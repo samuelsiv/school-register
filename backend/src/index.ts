@@ -4,7 +4,7 @@ import { Hono } from 'hono'
 const app = new Hono()
 
 app.get('/', (c) => {
-  return c.text('Hello Hono!')
+  return c.text('Hello Hono!');
 })
 
 serve({
@@ -12,4 +12,4 @@ serve({
   port: 3000
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`)
-})
+});
