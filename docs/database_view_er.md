@@ -6,6 +6,8 @@
             VARCHAR password_hash "NOT NULL"
             VARCHAR role "NOT NULL (administrator, teacher, student, parent)"
             VARCHAR username "Optional"
+            VARCHAR name "NOT NULL"
+            VARCHAR surname "NOT NULL"
             TIMESTAMP creation_date "DEFAULT CURRENT_TIMESTAMP"
             TIMESTAMP last_login_date
         }
@@ -13,9 +15,7 @@
         Students {
             SERIAL student_id PK
             INTEGER user_id FK "UNIQUE"
-            VARCHAR name "NOT NULL"
-            VARCHAR surname "NOT NULL"
-            DATE birth
+            DATE date_of_birth
             INTEGER class_id FK "NULLABLE"
             TIMESTAMP registration_date "DEFAULT CURRENT_TIMESTAMP"
         }
@@ -23,8 +23,6 @@
         Teachers {
             SERIAL teacher_id PK
             INTEGER user_id FK "UNIQUE"
-            VARCHAR name "NOT NULL"
-            VARCHAR surname "NOT NULL"
             DATE landing_date
         }
 
@@ -53,8 +51,8 @@
             INTEGER teacher_id FK "NULLABLE (who assigned)"
             VARCHAR title "NOT NULL"
             TEXT description
-            DATE assigned_on "DEFAULT CURRENT_DATE"
-            DATE expiring_on
+            DATE created_at "DEFAULT CURRENT_DATE"
+            DATE due_date
         }
 
         Grades {
