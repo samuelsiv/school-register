@@ -6,11 +6,9 @@ import { subjects } from './subjects.js';
 export const teachersSubjects = pgTable('teachers_subjects', {
   teacherId: integer('teacher_id').notNull().references(() => teachers.teacherId, { onDelete: 'cascade' }),
   subjectId: integer('subject_id').notNull().references(() => subjects.subjectId, { onDelete: 'cascade' }),
-}, (table) => {
-  return {
-    pk: primaryKey(table.teacherId, table.subjectId),
-  };
-});
+}, (table) => [
+  primaryKey({ columns: [table.teacherId, table.subjectId] }),
+]);
 
 export const teachersSubjectsRelations = relations(teachersSubjects, ({ one }) => ({
   teacher: one(teachers, {

@@ -2,32 +2,27 @@ import { pgTable, serial, integer, date, smallint, varchar, text, unique } from 
 import { relations } from 'drizzle-orm';
 import { students } from './students.js';
 import { classes } from './classes.js';
+import { teachers } from './teachers.js';
 
 export const events = pgTable('events', {
-  presentId: serial('present_id').primaryKey(),
-  noteId: serial('note_id'),
-  lateId: serial('late_id'),
-  exitId: serial('exit_id'),
-  studentId: integer('student_id').notNull().references(() => students.studentId, { onDelete: 'cascade' }),
-  classId: integer('class_id').notNull().references(() => classes.classId, { onDelete: 'cascade' }),
-  lessonDate: date('lesson_date').notNull(),
-  lessonHour: smallint('lesson_hour').notNull(),
-  attendanceStatus: varchar('attendance_status', { length: 50 }).notNull(),
-  justification: text('justification'),
-}, (table) => {
-  return {
-    uniqueAttendance: unique().on(table.studentId, table.lessonDate, table.lessonHour),
-  };
-});
+  eventId: serial('event_id').primaryKey(),
+  studentId: integer('student_id').notNull().references(() => students.studentId, { onDelete: 'cascade' }), // assigned to
+  teacherId: integer('teacher_id').references(() => teachers.teacherId, { onDelete: 'cascade' }), // created by
+  eventDate: date('event_date').notNull(),
+  eventHour: smallint('event_hour').notNull(),
+  eventType: varchar('event_type', { length: 50 }).notNull(), // e.g. "absence", "delay", "early leave", "present", "homework", "other", "note"
+  eventDescription: text('event_description'), // e.g. "other"
+}, (table) => [
+   unique('uniqueAttendance').on(table.studentId, table.eventDate, table.eventHour),
+]);
 
-// Relations for events
 export const eventsRelations = relations(events, ({ one }) => ({
   student: one(students, {
     fields: [events.studentId],
     references: [students.studentId],
   }),
-  class: one(classes, {
-    fields: [events.classId],
-    references: [classes.classId],
-  }),
+  teacher: one(teachers, {
+    fields: [events.teacherId],
+    references: [teachers.teacherId],
+  })
 }));
