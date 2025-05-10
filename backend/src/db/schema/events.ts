@@ -1,7 +1,6 @@
 import { pgTable, serial, integer, date, smallint, varchar, text, unique } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { students } from './students.js';
-import { classes } from './classes.js';
 import { teachers } from './teachers.js';
 
 export const events = pgTable('events', {
@@ -12,9 +11,7 @@ export const events = pgTable('events', {
   eventHour: smallint('event_hour').notNull(),
   eventType: varchar('event_type', { length: 50 }).notNull(), // e.g. "absence", "delay", "early leave", "present", "homework", "other", "note"
   eventDescription: text('event_description'), // e.g. "other"
-}, (table) => [
-   unique('uniqueAttendance').on(table.studentId, table.eventDate, table.eventHour),
-]);
+});
 
 export const eventsRelations = relations(events, ({ one }) => ({
   student: one(students, {

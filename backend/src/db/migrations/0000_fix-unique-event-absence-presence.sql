@@ -1,0 +1,1 @@
+ALTER TABLE events ADD CONSTRAINT unique_attendance_event UNIQUE (student_id, event_date, event_hour) WHERE (event_type IN ('presence', 'absence'));
