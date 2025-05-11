@@ -1,0 +1,2 @@
+ALTER TABLE "events" ADD COLUMN "class_id" integer NOT NULL;--> statement-breakpoint
+ALTER TABLE "events" ADD CONSTRAINT "events_class_id_classes_class_id_fk" FOREIGN KEY ("class_id") REFERENCES "public"."classes"("class_id") ON DELETE cascade ON UPDATE no action;

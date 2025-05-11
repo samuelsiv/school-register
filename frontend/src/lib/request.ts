@@ -5,7 +5,6 @@ export const request = async (method: "POST" | "GET", path: string, data?: objec
         method: string;
         headers: {
             "Content-Type": string;
-            "Authorization"?: string;
         };
         body?: string | undefined;
     } = {
@@ -13,11 +12,6 @@ export const request = async (method: "POST" | "GET", path: string, data?: objec
         headers: {
             "Content-Type": "application/json",
         }
-    }
-
-    const token = localStorage.getItem("access_token");
-    if (token) {
-        options.headers["Authorization"] = `Bearer ${token}`;
     }
 
     if (data) 

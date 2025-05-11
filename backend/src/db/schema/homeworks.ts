@@ -29,5 +29,4 @@ export const homeworksRelations = relations(homeworks, ({ one, many }) => ({
     fields: [homeworks.teacherId],
     references: [teachers.teacherId],
   }),
-  grades: many(grades),
 }));

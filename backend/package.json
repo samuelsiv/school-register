@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "PORT=3001 tsx watch src/index.ts",
     "build": "tsc",
+    "buildev": "npm run build && npm run dev",
     "start": "node dist/index.js"
   },
   "dependencies": {

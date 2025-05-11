@@ -1,12 +1,13 @@
 services:
   api:
     build: backend
-    command: npm run dev
+    command: npm run buildev
     volumes:
       - ./backend:/app/
       - /app/node_modules
     ports:
       - "3001:3001"
+      - "4983:4983"
     depends_on:
       - db
       - cache
@@ -26,6 +27,7 @@ services:
       - /app/node_modules
     environment:
       NODE_ENV: development
+      JWT_SECRET: DO_NOT_USE_DEV_IN_PROD_UNSAFE_JWT_KEY
     ports:
       - "3000:3000"
     depends_on:
@@ -35,10 +37,13 @@ services:
 
   db:
     image: postgres:13
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: sr
       POSTGRES_PASSWORD: sr
       POSTGRES_DB: schoolregister
+
 
   cache:
     image: redis:6.2-alpine
@@ -51,4 +56,6 @@ services:
 
 volumes:
   cache:
+    driver: local
+  postgres-data:
     driver: local

@@ -1,10 +1,9 @@
-import {LoginForm} from "@/components/forms/LoginSchema";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {DashAverageGradesChart} from "@/components/charts/DashAverageGradesChart";
 import {HomeworksCard} from "@/components/cards/HomeworksCard";
 import {EventsCard} from "@/components/cards/AbsencesCard";
-import {EventType} from "@/types/eventType";
+import {EventType} from "@/types/EventType";
 import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {BabyIcon} from "lucide-react";
 import {Button} from "@/components/ui/button";

@@ -24,3 +24,8 @@ declare module "hono" {
         user: JwtData;
     }
 }
+
+export type TokenData = {
+    userId: number,
+    role: string
+}
