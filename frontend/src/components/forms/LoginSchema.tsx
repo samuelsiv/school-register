@@ -6,9 +6,9 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import Config from "@/types/config";
 import {useEffect, useState} from "react";
 import {Turnstile} from 'next-turnstile';
+import {request} from "@/lib/request";
 
 export const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -20,10 +20,10 @@ export function LoginForm() {
     const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
 
     useEffect(() => {
-        request("POST", "/api/v1/misc/turnstile").then((json) => {
+        request("GET", "/api/v1/misc/config").then((json) => {
             setTurnstileSiteKey(json.siteKey)
         });
-    })
+    }, [])
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -50,7 +50,7 @@ export function LoginForm() {
         }).catch((err) => {
             console.log(err);
             alert("An error occurred while logging in. Please try again.");
-        }
+        })
     }
     return <Form {...form}>
         {form.formState.errors.root && (
