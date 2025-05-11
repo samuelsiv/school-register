@@ -1,6 +1,6 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {EventType} from "@/types/EventType";
+import {EventType} from "@/types/eventType";
 
 export function EventsCard({events}: {events: {id: number, type: EventType, date: string}[]}) {
     return (
