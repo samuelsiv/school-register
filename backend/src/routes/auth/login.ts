@@ -18,7 +18,7 @@ export default async function () {
   const router = new Hono().basePath("/api/v1/auth");
 
   router.post("/login", zValidator('json', loginSchema), async (c) => {
-    const { email, password, captcha } = await c.req.valid('json');
+    const { email, password, captcha } = c.req.valid('json');
     
     const captchaValid = await checkTurnstileToken(captcha);
     if (!captchaValid) {

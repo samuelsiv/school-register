@@ -1,0 +1,52 @@
+services:
+  api:
+    build: backend
+    command: npm run dev
+    volumes:
+      - ./backend:/app/
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+      - cache
+    environment:
+      DATABASE_URL: postgres://sr:sr@db/schoolregister
+      REDIS_URL: redis://localhost/
+      PORT: 3001
+      JWT_SECRET: DO_NOT_USE_DEV_IN_PROD_UNSAFE_JWT_KEY
+      TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      TURNSTILE_SECRET: 1x0000000000000000000000000000000AA
+
+  web:
+    build: frontend
+    command: npm run dev
+    volumes:
+      - ./frontend:/app/
+      - /app/node_modules
+
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: sr
+      POSTGRES_PASSWORD: sr
+      POSTGRES_DB: schoolregister
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
+volumes:
+  cache:
+    driver: local
