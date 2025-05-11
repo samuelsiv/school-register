@@ -44,9 +44,10 @@ export function LoginForm() {
                 form.setError("root", { message: data.error.issues.map((issue: any) => issue.message).join(", ") });
                 return;
             }
-            
-            localStorage.setItem("access_token", data.token);
-            window.location.href = "/dashboard";
+
+            document.cookie = "schoolAuth=" + data.token + ";"
+            localStorage.setItem("user_data", data.user);
+            window.location.href = "/home";
         }).catch((err) => {
             console.log(err);
             alert("An error occurred while logging in. Please try again.");

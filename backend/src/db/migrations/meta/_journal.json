@@ -8,6 +8,20 @@
       "when": 1746881891653,
       "tag": "0000_fix-unique-event-absence-presence",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1746999781529,
+      "tag": "0001_wakeful_starfox",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747000258621,
+      "tag": "0002_volatile_captain_midlands",
+      "breakpoints": true
     }
   ]
 }

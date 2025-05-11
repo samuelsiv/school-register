@@ -7,7 +7,14 @@ import { eq } from 'drizzle-orm';
 import { checkTurnstileToken } from "../../lib/turnstile.js";
 import { db } from "../../db/index.js";
 import { users } from "../../db/schema/users.js";
-
+import {generateToken} from "../../lib/token.js";
+import {
+  getCookie,
+  getSignedCookie,
+  setCookie,
+  setSignedCookie,
+  deleteCookie,
+} from 'hono/cookie'
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(6, { message: "Password is required" }),
@@ -40,18 +47,18 @@ export default async function () {
       .set({ lastLoginDate: new Date() })
       .where(eq(users.userId, userFound.userId));
     
-    const token = jwt.sign(
-      { 
-        userId: userFound.userId, 
-        role: userFound.role 
-      },
-      process.env.JWT_SECRET, 
-      { expiresIn: 3600 }
-    );
+    const token = generateToken({
+      userId: userFound.userId,
+      role: userFound.role
+    });
     
     const { password: _, ...userInfo } = userFound;
+    setCookie(c, "schoolAuth", token, {
+      expires: new Date(Date.now() + 3600 * 1000)
+    })
     return c.json({ 
       token,
+      success: true,
       user: userInfo
     });
   });

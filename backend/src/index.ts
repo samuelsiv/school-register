@@ -18,6 +18,7 @@ app.use('*', cors({
 app.route("", await (await import("./routes/admin/create-account.js")).default());
 app.route("", await (await import("./routes/auth/login.js")).default());
 app.route("", await (await import("./routes/misc/config.js")).default());
+app.route("", await (await import("./routes/user/info.js")).default());
 
 serve({
   fetch: app.fetch,
