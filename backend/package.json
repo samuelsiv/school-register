@@ -9,10 +9,15 @@
   "dependencies": {
     "@hono/node-server": "^1.14.1",
     "@hono/zod-validator": "^0.5.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
+    "axios": "^1.9.0",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.1",
     "drizzle-orm": "^0.43.1",
     "hono": "^4.7.9",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.15.6",
     "zod": "^3.24.4"
   },
