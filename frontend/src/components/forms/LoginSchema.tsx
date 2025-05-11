@@ -39,13 +39,13 @@ export function LoginForm() {
     }
 
     function onSubmit(values: z.infer<typeof loginSchema>) {
-
-        request("POST", "/api/v1/auth/login", values).then((json) => {
-            if (json.error) {
-                alert(json.error);
+        request("POST", "/api/v1/auth/login", values).then((data) => {
+            if (!data.success) {
+                form.setError("root", { message: data.error.issues.map((issue: any) => issue.message).join(", ") });
                 return;
             }
-            localStorage.setItem("access_token", json.token);
+            
+            localStorage.setItem("access_token", data.token);
             window.location.href = "/dashboard";
         }).catch((err) => {
             console.log(err);
@@ -53,6 +53,12 @@ export function LoginForm() {
         }
     }
     return <Form {...form}>
+        {form.formState.errors.root && (
+            <div className="bg-red-500 text-white p-4 rounded-md">
+                <p>{form.formState.errors.root.message}</p> 
+            </div>
+        )}
+
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
                 control={form.control}
