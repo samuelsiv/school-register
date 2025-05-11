@@ -10,9 +10,12 @@ app.get('/', (c) => {
   return c.text('Hello Hono!');
 })
 
+app.route("", await (await import("./routes/admin/create-account.js")).default());
+app.route("", await (await import("./routes/auth/login.js")).default());
+
 serve({
   fetch: app.fetch,
-  port: parseInt(process.env.PORT ?? "3000")
+  port: parseInt(process.env.PORT || "3000")
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`)
 });
