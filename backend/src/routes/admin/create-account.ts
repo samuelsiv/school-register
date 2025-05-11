@@ -15,11 +15,14 @@ const createAccountSchema = z.object({
 });
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/admin");
+    const router = new Hono().basePath("/api/v1/admin");
 
-  router.post("/create-account", authMiddleware, adminOnlyMiddleware, zValidator('json', createAccountSchema), async (c) => {
+    router.use("*", authMiddleware);
+    router.use("*", adminOnlyMiddleware);
 
-  });
+    router.post("/create-account", zValidator('json', createAccountSchema), async (c) => {
 
-  return router;
+    });
+
+    return router;
 }
