@@ -1,6 +1,6 @@
 const BASE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3001" : "";
 
-const request = async (method: "POST" | "GET", path: string, data?: object | undefined | null) => {
+export const request = async (method: "POST" | "GET", path: string, data?: object | undefined | null) => {
     const options: {
         method: string;
         headers: {
