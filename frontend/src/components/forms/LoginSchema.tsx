@@ -6,7 +6,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import Config from "@/types/Config";
+import Config from "@/types/config";
 import {useEffect, useState} from "react";
 import {Turnstile} from 'next-turnstile';
 
@@ -17,16 +17,14 @@ export const loginSchema = z.object({
 });
 
 export function LoginForm() {
-    const [turnstile_site_key, setTurnstileSiteKey] = useState("")
+    const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
+
     useEffect(() => {
-        fetch(Config.api_url + "/api/v1/misc/turnstile").then((res) => {
-            res.json().then((resjson) => {
-                setTurnstileSiteKey(resjson["site_key"])
-            })
-        })
+        request("POST", "/api/v1/misc/turnstile").then((json) => {
+            setTurnstileSiteKey(json.siteKey)
+        });
     })
 
-    // 1. Define your form.
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -40,15 +38,19 @@ export function LoginForm() {
         console.log(err);
     }
 
-    // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof loginSchema>) {
-        fetch(Config.api_url + "/api/v1/auth/login", {
-            method: "POST", headers: {
-                'content-type': 'application/json;charset=UTF-8',
-            },
-            mode: "no-cors",
-            body: JSON.stringify(values),
-        })
+
+        request("POST", "/api/v1/auth/login", values).then((json) => {
+            if (json.error) {
+                alert(json.error);
+                return;
+            }
+            localStorage.setItem("access_token", json.token);
+            window.location.href = "/dashboard";
+        }).catch((err) => {
+            console.log(err);
+            alert("An error occurred while logging in. Please try again.");
+        }
     }
     return <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -87,10 +89,10 @@ export function LoginForm() {
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Captcha</FormLabel>
-                        {turnstile_site_key != "" &&
+                        {turnstileSiteKey != "" &&
                             <Turnstile onVerify={(token) => {
                                 field.onChange(token)
-                            }} onError={onErr} siteKey={turnstile_site_key} />
+                            }} onError={onErr} siteKey={turnstileSiteKey} />
                         }
                         <FormMessage />
                     </FormItem>

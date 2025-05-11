@@ -12,7 +12,7 @@ app.get('/', (c) => {
 
 app.route("", await (await import("./routes/admin/create-account.js")).default());
 app.route("", await (await import("./routes/auth/login.js")).default());
-app.route("", await (await import("./routes/config/config.js")).default());
+app.route("", await (await import("./routes/misc/config.js")).default());
 
 serve({
   fetch: app.fetch,
