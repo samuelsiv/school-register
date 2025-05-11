@@ -6,6 +6,9 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
+import Config from "@/types/Config";
+import {useEffect, useState} from "react";
+import {Turnstile} from 'next-turnstile';
 
 export const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -14,6 +17,15 @@ export const loginSchema = z.object({
 });
 
 export function LoginForm() {
+    const [turnstile_site_key, setTurnstileSiteKey] = useState("")
+    useEffect(() => {
+        fetch(Config.api_url + "/api/v1/misc/turnstile").then((res) => {
+            res.json().then((resjson) => {
+                setTurnstileSiteKey(resjson["site_key"])
+            })
+        })
+    })
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -24,11 +36,19 @@ export function LoginForm() {
         },
     })
 
+    const onErr = (err : unknown) => {
+        console.log(err);
+    }
+
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof loginSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+        fetch(Config.api_url + "/api/v1/auth/login", {
+            method: "POST", headers: {
+                'content-type': 'application/json;charset=UTF-8',
+            },
+            mode: "no-cors",
+            body: JSON.stringify(values),
+        })
     }
     return <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -67,12 +87,11 @@ export function LoginForm() {
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Captcha</FormLabel>
-                        <FormItem>
-
-                        </FormItem>
-                        <FormControl>
-                            <Input placeholder="Insert your captcha" {...field} />
-                        </FormControl>
+                        {turnstile_site_key != "" &&
+                            <Turnstile onVerify={(token) => {
+                                field.onChange(token)
+                            }} onError={onErr} siteKey={turnstile_site_key} />
+                        }
                         <FormMessage />
                     </FormItem>
                 )}
