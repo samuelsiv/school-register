@@ -10,3 +10,17 @@ declare global {
     }
   }
 }
+
+export interface JwtData {
+  userId: string;
+  role: string;
+  exp: number;
+  nbf: number;
+  iat: number;
+}
+
+declare module "hono" {
+    interface ContextVariableMap {
+        user: JwtData;
+    }
+}
