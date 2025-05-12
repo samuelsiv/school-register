@@ -1,7 +1,7 @@
 services:
   api:
     build: backend
-    command: npm run build && npm run start
+    command: "npm run buildev"
     volumes:
       - ./backend:/app/
       - /app/node_modules

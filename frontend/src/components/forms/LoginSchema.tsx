@@ -8,7 +8,8 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useEffect, useState} from "react";
 import {Turnstile} from 'next-turnstile';
-import {request} from "@/lib/request";
+import {fetcher, request} from "@/lib/request";
+import useSWR, {preload} from "swr";
 
 export const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -45,9 +46,10 @@ export function LoginForm() {
                 return;
             }
 
-            document.cookie = "schoolAuth=" + data.token + ";"
-            localStorage.setItem("user_data", data.user);
-            window.location.href = "/home";
+            document.cookie = "auth_token=" + data.token + ";"
+            preload(`/api/v1/user/info`, fetcher).then(_ => {
+                window.location.href = "/home";
+            })
         }).catch((err) => {
             console.log(err);
             alert("An error occurred while logging in. Please try again.");
