@@ -37,27 +37,6 @@ export function AppSidebar({activeItem, activeChild}: {activeItem: string, activ
             </SidebarHeader>
             <SidebarHeader hidden={!open}>
                 <b>School-Register</b>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    {activeChild}
-                                    <ChevronDown className="ml-auto" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                                {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-                                {children.sort((child, _) => (child == activeChild) ? 0 : children.indexOf(child)).map((child) =>
-                                    <DropdownMenuItem key={child} >
-                                        <span>{child}</span>
-                                    </DropdownMenuItem>
-                                )}
-
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>

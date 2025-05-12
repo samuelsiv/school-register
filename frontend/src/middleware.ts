@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import {isLogged} from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
-    if (!await isLogged(request)) {
+    if (!(await isLogged(request)).authenticated) {
         const loginUrl = request.nextUrl.clone();
         loginUrl.pathname = '/login';
 

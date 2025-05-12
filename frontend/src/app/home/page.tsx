@@ -1,3 +1,5 @@
+"use client"
+
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {DashAverageGradesChart} from "@/components/charts/DashAverageGradesChart";
@@ -7,9 +9,11 @@ import {EventType} from "@/types/EventType";
 import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {BabyIcon} from "lucide-react";
 import {Button} from "@/components/ui/button";
+import {useUserInfo} from "@/lib/data";
 
 
 export default function HomePage() {
+    const { userInfo, isLoading, isError } = useUserInfo()
     return <div className="bg-background text-foreground flex items-center p-6 gap-6 text-center">
         <SidebarProvider>
             <AppSidebar activeItem={"#"} activeChild={"Alex Johnson"} />
@@ -17,8 +21,7 @@ export default function HomePage() {
                 <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
                     <SidebarTrigger/>
                     <div>
-                        <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">Welcome,
-                            [name]!</h1>
+                        <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">Welcome, {userInfo?.user?.name}!</h1>
                         <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your child&#39;s school
                             progress and attendance</h2>
                     </div>
