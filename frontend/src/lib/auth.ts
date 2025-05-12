@@ -1,15 +1,21 @@
-import {NextRequest} from "next/server";
-import {jwtVerify} from "jose"
-export const isLogged = async (request: NextRequest) => {
-    const schoolToken = request.cookies.get("schoolAuth")?.value
-    if (schoolToken == undefined) return false
+import { NextRequest } from "next/server";
+import { jwtVerify, JWTVerifyResult } from "jose";
 
-    try {
-        await jwtVerify(schoolToken, new TextEncoder().encode(process.env.JWT_SECRET || ""));
-        return true
-    } catch (err) {
-        console.log(err)
-
-        return false
+export const isLogged = async (
+  request: NextRequest,
+  options: {
+    tokenName?: string;
+    secretEnvVar?: string;
+    fallbackSecret?: string;
+  } = {}
+) => {
+    const token = request.cookies.get("auth_token")?.value;
+    if (!token) {
+        return { authenticated: false, reason: "missing_token" };
     }
-}
+
+    return {
+        authenticated: true,
+        payload: null
+    };
+};
