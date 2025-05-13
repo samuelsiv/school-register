@@ -33,10 +33,10 @@ export default function Grades() {
                 <div className="grid grid-rows-1 grid-cols-2 gap-12">
                     <AveragesOverviewCard
                         generalAverageByDays={[{grade: 8, day: "08/02"}, {grade: 7, day: "09/02"}, {grade: 9, day: "10/02"}]}
-                        averagesBySubject={[{name: "Matematica", teacher: "Fulvia Bottiglione", grade: 6, id: 321, grades: [{name: "Matematica", date: "09/02/2025", grade: 6, id: 321}]},
-                            {name: "Storia", teacher: "Alba Franzina", grade: 5, id: 3211, grades: [{name: "Storia", date: "11/05/2025", grade: 5, id: 321}]}]}/>
-                    <GradesListCard grades={[{name: "Matematica", date: "09/02/2025", grade: 6, id: 321},
-                        {name: "Storia", date: "11/05/2025", grade: 5, id: 321}]} />
+                        averagesBySubject={[{name: "Maths", teacher: "John Doe", grade: 6, id: 321, grades: [{name: "Math", date: "09/02/2025", grade: 6, id: 321}]},
+                            {name: "History", teacher: "Jane Doe", grade: 5, id: 3211, grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]}]}/>
+                    <GradesListCard grades={[{name: "Maths", date: "09/02/2025", grade: 6, id: 321},
+                        {name: "History", date: "11/05/2025", grade: 5, id: 321}]} />
                 </div>
             </main>
         </SidebarProvider>
