@@ -7,13 +7,19 @@ import {
     SidebarGroup, SidebarGroupLabel,
     SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,
 } from "@/components/ui/sidebar"
-import {BabyIcon, ChevronDown, LayoutDashboardIcon, PersonStandingIcon} from "lucide-react";
+import {BabyIcon, ChartAreaIcon, ChevronDown, LayoutDashboardIcon, PersonStandingIcon} from "lucide-react";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 const items = [
     {
         title: "Dashboard",
-        url: "#",
+        url: "/home/dashboard",
         icon: LayoutDashboardIcon
+    },
+    {
+        title: "Grades",
+        url: "/home/grades",
+        icon: ChartAreaIcon
     }
 ]
 
@@ -56,10 +62,10 @@ export function AppSidebar({activeItem, activeChild}: {activeItem: string, activ
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton asChild isActive={activeItem == item.url}>
-                                <a href={item.url}>
+                                <Link href={(activeItem == item.url) ? "#" : item.url}>
                                     <item.icon />
                                     <span>{item.title}</span>
-                                </a>
+                                </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
