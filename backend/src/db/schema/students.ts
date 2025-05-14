@@ -11,7 +11,6 @@ export const students = pgTable('students', {
   dateOfBirth: date('date_of_birth'),
   classId: integer('class_id').references(() => classes.classId, { onDelete: 'set null' }),
   registrationDate: timestamp('registration_date').defaultNow(),
-  studentName: text("student_name").default("").notNull()
 });
 
 export const studentsRelations = relations(students, ({ one, many }) => ({
