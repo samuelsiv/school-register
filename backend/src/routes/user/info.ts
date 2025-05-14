@@ -6,11 +6,10 @@ import {authMiddleware} from "../../middleware/auth.js";
 
 export default async function () {
     const router = new Hono().basePath("/api/v1/user");
-    router.use("*", authMiddleware);
 
     router.get("/info", async (c) => {
         const { userId } = c.get("user");
-        const [userFound] = await db.select().from(users).where(eq(users.userId, parseInt(userId))).limit(1);
+        const [userFound] = await db.select().from(users).where(eq(users.userId, userId)).limit(1);
         if (!userFound) return c.json({ error: "User not found" }, 401);
 
         const { password: _, ...userInfo } = userFound;

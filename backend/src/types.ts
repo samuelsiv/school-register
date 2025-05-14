@@ -12,7 +12,7 @@ declare global {
 }
 
 export interface JwtData {
-  userId: string;
+  userId: number;
   role: string;
   exp: number;
   nbf: number;

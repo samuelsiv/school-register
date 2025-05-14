@@ -8,7 +8,6 @@ import { checkTurnstileToken } from "../../lib/turnstile.js";
 import { db } from "../../db/index.js";
 import { users } from "../../db/schema/users.js";
 import { authMiddleware } from "../../middleware/auth.js";
-import { adminOnlyMiddleware } from "../../middleware/admin.js";
 
 const createAccountSchema = z.object({
 
@@ -16,9 +15,6 @@ const createAccountSchema = z.object({
 
 export default async function () {
     const router = new Hono().basePath("/api/v1/admin");
-
-    router.use("*", authMiddleware);
-    router.use("*", adminOnlyMiddleware);
 
     router.post("/create-account", zValidator('json', createAccountSchema), async (c) => {
 
