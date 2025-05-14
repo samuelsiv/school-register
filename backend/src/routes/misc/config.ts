@@ -4,7 +4,6 @@ import login from "../auth/login.js";
 export default async function () {
   const router = new Hono().basePath("/api/v1/misc");
 
-    })
   router.get("/config", async (c) => {
     return c.json({
 			turnstile: {
