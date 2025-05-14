@@ -22,11 +22,11 @@ app.use('*', cors({
   maxAge: 600,
 }));
 
-app.use('/api/v1/admin', authMiddleware, roleMiddleware(['admin']));
-app.use('/api/v1/students', authMiddleware, roleMiddleware(['student', 'parent']));
-app.use('/api/v1/teachers', authMiddleware, roleMiddleware(['teacher']));
-app.use('/api/v1/parents', authMiddleware, roleMiddleware(['parent']));
-app.use('/api/v1/user', authMiddleware, roleMiddleware(['*']));
+app.use('/api/v1/admin/*', authMiddleware, roleMiddleware(['admin']));
+app.use('/api/v1/students/*', authMiddleware, roleMiddleware(['student', 'parent']));
+app.use('/api/v1/teachers/*', authMiddleware, roleMiddleware(['teacher']));
+app.use('/api/v1/parents/*', authMiddleware, roleMiddleware(['parent']));
+app.use('/api/v1/user/*', authMiddleware, roleMiddleware(['*']));
 
 async function loadRoutes(routesDir: string) {
   const routeFiles = await readdir(routesDir, { withFileTypes: true });
