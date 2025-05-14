@@ -54,12 +54,11 @@ export default async function () {
       process.env.JWT_SECRET,
       { expiresIn: 3600 }
     );
-
     
     const { password: _, ...userInfo } = userFound;
     setCookie(c, "auth_token", token, {
       expires: new Date(Date.now() + 3600 * 1000)
-    })
+    });
     return c.json({ 
       token,
       success: true,

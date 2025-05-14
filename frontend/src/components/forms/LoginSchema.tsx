@@ -22,7 +22,7 @@ export function LoginForm() {
 
     useEffect(() => {
         request("GET", "/api/v1/misc/config").then((json) => {
-            setTurnstileSiteKey(json.siteKey)
+            setTurnstileSiteKey(json.turnstile.siteKey);
         });
     }, [])
 
@@ -42,14 +42,17 @@ export function LoginForm() {
     function onSubmit(values: z.infer<typeof loginSchema>) {
         request("POST", "/api/v1/auth/login", values).then((data) => {
             if (!data.success) {
-                form.setError("root", { message: data.error.issues.map((issue: any) => issue.message).join(", ") });
+                const errorMessage = Array.isArray(data.error?.issues)
+                ? data.error.issues.map((issue: any) => issue.message).join(", ")
+                : data.error?.message || "Login failed. Please check your credentials.";
+
+                form.setError("root", { message: errorMessage });
                 return;
             }
 
-            document.cookie = "auth_token=" + data.token + "; Max-Age=3600"
-            preload(`/api/v1/user/info`, fetcher).then(_ => {
-                window.location.href = "/home/dashboard";
-            })
+            preload("/api/v1/user/info", fetcher)
+                .then(() => window.location.href = "/home/dashboard")
+                .catch(() => window.location.href = "/home/dashboard");
         }).catch((err) => {
             console.log(err);
             alert("An error occurred while logging in. Please try again.");
