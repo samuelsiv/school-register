@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, date, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, date, timestamp, text } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { users } from './users.js';
 import { classes } from './classes.js';
@@ -11,6 +11,7 @@ export const students = pgTable('students', {
   dateOfBirth: date('date_of_birth'),
   classId: integer('class_id').references(() => classes.classId, { onDelete: 'set null' }),
   registrationDate: timestamp('registration_date').defaultNow(),
+  studentName: text("student_name").default("").notNull()
 });
 
 export const studentsRelations = relations(students, ({ one, many }) => ({

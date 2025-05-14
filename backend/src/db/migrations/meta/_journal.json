@@ -22,6 +22,20 @@
       "when": 1747000258621,
       "tag": "0002_volatile_captain_midlands",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1747258442937,
+      "tag": "0003_new_absorbing_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1747258545559,
+      "tag": "0004_awesome_thor_girl",
+      "breakpoints": true
     }
   ]
 }
