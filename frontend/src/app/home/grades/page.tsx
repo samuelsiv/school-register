@@ -18,7 +18,7 @@ import { Student } from "@/types/student";
 import { getJsonStore, getStore } from "@/lib/storage";
 import UserStore from "@/stores/user";
 
-export default function Grades() {
+const Grades = () => {
 	const userStore = UserStore.useContainer();
 	//const { grades, isLoadingGrades, isErrorGrades } = useGrades()
 

@@ -15,6 +15,8 @@ const UserStore = createContainer(() => {
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
 
+	const { data, error, isLoading } = useSWR(`/api/v1/user/info`, fetcher);
+
 	const selectStudent = (student: Student) => {
 		setSelectedStudent(student);
 		setJsonStore<Student>("selected_student", student);
@@ -26,7 +28,6 @@ const UserStore = createContainer(() => {
 	}
 
 	useEffect(() => {
-		const { data, error, isLoading } = useSWR(`/api/v1/user/info`, fetcher);
 		if (data) {
 			setUserId(data.user.userId);
 			setName(data.user.name);
