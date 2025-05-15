@@ -5,7 +5,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { GradesChart } from "@/components/charts/GradesChart";
 import { HomeworksCard } from "@/components/cards/HomeworksCard";
 import { EventsCard } from "@/components/cards/AbsencesCard";
-import { EventType } from "@/types/eventType";
+import { EventType } from "@/types/EventType";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BabyIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,11 +14,11 @@ import KidInfoAlert from "@/components/alert/KidInfoAlert";
 import { DashboardAverageCard } from "@/components/cards/DashboardAverageCard";
 import { GradesListCard } from "@/components/cards/GradesListCard";
 import { useEffect, useState } from "react";
-import { Student } from "@/types/student";
+import { Student } from "@/types/Student";
 import { getJsonStore } from "@/lib/storage";
 import UserStore from "@/stores/user";
 
-const HomePage = () => {
+export default function HomePage() {
 	const userStore = UserStore.useContainer();
 
 	return <div className="bg-background text-foreground flex items-center p-2 gap-6 text-center">

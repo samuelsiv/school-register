@@ -11,7 +11,7 @@ import { BabyIcon, ChartAreaIcon, ChevronDown, LayoutDashboardIcon, PersonStandi
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useUserInfo } from "@/lib/data";
-import { Student } from "@/types/student";
+import { Student } from "@/types/Student";
 import UserStore from "@/stores/user";
 import { usePathname } from "next/navigation";
 
@@ -44,7 +44,7 @@ export function AppSidebar({ activeChild, onSelectChildAction }: { activeChild: 
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarGroupLabel>YOUR CHILDREN</SidebarGroupLabel>
-					{userStore.managedStudents?.map((student) => (
+					{userStore.managedStudents.map((student: Student) => (
 						<SidebarMenuItem key={student.studentId} onClick={() => onSelectChildAction(student)}>
 							<SidebarMenuButton asChild isActive={activeChild == student}>
 								<a>
