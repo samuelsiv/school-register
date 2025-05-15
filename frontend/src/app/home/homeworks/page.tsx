@@ -19,11 +19,26 @@ import { getJsonStore, getStore } from "@/lib/storage";
 import UserStore from "@/stores/user";
 import {DayPicker} from "react-day-picker";
 import {Calendar} from "@/components/ui/calendar";
+import HomeworkCard from "@/components/cards/HomeworkCard";
+import {Homework} from "@/types/Homework";
 
 export default function Homeworks() {
 	const userStore = UserStore.useContainer();
 	//const { grades, isLoadingGrades, isErrorGrades } = useGrades()
 	const [selectedDay, setDay] = useState<Date>(new Date())
+
+	const testHomeworks: Homework[] = [
+		{
+			title: "Do the homeworks",
+			description: "Homework where you have to do your homeworks",
+			homeworkId: 123,
+			subjectId: 123,
+			dueDate: "27/07/2027",
+			classId: 132,
+			createdAt: "26/07/2027",
+			teacherId: 111
+		}
+	]
 	return <div className="bg-background text-foreground flex items-center p-2 gap-6 text-center">
 		<AppSidebar activeChild={userStore.selectedStudent} onSelectChildAction={userStore.selectStudent} />
 
@@ -47,8 +62,8 @@ export default function Homeworks() {
 				onMonthChange={(month) => setDay(month)}
 			/>
 			{selectedDay.getMonth()}
-			<div className="grid grid-rows-1 grid-cols-2 gap-12">
-
+			<div className="grid grid-rows-1 grid-cols-3 gap-12">
+				{testHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={homework.homeworkId}/> )}
 			</div>
 		</main>
 	</div>
