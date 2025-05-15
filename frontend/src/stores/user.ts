@@ -2,7 +2,7 @@
 
 import { fetcher } from "@/lib/request";
 import { getJsonStore, setJsonStore } from "@/lib/storage";
-import { Student } from "@/types/student";
+import { Student } from "@/types/Student";
 import { use, useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
