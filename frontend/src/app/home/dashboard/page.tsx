@@ -18,7 +18,7 @@ import { Student } from "@/types/student";
 import { getJsonStore } from "@/lib/storage";
 import UserStore from "@/stores/user";
 
-export default function HomePage() {
+const HomePage = () => {
 	const userStore = UserStore.useContainer();
 
 	return <div className="bg-background text-foreground flex items-center p-2 gap-6 text-center">
