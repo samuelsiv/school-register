@@ -1,18 +1,18 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import {isLogged} from "@/lib/auth";
+import { isLogged } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
-    if (!((await isLogged(request)).authenticated)) {
-        const loginUrl = request.nextUrl.clone();
-        loginUrl.pathname = '/login';
+	if (!await isLogged(request)) {
+		const loginUrl = request.nextUrl.clone();
+		loginUrl.pathname = '/login';
 
-        return NextResponse.redirect(loginUrl)
-    }
+		return NextResponse.redirect(loginUrl);
+	}
 
-    return NextResponse.next();
+	return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/home"],
+	matcher: ["/home"],
 }

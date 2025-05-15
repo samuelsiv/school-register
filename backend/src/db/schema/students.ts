@@ -8,9 +8,7 @@ import { events } from './events.js';
 export const students = pgTable('students', {
   studentId: serial('student_id').primaryKey(),
   userId: integer('user_id').notNull().unique().references(() => users.userId, { onDelete: 'cascade' }),
-  dateOfBirth: date('date_of_birth'),
   classId: integer('class_id').references(() => classes.classId, { onDelete: 'set null' }),
-  registrationDate: timestamp('registration_date').defaultNow(),
 });
 
 export const studentsRelations = relations(students, ({ one, many }) => ({
