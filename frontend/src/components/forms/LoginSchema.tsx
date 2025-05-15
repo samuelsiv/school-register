@@ -50,6 +50,7 @@ export function LoginForm() {
                 return;
             }
 
+            document.cookie = "auth_token=" + data.token + "; Max-Age=3600"
             preload("/api/v1/user/info", fetcher)
                 .then(() => window.location.href = "/home/dashboard")
                 .catch(() => window.location.href = "/home/dashboard");

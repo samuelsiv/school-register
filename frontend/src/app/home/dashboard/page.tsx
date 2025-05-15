@@ -13,13 +13,24 @@ import {useUserInfo} from "@/lib/data";
 import KidInfoAlert from "@/components/alert/KidInfoAlert";
 import {DashboardAverageCard} from "@/components/cards/DashboardAverageCard";
 import {GradesListCard} from "@/components/cards/GradesListCard";
+import {useEffect, useState} from "react";
+import {Student} from "@/types/Student";
+import {getJsonStore} from "@/lib/storage";
 
 
 export default function HomePage() {
     const { userInfo, isLoading, isError } = useUserInfo()
+    const [child, _setChild] = useState<Student | undefined>(userInfo?.students[0])
+    const setChild = (childName: Student) => {
+        localStorage.setItem("child", JSON.stringify(childName))
+        _setChild(childName)
+    }
+    useEffect(() => {
+        _setChild(getJsonStore("child") || userInfo?.students[0])
+    }, [userInfo]);
     return <div className="bg-background text-foreground flex items-center p-2 gap-6 text-center">
         <SidebarProvider>
-            <AppSidebar activeItem={"/home/dashboard"} activeChild={"Alex Johnson"} />
+            <AppSidebar activeItem={"/home/dashboard"} activeChild={child} onSelectChildAction={setChild} />
             <main className="flex flex-col w-full items-center justify-center gap-6">
                 <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
                     <SidebarTrigger/>
@@ -31,7 +42,7 @@ export default function HomePage() {
                     <br/>
 
                 </div>
-                <KidInfoAlert name={"Alex"} />
+                <KidInfoAlert name={child?.studentName || ""} />
 
                 <div className="grid grid-rows-4 grid-cols-3 gap-12">
                     <DashboardAverageCard

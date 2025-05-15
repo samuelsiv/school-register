@@ -10,6 +10,8 @@ import {
 import {BabyIcon, ChartAreaIcon, ChevronDown, LayoutDashboardIcon, PersonStandingIcon} from "lucide-react";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import {useUserInfo} from "@/lib/data";
+import {Student} from "@/types/Student";
 const items = [
     {
         title: "Dashboard",
@@ -23,10 +25,8 @@ const items = [
     }
 ]
 
-const children = [
-    "Alex Johnson"
-]
-export function AppSidebar({activeItem, activeChild}: {activeItem: string, activeChild: string}) {
+export function AppSidebar({activeItem, activeChild, onSelectChildAction}: {activeItem: string, activeChild: Student | undefined, onSelectChildAction: (student: Student) => void}) {
+    const { userInfo, isLoading, isError } = useUserInfo()
     const {
         state,
         open,
@@ -47,12 +47,12 @@ export function AppSidebar({activeItem, activeChild}: {activeItem: string, activ
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>YOUR CHILDREN</SidebarGroupLabel>
-                    {children.map((item) => (
-                        <SidebarMenuItem key={item}>
-                            <SidebarMenuButton asChild isActive={activeChild == item}>
+                    {userInfo?.students?.map((student) => (
+                        <SidebarMenuItem key={student.studentId} onClick={() => onSelectChildAction(student)}>
+                            <SidebarMenuButton asChild isActive={activeChild == student}>
                                 <a>
                                     <BabyIcon />
-                                    <span>{item}</span>
+                                    <span>{student.studentName}</span>
                                 </a>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
