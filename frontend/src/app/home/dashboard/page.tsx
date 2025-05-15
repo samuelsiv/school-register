@@ -37,10 +37,14 @@ export default function HomePage() {
 			<div className="grid grid-rows-4 grid-cols-3 gap-12">
 				<DashboardAverageCard grades={[{ grade: 8, day: "08/02" }, { grade: 7, day: "09/02" }, { grade: 9, day: "10/02" }]} />
 				<HomeworksCard homeworks={[{
-					id: 123,
-					author: "mr. John Doe (not the parent)",
-					description: "Study from page 186 of the English Textbook to page 244",
-					date: "17/04/2025"
+					title: "Do the homeworks",
+					description: "Homework where you have to do your homeworks",
+					homeworkId: 123,
+					subjectId: 123,
+					dueDate: "27/07/2027",
+					classId: 132,
+					createdAt: "26/07/2027",
+					teacherId: 111
 				}]} />
 
 				<EventsCard events={[{

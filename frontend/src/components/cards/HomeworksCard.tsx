@@ -1,7 +1,9 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
+import {Homework} from "@/types/Homework";
+import HomeworkCard from "@/components/cards/HomeworkCard";
 
-export function HomeworksCard({homeworks}: {homeworks: {id: number, author: string, description: string, date: string}[]}) {
+export function HomeworksCard({homeworks}: {homeworks: Homework[]}) {
     return (
         <Card>
             <CardHeader>
@@ -11,15 +13,7 @@ export function HomeworksCard({homeworks}: {homeworks: {id: number, author: stri
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                {homeworks.map((homework) => <Card key={homework.id}>
-                    <CardContent>
-                        <h3 className="font-bold">{homework.author}, by {homework.date}</h3>
-                        <h2 className="text-xl">{homework.description}</h2>
-                    </CardContent>
-                    <CardAction className="w-full">
-                        <Button variant="default">Done</Button>
-                    </CardAction>
-                </Card>)}
+                {homeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={homework.homeworkId}/> )}
 
             </CardContent>
         </Card>
