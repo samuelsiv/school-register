@@ -2,19 +2,37 @@ import { Hono } from "hono";
 import { authMiddleware } from "../../middleware/auth.js";
 import { db } from "../../db/index.js";
 import { grades } from "../../db/schema/grades.js";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
+import { parentStudents } from "../../db/schema/parentStudents.js";
 
 export default async function () {
   const router = new Hono().basePath("/api/v1/students");
 
   router.get("/grades",  async (c) => {
     const user = c.get("user");
-    const studentId = user.userId;
+    let userId = user.userId;
+
+    if (user.role === "parent") {
+      const studentId = parseInt(c.req.query("studentId") as string);
+      if (!studentId) return c.json({ error: "studentId is required" }, 400);
+
+      const student = await db
+        .select()
+        .from(parentStudents)
+        .where(and(
+          eq(parentStudents.parentId, user.userId),
+          eq(parentStudents.studentId, studentId)
+        ))
+      
+      if (student.length === 0) return c.json({ error: "You are not authorized to view this student's grades" }, 403);
+      
+      userId = studentId;
+    }
 
     const allGrades = await db
       .select()
       .from(grades)
-      .where(eq(grades.studentId, studentId));
+      .where(eq(grades.studentId, userId));
 
     return c.json({ allGrades });
   });

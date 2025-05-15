@@ -9,7 +9,6 @@ import { grades } from './grades.js';
 export const teachers = pgTable('teachers', {
   teacherId: serial('teacher_id').primaryKey(),
   userId: integer('user_id').notNull().unique().references(() => users.userId, { onDelete: 'cascade' }),
-  landingDate: date('landing_date'),
 });
 
 export const teachersRelations = relations(teachers, ({ one, many }) => ({

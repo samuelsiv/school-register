@@ -5,16 +5,13 @@ import { jwtVerify, JWTVerifyResult } from "jose";
 
 export const isLogged = async (
   request: NextRequest
-) => {
+): Promise<boolean> => {
     const token = request.cookies.get("auth_token")?.value;
-    if (!token) return { authenticated: false, reason: "missing_token" };
+    if (!token) return false;
     try {
         await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET || ""));
-        return {
-            authenticated: true,
-            payload: null
-        };
+        return true;
     } catch (e) {
-        return { authenticated: false, reason: "invalid_token" };
+        return false;
     }
 };

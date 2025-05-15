@@ -7,6 +7,7 @@ declare global {
         JWT_SECRET: string;
         TURNSTILE_SECRET: string;
         TURNSTILE_SITE_KEY: string;
+        BCRYPT_SALT_ROUNDS: number;
     }
   }
 }

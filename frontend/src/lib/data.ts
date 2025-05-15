@@ -1,8 +1,8 @@
 import useSWR from "swr";
 import {fetcher} from "@/lib/request";
-import {UserInfo} from "@/types/UserInfo";
-import {Student} from "@/types/Student";
-import {Grade} from "@/types/Grade";
+import {UserInfo} from "@/types/userInfo";
+import {Student} from "@/types/student";
+import {Grade} from "@/types/grade";
 
 export function useUserInfo(): {userInfo: { success: boolean, user: UserInfo, students: Student[] } | null, isLoading: boolean, isError: boolean} {
     const { data, error, isLoading } = useSWR(`/api/v1/user/info`, fetcher)
