@@ -9,17 +9,30 @@ import {EventType} from "@/types/EventType";
 import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {BabyIcon} from "lucide-react";
 import {Button} from "@/components/ui/button";
-import {useUserInfo} from "@/lib/data";
+import {useGrades, useUserInfo} from "@/lib/data";
 import KidInfoAlert from "@/components/alert/KidInfoAlert";
 import {AveragesOverviewCard} from "@/components/cards/AveragesOverviewCard";
 import {GradesListCard} from "@/components/cards/GradesListCard";
+import {useEffect, useState} from "react";
+import {Student} from "@/types/Student";
+import {getJsonStore, getStore} from "@/lib/storage";
 
 
 export default function Grades() {
     const { userInfo, isLoading, isError } = useUserInfo()
+    const { grades, isLoadingGrades, isErrorGrades } = useGrades()
+
+    const [child, _setChild] = useState<Student | undefined>(userInfo?.students[0])
+    const setChild = (childName: Student) => {
+        localStorage.setItem("child", JSON.stringify(childName))
+        _setChild(childName)
+    }
+    useEffect(() => {
+        _setChild(getJsonStore("child") || userInfo?.students[0])
+    }, [userInfo]);
     return <div className="bg-background text-foreground flex items-center p-2 gap-6 text-center">
         <SidebarProvider>
-            <AppSidebar activeItem={"/home/grades"} activeChild={"Alex Johnson"} />
+            <AppSidebar activeItem={"/home/grades"} activeChild={child} onSelectChildAction={setChild} />
             <main className="flex flex-col w-full items-center justify-center gap-6">
                 <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
                     <SidebarTrigger/>
@@ -29,7 +42,7 @@ export default function Grades() {
                     </div>
                     <br/>
                 </div>
-                <KidInfoAlert name={"Alex"} />
+                <KidInfoAlert name={child?.studentName || ""} />
                 <div className="grid grid-rows-1 grid-cols-2 gap-12">
                     <AveragesOverviewCard
                         generalAverageByDays={[{grade: 8, day: "08/02"}, {grade: 7, day: "09/02"}, {grade: 9, day: "10/02"}]}

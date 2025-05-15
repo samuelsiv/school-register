@@ -11,7 +11,7 @@ export default function KidInfoAlert({name}: {name: string}) {
             </div>
             <div className="text-start flex justify-center flex-col text-start">
                 <CardTitle>Viewing {name}&#39;s info</CardTitle>
-                <CardDescription>You are viewing the school performance of Alex Johnson</CardDescription>
+                <CardDescription>You are viewing the school performance of {name}</CardDescription>
             </div>
         </div>
         <Button className="h-full">Contact School</Button>

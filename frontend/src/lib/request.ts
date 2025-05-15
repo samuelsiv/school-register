@@ -20,9 +20,14 @@ export const request = async (method: "POST" | "GET", path: string, data?: objec
         options.body = JSON.stringify(data)
     
     const response = await fetch(`${BASE_URL}${path}`, options)
+    if (response.status == 401) {
+        document.location.href = "/"
+    }
     if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`)
     }
+
+
 
     return response.json();
 };
