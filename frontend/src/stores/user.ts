@@ -2,12 +2,29 @@
 
 import { fetcher } from "@/lib/request";
 import { getJsonStore, setJsonStore } from "@/lib/storage";
-import { Student } from "@/types/Student";
+import { Student } from "@/types/student";
 import { use, useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
+import { usePathname } from 'next/navigation'
+
+const ignorePaths = [
+	"/login"	
+]
 
 const UserStore = createContainer(() => {
+	console.log("UserStore");
+	if (ignorePaths.includes(usePathname())) {
+		return {
+			userId: null,
+			getName: () => null,
+			isParent: false,
+			selectedStudent: null,
+			selectStudent: () => {},
+			managedStudents: [],
+		}
+	}
+
 	const [userId, setUserId] = useState(null);
 	const [name, setName] = useState(null);
 
