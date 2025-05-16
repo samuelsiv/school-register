@@ -2,6 +2,7 @@
 
 import { fetcher } from "@/lib/request";
 import { getJsonStore, setJsonStore } from "@/lib/storage";
+import { Role } from "@/types/auth";
 import { Student } from "@/types/student";
 import { usePathname } from "next/navigation";
 import { use, useEffect, useState } from "react";
@@ -20,20 +21,27 @@ const UserStore = createContainer(() => {
 			isParent: false,
 
 			selectedStudent: null,
-			selectStudent: () => {},
+			selectStudent: () => { },
 
 			managedStudents: [],
 		}
 	}
 
-	const [userId, setUserId] = useState(null);
-	const [name, setName] = useState(null);
+	const [userId, setUserId] = useState<number | null>(null);
+	const [name, setName] = useState<string | null>(null);
 
 	const [isParent, setIsParent] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
 
-	const { data, error, isLoading } = useSWR(`/api/v1/user/info`, fetcher);
+	const { data, error, isLoading } = useSWR<{
+		user: {
+			userId: number;
+			name: string;
+			role: Role;
+			assignedStudents: Student[];
+		}
+	}>(`/api/v1/user/info`, fetcher);
 
 	const selectStudent = (student: Student) => {
 		setSelectedStudent(student);

@@ -2,19 +2,22 @@
 
 import { NextRequest } from "next/server";
 import { jwtVerify, JWTVerifyResult } from "jose";
+import { Role } from "@/types/auth";
 
-export const isLogged = async (
+export const getAuthInfo = async (
   request: NextRequest
 ): Promise<{
-  role: "student" | "parent" | "teacher" | "admin" | null;
+  role: Role | null;
 	authenticated: boolean;
 } | null> => {
   const token = request.cookies.get("auth_token")?.value;
   if (!token) throw new Error("No token found");
   try {
-    const data = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET || ""));
+    const data = await jwtVerify<{
+			role: Role;
+		}>(token, new TextEncoder().encode(process.env.JWT_SECRET || ""));
     return {
-			role: data.payload.role as "student" | "parent" | "teacher" | "admin",
+			role: data.payload.role,
 			authenticated: true,
 		};
   } catch (e) {
