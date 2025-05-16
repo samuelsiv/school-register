@@ -48,7 +48,7 @@ export default function HomePage() {
 					date: "17/04/2025"
 				}]} />
 
-				<GradesListCard grades={[{ name: "Matematica", date: "09/02/2025", grade: 6, id: 321 }, { name: "Storia", date: "11/05/2025", grade: 5, id: 321 }]} />
+				<GradesListCard grades={[{ name: "Matematica", date: "09/02/2025", grade: 6, id: 321 }, { name: "Storia", date: "11/05/2025", grade: 5, id: 321 }]} cols={2} />
 			</div>
 		</main>
 	</div>
