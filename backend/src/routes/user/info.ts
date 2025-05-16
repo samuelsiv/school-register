@@ -32,13 +32,23 @@ export default async function () {
 				.where(eq(parentStudents.parentId, userId));
 
 			assignedStudents = assignedStudentEntries.map((entry) => entry.student);
+		} else if (userFound.role === "student") {
+			const studentEntry = await db.select({
+				studentId: students.studentId,
+				classId: students.classId,
+			})
+			.from(students)
+			.where(eq(students.userId, userId))
+			.limit(1);
+			
+			assignedStudents = studentEntry.map((entry) => entry);
 		}
 
 		const { password: _, ...userInfo } = userFound;
 		return c.json({
 			success: true,
 			user: userInfo,
-			students: assignedStudents,
+			assignedStudents
 		});
 	});
 

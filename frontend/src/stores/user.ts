@@ -33,10 +33,10 @@ const UserStore = createContainer(() => {
 			setName(data.user.name);
 			setIsParent(data.user.role === "parent");
 
-			setSelectedStudent(data.user.students[0]);
+			setSelectedStudent(data.user.assignedStudents[0]);
 
 			if (data.user.role === "parent") {
-				setManagedStudents(data.user.students);
+				setManagedStudents(data.user.assignedStudents);
 			}
 		}
 	}, []);
