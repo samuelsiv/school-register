@@ -49,7 +49,7 @@ export function LoginForm() {
 						? data.error.issues.map((issue: {
 							message: string;
 						}) => issue.message).join(", ")
-						: data.error?.message || "Login failed. Please check your credentials.";
+						: data.error?.message || data.error ? data.error : "Login failed. Please check your credentials.";
 
 					form.setError("root", { message: errorMessage });
 					return;
