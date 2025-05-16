@@ -1,13 +1,13 @@
+"use server";
+
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { isLogged } from "@/lib/auth";
+import { getAuthInfo } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
-	if (!await isLogged(request)) {
-		const loginUrl = request.nextUrl.clone();
-		loginUrl.pathname = '/login';
-
-		return NextResponse.redirect(loginUrl);
+	const authInfo = await getAuthInfo(request);
+	if (!authInfo || !authInfo.authenticated || authInfo.role !== "student") {
+		return NextResponse.redirect("/login");
 	}
 
 	return NextResponse.next();
