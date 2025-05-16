@@ -1,13 +1,195 @@
-import { LoginForm } from "@/components/forms/LoginSchema";
-import { isLogged } from "@/lib/auth";
+"use client"
+
+import { useEffect, useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile } from 'next-turnstile';
+import { preload } from "swr";
+import { fetcher, request } from "@/lib/request";
+
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LockIcon, MailIcon, Shield } from "lucide-react";
+
+export const loginSchema = z.object({
+	email: z.string().email({ message: "Invalid email address" }),
+	password: z.string().min(6, { message: "Password is required" }),
+	captcha: z.string().min(6, { message: "Captcha is required" }),
+});
+
+export function LoginForm() {
+	const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		request("GET", "/api/v1/misc/config").then((json) => {
+			setTurnstileSiteKey(json.turnstile.siteKey);
+		});
+	}, []);
+
+	const form = useForm({
+		resolver: zodResolver(loginSchema),
+		defaultValues: {
+			email: "",
+			password: "",
+			captcha: ""
+		},
+	});
+
+	function onSubmit(values: object) {
+		setIsLoading(true);
+		request("POST", "/api/v1/auth/login", values)
+			.then((data) => {
+				if (!data.success) {
+					const errorMessage = Array.isArray(data.error?.issues)
+						? data.error.issues.map((issue: {
+							message: string;
+						}) => issue.message).join(", ")
+						: data.error?.message || "Login failed. Please check your credentials.";
+
+					form.setError("root", { message: errorMessage });
+					return;
+				}
+
+				document.cookie = "auth_token=" + data.token + "; Max-Age=3600";
+				preload("/api/v1/user/info", fetcher)
+					.then(() => window.location.href = "/home/dashboard")
+					.catch(() => window.location.href = "/home/dashboard");
+			})
+			.catch((err) => {
+				console.log(err);
+				form.setError("root", { message: "An error occurred while logging in. Please try again." });
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
+	}
+
+	return (
+		<Card className="w-full max-w-md shadow-lg mx-auto">
+			<CardHeader className="space-y-1">
+				<CardTitle className="text-2xl font-bold text-center">Sign In</CardTitle>
+				<CardDescription className="text-center">
+					Login with your school account credentials
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Form {...form}>
+					{form.formState.errors.root && (
+						<Alert variant="destructive" className="mb-6">
+							<AlertDescription>
+								{form.formState.errors.root.message}
+							</AlertDescription>
+						</Alert>
+					)}
+
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Email</FormLabel>
+									<FormControl>
+										<div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:border-input">
+											<span className="pl-3 text-muted-foreground">
+												<MailIcon size={18} />
+											</span>
+											<Input
+												className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+												type="email"
+												placeholder="email@school.edu.it"
+												{...field}
+											/>
+										</div>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Password</FormLabel>
+									<FormControl>
+										<div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:border-input">
+											<span className="pl-3 text-muted-foreground">
+												<LockIcon size={18} />
+											</span>
+											<Input
+												className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+												type="password"
+												placeholder="Enter your password"
+												{...field}
+											/>
+										</div>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="captcha"
+							render={({ field }) => (
+								<FormItem className="space-y-2">
+									<div className="flex justify-center">
+										{turnstileSiteKey !== "" ? (
+											<Turnstile
+												onVerify={(token) => {
+													field.onChange(token);
+												}}
+												onError={(e) => console.log(e)}
+												siteKey={turnstileSiteKey}
+											/>
+										) : (
+											<div className="h-20 w-full bg-muted rounded-md flex items-center justify-center">
+												<Shield className="h-6 w-6 text-muted-foreground animate-pulse" />
+											</div>
+										)}
+									</div>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<Button
+							type="submit"
+							className="w-full mt-6"
+							disabled={isLoading}
+						>
+							{isLoading ? "Signing in..." : "Sign In"}
+						</Button>
+					</form>
+				</Form>
+			</CardContent>
+			<CardFooter className="flex justify-center border-t pt-4">
+				<p className="text-sm text-muted-foreground">
+					Need help? Contact your school administrator
+				</p>
+			</CardFooter>
+		</Card>
+	);
+}
 
 export default function LoginPage() {
-	// TODO: Check if the user is already logged in
+	return (
+		<div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-background to-muted p-4">
+			<div className="w-full max-w-md mx-auto space-y-6 text-center mb-6">
+				<h1 className="text-4xl font-extrabold tracking-tight text-primary">School Register</h1>
+			</div>
 
-	return <div className="bg-background text-foreground flex flex-col items-center p-6 gap-6 text-center w-full">
-		<h1 className="scroll-m-20 text-5xl font-extrabold tracking-tight lg:text-5xl">School-Register</h1>
-		<br />
-		<h2 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-3xl">Welcome! <br /> Go ahead and login with your school account.</h2>
-		<LoginForm />
-	</div>
+			<div className="w-full flex justify-center">
+				<LoginForm />
+			</div>
+		</div>
+	);
 }

@@ -32,6 +32,11 @@ services:
       - "3000:3000"
     depends_on:
       - api
+    develop:
+      watch:
+        - action: sync
+          path: ./app/frontend
+          target: ./frontend
 
   db:
     image: postgres:13
