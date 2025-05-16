@@ -25,10 +25,14 @@ export default async function () {
 					student: {
 						studentId: students.studentId,
 						classId: students.classId,
+						name: users.name,
+						surname: users.surname,
+						username: users.username
 					},
 				})
 				.from(parentStudents)
 				.innerJoin(students, eq(parentStudents.studentId, students.studentId))
+				.innerJoin(users, eq(students.userId, users.userId))
 				.where(eq(parentStudents.parentId, userId)))
 				.map((entry) => entry.student);
 		} else if (userFound.role === "student") {
@@ -36,9 +40,13 @@ export default async function () {
 				.select({
 					studentId: students.studentId,
 					classId: students.classId,
+					name: users.name,
+					surname: users.surname,
+					username: users.username
 				})
 				.from(students)
 				.where(eq(students.userId, userId))
+				.innerJoin(users, eq(students.userId, userId))
 				.limit(1))
 				.map((entry) => entry);
 			

@@ -17,7 +17,7 @@ import { LockIcon, MailIcon, Shield } from "lucide-react";
 import {redirect} from "next/navigation";
 import {UserInfo} from "@/types/userInfo";
 
-export const loginSchema = z.object({
+const loginSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
 	password: z.string().min(6, { message: "Password is too short!" }),
 	captcha: z.string({ required_error: "Captcha is required" }).min(6, { message: "Captcha is required" }),

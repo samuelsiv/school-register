@@ -8,6 +8,8 @@ import { usePathname } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
+import {UserInfo} from "@/types/userInfo";
+import {string} from "zod";
 
 const ignoredPaths = [
 	"/login",
@@ -17,7 +19,7 @@ const UserStore = createContainer(() => {
 	if (ignoredPaths.includes(usePathname())) {
 		return {
 			userId: null,
-			getName: () => null,
+			getName: () => string,
 			isParent: false,
 
 			selectedStudent: null,
@@ -35,12 +37,9 @@ const UserStore = createContainer(() => {
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
 
 	const { data, error, isLoading } = useSWR<{
-		user: {
-			userId: number;
-			name: string;
-			role: Role;
-			assignedStudents: Student[];
-		}
+		success: boolean,
+		user: UserInfo
+		assignedStudents: Student[]
 	}>(`/api/v1/user/info`, fetcher, { keepPreviousData: true });
 
 	const selectStudent = (student: Student) => {
@@ -49,8 +48,8 @@ const UserStore = createContainer(() => {
 	};
 
 	const getName = (getParentName: boolean = false) => {
-		if (isParent && !getParentName) return selectedStudent?.fullName!;
-		return name!;
+		if (isParent && !getParentName) return (selectedStudent?.name || "") + " " + (selectedStudent?.surname || "");
+		return name || "";
 	}
 
 	useEffect(() => {
@@ -59,13 +58,13 @@ const UserStore = createContainer(() => {
 			setName(data.user.name);
 			setIsParent(data.user.role === "parent");
 
-			setSelectedStudent(data.user.assignedStudents[0]);
+			setSelectedStudent(data.assignedStudents[0]);
 
 			if (data.user.role === "parent") {
-				setManagedStudents(data.user.assignedStudents);
+				setManagedStudents(data.assignedStudents);
 			}
 		}
-	}, []);
+	}, [data]);
 
 	useEffect(() => {
 		if (!isParent) return;

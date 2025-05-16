@@ -8,6 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import HomeworkCard from "@/components/cards/HomeworkCard";
 import { Homework } from "@/types/homework";
 import { useState } from "react";
+import {Card} from "@/components/ui/card";
 
 export default function Homeworks() {
 	const userStore = UserStore.useContainer();
@@ -38,16 +39,21 @@ export default function Homeworks() {
 				</div>
 				<br />
 			</div>
-			<KidInfoAlert name={userStore.getName()!} />
-			<Calendar
-				mode="single"
-				selected={undefined}
-				disabled={(date) =>
-					date < new Date("1900-01-01")
-				}
-				initialFocus
-				onMonthChange={(month) => setDay(month)}
-			/>
+			{userStore.isParent &&
+				<KidInfoAlert name={userStore.selectedStudent?.name!} />
+			}
+			<Card className="">
+				<Calendar
+					mode="single"
+					selected={undefined}
+					disabled={(date) =>
+						date < new Date("1900-01-01")
+					}
+					initialFocus
+					onMonthChange={(month) => setDay(month)}
+				/>
+			</Card>
+
 			{selectedDay.getMonth()}
 			<div className="grid grid-rows-1 grid-cols-3 gap-12">
 				{testHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={homework.homeworkId} />)}

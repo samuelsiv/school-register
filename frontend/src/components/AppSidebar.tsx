@@ -7,7 +7,14 @@ import {
 	SidebarGroup, SidebarGroupLabel,
 	SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,
 } from "@/components/ui/sidebar"
-import { BabyIcon, ChartAreaIcon, ChevronDown, LayoutDashboardIcon, PersonStandingIcon } from "lucide-react";
+import {
+	BabyIcon,
+	BookOpenCheckIcon,
+	ChartAreaIcon,
+	ChevronDown,
+	LayoutDashboardIcon,
+	PersonStandingIcon
+} from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useUserInfo } from "@/lib/data";
@@ -25,6 +32,11 @@ const items = [
 		title: "Grades",
 		url: "/student/grades",
 		icon: ChartAreaIcon
+	},
+	{
+		title: "Homeworks",
+		url: "/student/homeworks",
+		icon: BookOpenCheckIcon
 	}
 ]
 
@@ -49,7 +61,7 @@ export function AppSidebar({ activeChild, onSelectChildAction }: { activeChild: 
 							<SidebarMenuButton asChild isActive={activeChild == student}>
 								<a>
 									<BabyIcon />
-									<span>{student.fullName}</span>
+									<span>{student.name} {student.surname}</span>
 								</a>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
