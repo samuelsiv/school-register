@@ -1,10 +1,21 @@
 "use client"
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { GradesChart } from "@/components/charts/GradesChart";
+import { HomeworksCard } from "@/components/cards/HomeworksCard";
+import { EventsCard } from "@/components/cards/AbsencesCard";
+import { EventType } from "@/types/EventType";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BabyIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useGrades, useUserInfo } from "@/lib/data";
 import KidInfoAlert from "@/components/alert/KidInfoAlert";
 import { AveragesOverviewCard } from "@/components/cards/AveragesOverviewCard";
 import { GradesListCard } from "@/components/cards/GradesListCard";
+import { useEffect, useState } from "react";
+import { Student } from "@/types/Student";
+import { getJsonStore, getStore } from "@/lib/storage";
 import UserStore from "@/stores/user";
 
 export default function Grades() {
