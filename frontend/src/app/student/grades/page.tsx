@@ -23,7 +23,7 @@ export default function Grades() {
 				</div>
 				<br />
 			</div>
-			<KidInfoAlert name={userStore.getName()} />
+			<KidInfoAlert name={userStore.getName()!} />
 			<div className="grid grid-rows-1 grid-cols-2 gap-12">
 				<AveragesOverviewCard
 					generalAverageByDays={[{ grade: 8, day: "08/02" }, { grade: 7, day: "09/02" }, { grade: 9, day: "10/02" }]}
