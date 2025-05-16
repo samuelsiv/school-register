@@ -1,6 +1,6 @@
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {Homework} from "@/types/Homework";
+import {Homework} from "@/types/homework";
 import HomeworkCard from "@/components/cards/HomeworkCard";
 
 export function HomeworksCard({homeworks}: {homeworks: Homework[]}) {

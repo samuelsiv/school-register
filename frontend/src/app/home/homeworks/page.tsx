@@ -20,7 +20,7 @@ import UserStore from "@/stores/user";
 import {DayPicker} from "react-day-picker";
 import {Calendar} from "@/components/ui/calendar";
 import HomeworkCard from "@/components/cards/HomeworkCard";
-import {Homework} from "@/types/Homework";
+import {Homework} from "@/types/homework";
 
 export default function Homeworks() {
 	const userStore = UserStore.useContainer();
