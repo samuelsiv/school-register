@@ -30,10 +30,9 @@ const chartConfig = {
 } satisfies ChartConfig
 
 // last in list has to be the current one
-export function GradesChart({grades}: {grades: {grade: number, day: string}[]}) {
+export function GradesChart({grades, className}: {grades: {grade: number, day: string}[], className?: string}) {
     return (
-
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className={className}>
             <AreaChart
                 accessibilityLayer
                 data={grades}

@@ -28,8 +28,8 @@ export function AveragesOverviewCard({generalAverageByDays, averagesBySubject}: 
         <Card>
             <CardHeader>
                 { (selectedAverage == null) && <>
-                <CardTitle>Averages</CardTitle>
-                <h2 className="text-2xl font-bold">{generalAverageByDays.at(-1)?.grade || "/"}</h2>
+                <CardTitle className="text-3xl font-bold">Averages</CardTitle>
+                <h2 className="text-4xl font-bold">{generalAverageByDays.at(-1)?.grade || "/"}</h2>
                 <CardDescription>
                     The average for the last 14 active school days
                 </CardDescription>
@@ -49,22 +49,36 @@ export function AveragesOverviewCard({generalAverageByDays, averagesBySubject}: 
                 </>}
             </CardHeader>
             <CardContent>
-                {(selectedAverage == null) && <>
-                    <GradesChart grades={generalAverageByDays}/>
-                    <h2 className="text-xl font-semibold my-6">Subjects</h2>
-
-                    {averagesBySubject.map((average) =>
-                        <AverageCard average={average} onArrowClick={() => {setSelectedAverage(average)}}/>
-                    )}
-                    </>
-                }
-                { (selectedAverage != null) && <>
+                <div className="grid grid-cols-3 grid-rows-1 gap-x-6">
+                    {(selectedAverage == null) && <div className="text-center">
+                        <GradesChart grades={generalAverageByDays} className={"relative top-[50%] transform-[translate(-9%,-50%)]"}/>
+                    </div>
+                    }
+                    {(selectedAverage == null) && <div className="col-span-2">
+                        <h2 className="text-xl font-semibold my-2">Subjects</h2>
+                        <div className="grid grid-cols-2 gap-x-6">
+                            {averagesBySubject.slice(0, 4).map((average) =>
+                                <AverageCard average={average} onArrowClick={() => {
+                                    setSelectedAverage(average)
+                                }}/>
+                            )}
+                        </div>
+                    </div> }
+                    {(selectedAverage == null) && <div className={"grid grid-cols-3 gap-6 col-span-full"}>
+                        {averagesBySubject.slice(4).map((average) =>
+                            <AverageCard average={average} onArrowClick={() => {
+                                setSelectedAverage(average)
+                            }}/>
+                        )}
+                    </div> }
+                    {(selectedAverage != null) && <div>
                     {selectedAverage.grades.map((grade) =>
-                        <GradeCard grade={grade}/>
-                    )}
-                </>
-                }
+                                <GradeCard grade={grade}/>
+                            )}
+                        </div>
+                        }
+                    </div>
             </CardContent>
         </Card>
-    )
+)
 }
