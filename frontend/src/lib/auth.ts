@@ -15,7 +15,7 @@ export const getAuthInfo = async (
   try {
     const data = await jwtVerify<{
 			role: Role;
-		}>(token, new TextEncoder().encode(process.env.JWT_SECRET || ""));
+		}>(token, new TextEncoder().encode(process.env.JWT_SECRET || "DO_NOT_USE_DEV_IN_PROD_UNSAFE_JWT_KEY"));
     return {
 			role: data.payload.role,
 			authenticated: true,
