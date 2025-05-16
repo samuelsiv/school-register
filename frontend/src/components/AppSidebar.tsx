@@ -69,8 +69,8 @@ export function AppSidebar({ activeChild, onSelectChildAction }: { activeChild: 
 				</SidebarGroup>
 				<SidebarGroup>
 					{items.map((item) => (
-						<SidebarMenuItem key={item.title} className="mb-2">
-							<SidebarMenuButton asChild isActive={activeItem == item.url}>
+						<SidebarMenuItem key={item.title} className="mb-2" >
+							<SidebarMenuButton asChild isActive={activeItem == item.url} className={(activeItem == item.url) ? "ring-1" : ""}>
 								<Link href={(activeItem == item.url) ? "#" : item.url}>
 									<item.icon />
 									<span>{item.title}</span>

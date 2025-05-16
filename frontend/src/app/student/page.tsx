@@ -13,13 +13,15 @@ import {useEffect} from "react";
 
 export default function HomePage() {
 	const userStore = UserStore.useContainer();
-	return <div className="bg-background text-foreground flex items-center p-2 gap-6 text-center">
+	return <div className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted">
 		<AppSidebar activeChild={userStore.selectedStudent} onSelectChildAction={userStore.selectStudent} />
 		<main className="flex flex-col w-full items-center justify-center gap-6">
 			<div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
 				<SidebarTrigger />
 				<div>
-					<h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">Welcome, {userStore.getName(true).toString()}!</h1>
+					<h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
+						Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
+					</h1>
 					<h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your child&#39;s school progress and attendance</h2>
 				</div>
 				<br />
@@ -27,7 +29,7 @@ export default function HomePage() {
 			{userStore.isParent &&
 				<KidInfoAlert name={userStore.selectedStudent?.name!} />
 			}
-			<div className="grid grid-rows-4 grid-cols-3 gap-12">
+			<div className="grid grid-rows-2 grid-cols-3 gap-12">
 				<DashboardAverageCard grades={[{ grade: 8, day: "08/02" }, { grade: 7, day: "09/02" }, { grade: 9, day: "10/02" }]} />
 				<HomeworksCard homeworks={[{
 					title: "Do the homeworks",
