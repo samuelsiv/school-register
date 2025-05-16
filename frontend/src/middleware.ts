@@ -6,7 +6,7 @@ import { getAuthInfo } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
 	const authInfo = await getAuthInfo(request);
-	if (!authInfo || !authInfo.authenticated || authInfo.role !== "student") {
+	if (!authInfo || !authInfo.authenticated) {
 		return NextResponse.redirect("/login");
 	}
 
@@ -14,5 +14,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/home"],
+	matcher: ["/students", "/teacher"],
 }

@@ -11,19 +11,19 @@ import { BabyIcon, ChartAreaIcon, ChevronDown, LayoutDashboardIcon, PersonStandi
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useUserInfo } from "@/lib/data";
-import { Student } from "@/types/Student";
+import { Student } from "@/types/student";
 import UserStore from "@/stores/user";
 import { usePathname } from "next/navigation";
 
 const items = [
 	{
 		title: "Dashboard",
-		url: "/home/dashboard",
+		url: "/student",
 		icon: LayoutDashboardIcon
 	},
 	{
 		title: "Grades",
-		url: "/home/grades",
+		url: "/student/grades",
 		icon: ChartAreaIcon
 	}
 ]
@@ -57,7 +57,7 @@ export function AppSidebar({ activeChild, onSelectChildAction }: { activeChild: 
 				</SidebarGroup>
 				<SidebarGroup>
 					{items.map((item) => (
-						<SidebarMenuItem key={item.title}>
+						<SidebarMenuItem key={item.title} className="mb-2">
 							<SidebarMenuButton asChild isActive={activeItem == item.url}>
 								<Link href={(activeItem == item.url) ? "#" : item.url}>
 									<item.icon />
