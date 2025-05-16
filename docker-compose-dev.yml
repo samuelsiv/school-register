@@ -1,7 +1,8 @@
 services:
   api:
     build: backend
-    command: "npm run buildev"
+    command: >
+      sh -c "npx drizzle-kit push && npm run buildev"
     volumes:
       - ./backend:/app/
       - /app/node_modules

@@ -1,3 +1,5 @@
+import { usePathname } from "next/navigation";
+
 const BASE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3001" : "";
 
 function getCookie(name: string) {
@@ -5,6 +7,10 @@ function getCookie(name: string) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop()?.split(';').shift();
 }
+
+const ignoredPaths = [
+    "/login",
+]
 
 export const request = async (method: "POST" | "GET", path: string, data?: object | undefined | null) => {
     const options: RequestInit = {
@@ -20,13 +26,14 @@ export const request = async (method: "POST" | "GET", path: string, data?: objec
         options.body = JSON.stringify(data)
     
     const response = await fetch(`${BASE_URL}${path}`, options)
-    if (response.status == 401 && document.location.href.indexOf("/login") == -1) {
+    if (response.status == 401 && !ignoredPaths.includes(usePathname())) {
         document.location.href = "/";
-    }
+        return;
+    };
 
-    if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`)
-    }
+    //if (!response.ok) {
+    //    throw new Error(`Error: ${response.statusText}`)
+    //}
 
     return response.json();
 };
