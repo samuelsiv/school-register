@@ -2,15 +2,16 @@
 
 import { NextRequest } from "next/server";
 import { redirect } from "next/navigation";
-import { isLogged } from "@/lib/auth";
+import { getAuthInfo } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
-	if (!await isLogged(request)) {
+	const authInfo = await getAuthInfo(request);
+	if (!authInfo || !authInfo.authenticated || authInfo.role !== "student") {
 		return new Response('', {
 			status: 307,
 			headers: { 'Set-Cookie': `auth_token=`, "Location": "/login" },
 		});
 	}
-
+	
 	redirect("/home/dashboard");
 }
