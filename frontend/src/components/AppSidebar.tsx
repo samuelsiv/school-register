@@ -48,10 +48,10 @@ export function AppSidebar({ activeChild, onSelectChildAction }: { activeChild: 
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarHeader hidden={open}>
-				<b>SR</b>
+				<b className="text-primary">SR</b>
 			</SidebarHeader>
 			<SidebarHeader hidden={!open}>
-				<b>School-Register</b>
+				<b className="text-primary">School Register</b>
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>

@@ -53,6 +53,8 @@ export function GradesChart({grades, className}: {grades: {grade: number, day: s
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
+                    tickCount={5}
+                    ticks={[2, 4, 6, 8, 10]}
                 />
                 <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
                 <defs>

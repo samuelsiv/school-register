@@ -27,7 +27,7 @@ export default function Homeworks() {
 			teacherId: 111
 		}
 	]
-	return <div className="bg-background text-foreground flex items-center p-2 gap-6 text-center">
+	return <div className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted h-full">
 		<AppSidebar activeChild={userStore.selectedStudent} onSelectChildAction={userStore.selectStudent} />
 
 		<main className="flex flex-col w-full items-center justify-center gap-6">
@@ -55,7 +55,7 @@ export default function Homeworks() {
 			</Card>
 
 			{selectedDay.getMonth()}
-			<div className="grid grid-rows-1 grid-cols-3 gap-12">
+			<div className="grid grid-rows-2 grid-cols-3 gap-12">
 				{testHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={homework.homeworkId} />)}
 			</div>
 		</main>
