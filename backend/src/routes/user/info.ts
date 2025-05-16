@@ -19,7 +19,7 @@ export default async function () {
 		}[] = [];
 
 		if (userFound.role === "parent") {
-			const assignedStudentEntries = await db
+			assignedStudents = (await db
 				.select({
 					parentId: parentStudents.parentId,
 					student: {
@@ -29,17 +29,18 @@ export default async function () {
 				})
 				.from(parentStudents)
 				.innerJoin(students, eq(parentStudents.studentId, students.studentId))
-				.where(eq(parentStudents.parentId, userId));
-
-			assignedStudents = assignedStudentEntries.map((entry) => entry.student);
+				.where(eq(parentStudents.parentId, userId)))
+				.map((entry) => entry.student);
 		} else if (userFound.role === "student") {
-			const studentEntry = await db.select({
-				studentId: students.studentId,
-				classId: students.classId,
-			})
-			.from(students)
-			.where(eq(students.userId, userId))
-			.limit(1);
+			const studentEntry = (await db
+				.select({
+					studentId: students.studentId,
+					classId: students.classId,
+				})
+				.from(students)
+				.where(eq(students.userId, userId))
+				.limit(1))
+				.map((entry) => entry);
 			
 			assignedStudents = studentEntry.map((entry) => entry);
 		}

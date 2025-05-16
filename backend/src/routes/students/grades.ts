@@ -10,8 +10,9 @@ export default async function () {
 
   router.get("/grades",  async (c) => {
     const user = c.get("user");
-    let userId = user.userId;
 
+    let dbCondition = eq(grades.studentId, user.userId);
+    
     if (user.role === "parent") {
       const studentId = parseInt(c.req.query("studentId") as string);
       if (!studentId) return c.json({ error: "studentId is required" }, 400);
@@ -26,13 +27,13 @@ export default async function () {
       
       if (student.length === 0) return c.json({ error: "You are not authorized to view this student's grades" }, 403);
       
-      userId = studentId;
+      dbCondition = eq(grades.studentId, studentId);
     }
 
     const allGrades = await db
       .select()
       .from(grades)
-      .where(eq(grades.studentId, userId));
+      .where(dbCondition);
 
     return c.json({ allGrades });
   });

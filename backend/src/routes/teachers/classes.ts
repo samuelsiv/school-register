@@ -9,7 +9,6 @@ export default async function () {
 
   router.get("/classes", async (c) => {
     const user = c.get("user");
-    const teacherId = user.userId;
 
     const allClasses = await db
       .select({
@@ -18,7 +17,7 @@ export default async function () {
       })
       .from(teacherClasses)
       .innerJoin(classes, eq(teacherClasses.classId, classes.classId))
-      .where(eq(teacherClasses.teacherId, teacherId));
+      .where(eq(teacherClasses.teacherId, user.userId));
 
     return c.json({ allClasses });
   });
