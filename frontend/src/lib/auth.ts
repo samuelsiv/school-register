@@ -5,13 +5,23 @@ import { jwtVerify, JWTVerifyResult } from "jose";
 
 export const isLogged = async (
   request: NextRequest
-): Promise<boolean> => {
+): Promise<{
+  role: "student" | "parent" | "teacher" | "admin" | null;
+	authenticated: boolean;
+} | null> => {
     const token = request.cookies.get("auth_token")?.value;
     if (!token) return false;
     try {
-        await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET || ""));
-        return true;
+        const data = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET || ""));
+        return {
+						role: data.payload.role as "student" | "parent" | "teacher" | "admin",
+						authenticated: true,
+				};
     } catch (e) {
-        return false;
+        return {
+						role: null,
+						authenticated: false,
+				};
+			}
     }
 };
