@@ -42,7 +42,7 @@ export default function Homeworks() {
 			{userStore.isParent &&
 				<KidInfoAlert name={userStore.selectedStudent?.name!} />
 			}
-			<Card className="">
+			<Card className="border-t border-t-[2px]">
 				<Calendar
 					mode="single"
 					selected={undefined}

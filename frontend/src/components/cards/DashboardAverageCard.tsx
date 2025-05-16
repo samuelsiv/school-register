@@ -20,7 +20,7 @@ import {GradesChart} from "@/components/charts/GradesChart";
 // last in list has to be the current one
 export function DashboardAverageCard({grades}: {grades: {grade: number, day: string}[]}) {
     return (
-        <Card>
+        <Card className="border-t border-t-[2px]">
             <CardHeader>
                 <CardTitle>Grade Average</CardTitle>
                 <h2 className="text-2xl font-bold">{grades.at(-1)?.grade || "/"}</h2>
