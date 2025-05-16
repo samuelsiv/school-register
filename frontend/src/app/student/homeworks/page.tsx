@@ -1,26 +1,13 @@
 "use client"
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { GradesChart } from "@/components/charts/GradesChart";
-import { HomeworksCard } from "@/components/cards/HomeworksCard";
-import { EventsCard } from "@/components/cards/AbsencesCard";
-import { EventType } from "@/types/EventType";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BabyIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useGrades, useUserInfo } from "@/lib/data";
 import KidInfoAlert from "@/components/alert/KidInfoAlert";
-import { AveragesOverviewCard } from "@/components/cards/AveragesOverviewCard";
-import { GradesListCard } from "@/components/cards/GradesListCard";
-import { useEffect, useState } from "react";
-import { Student } from "@/types/Student";
-import { getJsonStore, getStore } from "@/lib/storage";
 import UserStore from "@/stores/user";
-import {DayPicker} from "react-day-picker";
-import {Calendar} from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/calendar";
 import HomeworkCard from "@/components/cards/HomeworkCard";
-import {Homework} from "@/types/homework";
+import { Homework } from "@/types/homework";
+import { useState } from "react";
 
 export default function Homeworks() {
 	const userStore = UserStore.useContainer();
@@ -51,7 +38,7 @@ export default function Homeworks() {
 				</div>
 				<br />
 			</div>
-			<KidInfoAlert name={userStore.getName()} />
+			<KidInfoAlert name={userStore.getName()!} />
 			<Calendar
 				mode="single"
 				selected={undefined}
@@ -63,7 +50,7 @@ export default function Homeworks() {
 			/>
 			{selectedDay.getMonth()}
 			<div className="grid grid-rows-1 grid-cols-3 gap-12">
-				{testHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={homework.homeworkId}/> )}
+				{testHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={homework.homeworkId} />)}
 			</div>
 		</main>
 	</div>

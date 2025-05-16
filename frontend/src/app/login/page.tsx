@@ -17,8 +17,8 @@ import { LockIcon, MailIcon, Shield } from "lucide-react";
 
 export const loginSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
-	password: z.string().min(6, { message: "Password is required" }),
-	captcha: z.string().min(6, { message: "Captcha is required" }),
+	password: z.string().min(6, { message: "Password is too short!" }),
+	captcha: z.string({ required_error: "Captcha is required" }).min(6, { message: "Captcha is required" }),
 });
 
 export function LoginForm() {
