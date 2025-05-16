@@ -9,27 +9,31 @@ function getCookie(name: string) {
 }
 
 const ignoredPaths = [
+    "/",
     "/login",
 ]
 
-export const request = async (method: "POST" | "GET", path: string, data?: object | undefined | null) => {
-    const options: RequestInit = {
+export const request = async (method: "POST" | "GET", path: string, options?: {
+    auth?: string | null
+    data?: object | undefined | null
+} | null) => {
+    const reqOptions: RequestInit = {
         method,
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + (getCookie("auth_token") || "")
+            "Authorization": "Bearer " + (options?.auth || getCookie("auth_token") || "")
         },
         credentials: "same-origin"
     }
 
-    if (data) 
-        options.body = JSON.stringify(data)
+    if (options?.data)
+        reqOptions.body = JSON.stringify(options.data)
     
-    const response = await fetch(`${BASE_URL}${path}`, options)
+    const response = await fetch(`${BASE_URL}${path}`, reqOptions)
     if (response.status == 401 && !ignoredPaths.includes(window.location.pathname)) {
         document.location.href = "/";
         return;
-    };
+    }
 
     //if (!response.ok) {
     //    throw new Error(`Error: ${response.statusText}`)

@@ -6,12 +6,15 @@ import { getAuthInfo } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
 	const authInfo = await getAuthInfo(request);
-	if (!authInfo || !authInfo.authenticated || authInfo.role !== "student") {
+	if (!authInfo || !authInfo.authenticated) {
 		return new Response('', {
 			status: 307,
 			headers: { 'Set-Cookie': `auth_token=`, "Location": "/login" },
 		});
 	}
-	
-	redirect("/home/dashboard");
+	if (authInfo.role == "student" || authInfo.role == "parent") {
+		redirect("/student");
+	} else {
+		redirect("/teachers");
+	}
 }

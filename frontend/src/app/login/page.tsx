@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LockIcon, MailIcon, Shield } from "lucide-react";
+import {redirect} from "next/navigation";
+import {UserInfo} from "@/types/userInfo";
 
 export const loginSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
@@ -42,7 +44,9 @@ export function LoginForm() {
 
 	function onSubmit(values: object) {
 		setIsLoading(true);
-		request("POST", "/api/v1/auth/login", values)
+		request("POST", "/api/v1/auth/login", {
+			data: values
+		})
 			.then((data) => {
 				if (!data.success) {
 					const errorMessage = Array.isArray(data.error?.issues)
@@ -57,8 +61,17 @@ export function LoginForm() {
 
 				document.cookie = "auth_token=" + data.token + "; Max-Age=3600";
 				preload("/api/v1/user/info", fetcher)
-					.then(() => window.location.href = "/home/dashboard")
-					.catch(() => window.location.href = "/home/dashboard");
+					.then((data: {
+						success: boolean,
+						user: UserInfo
+					}) => {
+						if (data.user.role == "student" || data.user.role == "parent") {
+							redirect("/student");
+						} else {
+							redirect("/teachers");
+						}
+						})
+					.catch(() => window.location.href = "/student");
 			})
 			.catch((err) => {
 				console.log(err);
@@ -96,7 +109,7 @@ export function LoginForm() {
 									<FormLabel>Email</FormLabel>
 									<FormControl>
 										<div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:border-input">
-											<span className="pl-3 text-muted-foreground">
+											<span className="px-3 text-muted-foreground">
 												<MailIcon size={18} />
 											</span>
 											<Input
@@ -120,7 +133,7 @@ export function LoginForm() {
 									<FormLabel>Password</FormLabel>
 									<FormControl>
 										<div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:border-input">
-											<span className="pl-3 text-muted-foreground">
+											<span className="px-3 text-muted-foreground">
 												<LockIcon size={18} />
 											</span>
 											<Input

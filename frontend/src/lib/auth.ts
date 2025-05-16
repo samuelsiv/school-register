@@ -11,8 +11,8 @@ export const getAuthInfo = async (
 	authenticated: boolean;
 } | null> => {
   const token = request.cookies.get("auth_token")?.value;
-  if (!token) throw new Error("No token found");
   try {
+	if (!token) throw new Error("No token found");
     const data = await jwtVerify<{
 			role: Role;
 		}>(token, new TextEncoder().encode(process.env.JWT_SECRET || "DO_NOT_USE_DEV_IN_PROD_UNSAFE_JWT_KEY"));

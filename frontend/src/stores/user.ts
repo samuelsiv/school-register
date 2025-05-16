@@ -41,7 +41,7 @@ const UserStore = createContainer(() => {
 			role: Role;
 			assignedStudents: Student[];
 		}
-	}>(`/api/v1/user/info`, fetcher);
+	}>(`/api/v1/user/info`, fetcher, { keepPreviousData: true });
 
 	const selectStudent = (student: Student) => {
 		setSelectedStudent(student);
