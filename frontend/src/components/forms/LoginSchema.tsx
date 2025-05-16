@@ -23,6 +23,8 @@ export function LoginForm() {
 	useEffect(() => {
 		request("GET", "/api/v1/misc/config").then((json) => {
 			setTurnstileSiteKey(json.turnstile.siteKey);
+		}).catch((err) => {
+			setTurnstileSiteKey("");
 		});
 	}, [])
 

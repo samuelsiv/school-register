@@ -2,20 +2,13 @@
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { GradesChart } from "@/components/charts/GradesChart";
 import { HomeworksCard } from "@/components/cards/HomeworksCard";
 import { EventsCard } from "@/components/cards/AbsencesCard";
-import { EventType } from "@/types/EventType";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BabyIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useUserInfo } from "@/lib/data";
+import { EventType } from "@/types/eventType";
 import KidInfoAlert from "@/components/alert/KidInfoAlert";
 import { DashboardAverageCard } from "@/components/cards/DashboardAverageCard";
 import { GradesListCard } from "@/components/cards/GradesListCard";
-import { useEffect, useState } from "react";
-import { Student } from "@/types/Student";
-import { getJsonStore } from "@/lib/storage";
+import { Student } from "@/types/student";
 import UserStore from "@/stores/user";
 
 export default function HomePage() {
