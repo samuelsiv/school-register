@@ -2,31 +2,31 @@
 
 import { fetcher } from "@/lib/request";
 import { getJsonStore, setJsonStore } from "@/lib/storage";
-import { Role } from "@/types/auth";
 import { Student } from "@/types/student";
 import { usePathname } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
-import {UserInfo} from "@/types/userInfo";
-import {string} from "zod";
+import { UserInfo } from "@/types/userInfo";
+import { Grade } from "@/types/grade";
 
-const ignoredPaths = [
-	"/login",
-];
+const ignoredPaths = ["/login"];
 
 const UserStore = createContainer(() => {
-	if (ignoredPaths.includes(usePathname())) {
+	const pathname = usePathname();
+
+	if (ignoredPaths.includes(pathname)) {
 		return {
 			userId: null,
-			getName: () => string,
+			getName: () => "",
 			isParent: false,
 
 			selectedStudent: null,
-			selectStudent: () => { },
+			selectStudent: () => {},
 
 			managedStudents: [],
-		}
+			grades: [],
+		};
 	}
 
 	const [userId, setUserId] = useState<number | null>(null);
@@ -35,12 +35,7 @@ const UserStore = createContainer(() => {
 	const [isParent, setIsParent] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
-
-	const { data, error, isLoading } = useSWR<{
-		success: boolean,
-		user: UserInfo
-		assignedStudents: Student[]
-	}>(`/api/v1/user/info`, fetcher, { keepPreviousData: true });
+	const [grades, setGrades] = useState<Grade[]>([]);
 
 	const selectStudent = (student: Student) => {
 		setSelectedStudent(student);
@@ -48,23 +43,31 @@ const UserStore = createContainer(() => {
 	};
 
 	const getName = (getParentName: boolean = false) => {
-		if (isParent && !getParentName) return (selectedStudent?.name || "") + " " + (selectedStudent?.surname || "");
+		if (isParent && !getParentName) {
+			return `${selectedStudent?.name || ""} ${selectedStudent?.surname || ""}`;
+		}
 		return name || "";
-	}
+	};
+
+	const { data: userData } = useSWR<{
+		success: boolean;
+		user: UserInfo;
+		assignedStudents: Student[];
+	}>("/api/v1/user/info", fetcher, { keepPreviousData: true });
 
 	useEffect(() => {
-		if (data) {
-			setUserId(data.user.userId);
-			setName(data.user.name);
-			setIsParent(data.user.role === "parent");
+		if (userData) {
+			setUserId(userData.user.userId);
+			setName(userData.user.name);
+			setIsParent(userData.user.role === "parent");
 
-			setSelectedStudent(data.assignedStudents[0]);
+			setSelectedStudent(userData.assignedStudents[0]);
 
-			if (data.user.role === "parent") {
-				setManagedStudents(data.assignedStudents);
+			if (userData.user.role === "parent") {
+				setManagedStudents(userData.assignedStudents);
 			}
 		}
-	}, [data]);
+	}, [userData]);
 
 	useEffect(() => {
 		if (!isParent) return;
@@ -75,6 +78,20 @@ const UserStore = createContainer(() => {
 		}
 	}, [isParent]);
 
+	if (selectedStudent) {
+		const { data: gradesData } = useSWR<Grade[]>(
+			`/api/v1/students/${selectedStudent.studentId}/grades`,
+			fetcher,
+			{ keepPreviousData: true }
+		);
+
+		useEffect(() => {
+			if (gradesData) {
+				setGrades(gradesData);
+			}
+		}, []);
+	}
+
 	return {
 		userId,
 		getName,
@@ -84,7 +101,8 @@ const UserStore = createContainer(() => {
 		selectStudent,
 
 		managedStudents,
-	}
+		grades,
+	};
 });
 
 export default UserStore;
