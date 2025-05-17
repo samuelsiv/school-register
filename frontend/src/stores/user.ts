@@ -10,6 +10,7 @@ import useSWR from "swr";
 import { createContainer } from "unstated-next";
 import {UserInfo} from "@/types/userInfo";
 import {string} from "zod";
+import { Grade } from "@/types/grade";
 
 const ignoredPaths = [
 	"/login",
@@ -35,6 +36,8 @@ const UserStore = createContainer(() => {
 	const [isParent, setIsParent] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
+	
+	const [grades, setGrades] = useState<Grade[]>([]);
 
 	const { data, error, isLoading } = useSWR<{
 		success: boolean,
@@ -75,6 +78,21 @@ const UserStore = createContainer(() => {
 		}
 	}, [isParent]);
 
+	if (selectedStudent) {
+		const { data, error, isLoading } = useSWR<{
+				success: boolean,
+				user: UserInfo
+				assignedStudents: Student[]
+		}>(`/api/v1/students/${selectedStudent.studentId}/grades`, fetcher, { keepPreviousData: true });
+			
+		useEffect(() => {
+			if (!selectedStudent) return;
+			
+			console.log(grades);
+
+		}, [data]);
+	}
+
 	return {
 		userId,
 		getName,
@@ -84,6 +102,7 @@ const UserStore = createContainer(() => {
 		selectStudent,
 
 		managedStudents,
+		grades
 	}
 });
 
