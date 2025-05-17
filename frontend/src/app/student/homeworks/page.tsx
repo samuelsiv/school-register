@@ -17,6 +17,8 @@ export default function Homeworks() {
 
 	const testHomeworks: Homework[] = [
 		{
+			teacherName: "Jane Doe",
+			subjectName: "Maths",
 			title: "Do the homeworks",
 			description: "Homework where you have to do your homeworks",
 			homeworkId: 123,
@@ -28,7 +30,7 @@ export default function Homeworks() {
 		}
 	]
 	return <div className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted h-full">
-		<AppSidebar activeChild={userStore.selectedStudent} onSelectChildAction={userStore.selectStudent} />
+		<AppSidebar />
 
 		<main className="flex flex-col w-full items-center justify-center gap-6">
 			<div id="title" className="flex flex-row gap-12 w-full justify-between items-center">

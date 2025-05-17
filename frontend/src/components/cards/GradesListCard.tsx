@@ -1,5 +1,3 @@
-
-
 "use client"
 
 import {ArrowDown, ArrowLeftIcon, ArrowRightIcon, TrendingUp} from "lucide-react"
@@ -23,7 +21,7 @@ import {useState} from "react";
 export function GradesListCard({grades, cols}: {grades: {grade: number, name: string, id: number, date: string, description?: string | null}[], cols?: number | null}) {
     const [selectedGrade, setGrade] = useState<{grade: number, name: string, id: number, date: string, description?: string | null} | null>()
     return (
-        <Card>
+        <Card className="border-t-[2px]">
             <CardHeader>
                 <CardTitle className="text-3xl font-bold">Latest Grades</CardTitle>
             </CardHeader>

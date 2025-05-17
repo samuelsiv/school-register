@@ -14,7 +14,7 @@ import {useEffect} from "react";
 export default function HomePage() {
 	const userStore = UserStore.useContainer();
 	return <div className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted">
-		<AppSidebar activeChild={userStore.selectedStudent} onSelectChildAction={userStore.selectStudent} />
+		<AppSidebar />
 		<main className="flex flex-col w-full items-center justify-center gap-6">
 			<div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
 				<SidebarTrigger />
@@ -32,6 +32,8 @@ export default function HomePage() {
 			<div className="grid grid-rows-2 grid-cols-3 gap-12">
 				<DashboardAverageCard grades={[{ grade: 8, day: "08/02" }, { grade: 7, day: "09/02" }, { grade: 9, day: "10/02" }]} />
 				<HomeworksCard homeworks={[{
+					teacherName: "Jane Doe",
+					subjectName: "Maths",
 					title: "Do the homeworks",
 					description: "Homework where you have to do your homeworks",
 					homeworkId: 123,

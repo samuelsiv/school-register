@@ -5,7 +5,7 @@ import HomeworkCard from "@/components/cards/HomeworkCard";
 
 export function HomeworksCard({homeworks}: {homeworks: Homework[]}) {
     return (
-        <Card>
+        <Card className="border-t-[2px]">
             <CardHeader>
                 <CardTitle>Homeworks</CardTitle>
                 <CardDescription>

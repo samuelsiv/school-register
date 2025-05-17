@@ -25,7 +25,7 @@ export function AveragesOverviewCard({generalAverageByDays, averagesBySubject}: 
     const [selectedAverage, setSelectedAverage] = useState<{grade: number, name: string, teacher: string, id: number, grades: {grade: number, name: string, id: number, date: string}[]} | null>(null)
 
     return (
-        <Card>
+        <Card className="border-t-[2px]">
             <CardHeader>
                 { (selectedAverage == null) && <>
                 <CardTitle className="text-3xl font-bold">Averages</CardTitle>
