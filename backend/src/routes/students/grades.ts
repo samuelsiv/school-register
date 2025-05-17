@@ -4,6 +4,9 @@ import { db } from "../../db/index.js";
 import { grades } from "../../db/schema/grades.js";
 import { and, eq } from "drizzle-orm";
 import { parentStudents } from "../../db/schema/parentStudents.js";
+import {subjects} from "../../db/schema/subjects.js";
+import {teachers} from "../../db/schema/teachers.js";
+import {users} from "../../db/schema/users.js";
 
 export default async function () {
   const router = new Hono().basePath("/api/v1/students");
@@ -29,10 +32,24 @@ export default async function () {
       dbCondition = eq(grades.studentId, studentId);
     }
 
-    const allGrades = await db
-      .select()
+    const allGrades: {
+      gradeId: number, subjectName: string
+      studentId: number, teacherId: number,
+      subjectId: number, value: string,
+      weight: string, insertedAt: string | null,
+      comment: string | null, teacherName: string
+    }[] = await db
+      .select({
+        gradeId: grades.gradeId, subjectName: subjects.subjectName,
+        studentId: grades.studentId, teacherId: grades.teacherId,
+        subjectId: grades.subjectId, value: grades.value,
+        weight: grades.weight, insertedAt: grades.insertedAt,
+        comment: grades.comment, teacherName: users.name
+      })
       .from(grades)
-      .where(dbCondition);
+      .where(dbCondition)
+      .innerJoin(subjects, eq(subjects.subjectId, grades.subjectId))
+      .innerJoin(users, eq(users.userId, grades.teacherId));
 
     return c.json({ allGrades });
   });

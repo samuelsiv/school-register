@@ -58,7 +58,7 @@ export function AveragesOverviewCard({generalAverageByDays, averagesBySubject}: 
                         <h2 className="text-xl font-semibold my-2">Subjects</h2>
                         <div className="grid grid-cols-2 gap-x-6">
                             {averagesBySubject.slice(0, 4).map((average) =>
-                                <AverageCard average={average} onArrowClick={() => {
+                                <AverageCard average={average} key={average.id} onArrowClick={() => {
                                     setSelectedAverage(average)
                                 }}/>
                             )}
@@ -66,7 +66,7 @@ export function AveragesOverviewCard({generalAverageByDays, averagesBySubject}: 
                     </div> }
                     {(selectedAverage == null) && <div className={"grid grid-cols-3 gap-6 col-span-full"}>
                         {averagesBySubject.slice(4).map((average) =>
-                            <AverageCard average={average} onArrowClick={() => {
+                            <AverageCard average={average} key={average.id} onArrowClick={() => {
                                 setSelectedAverage(average)
                             }}/>
                         )}
