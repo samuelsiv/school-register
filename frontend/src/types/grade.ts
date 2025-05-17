@@ -7,5 +7,6 @@ export type Grade = {
     weight: number, // 50%, 100%
     insertedAt: string,
     comment: string,
-    subjectName: string
+    subjectName: string,
+    teacherName: string
 }
