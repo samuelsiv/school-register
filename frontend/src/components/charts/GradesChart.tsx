@@ -17,6 +17,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
+import {Grade} from "@/types/grade";
 
 const chartConfig = {
     desktop: {
@@ -30,7 +31,8 @@ const chartConfig = {
 } satisfies ChartConfig
 
 // last in list has to be the current one
-export function GradesChart({grades, className}: {grades: {grade: number, day: string}[], className?: string}) {
+export function GradesChart({grades, className}: {grades: Grade[], className?: string}) {
+    console.log(grades)
     return (
         <ChartContainer config={chartConfig} className={className}>
             <AreaChart
@@ -43,13 +45,13 @@ export function GradesChart({grades, className}: {grades: {grade: number, day: s
             >
                 <CartesianGrid vertical={false} />
                 <XAxis
-                    dataKey="day"
+                    dataKey="insertedAt"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
                 />
                 <YAxis
-                    dataKey="grade"
+                    dataKey="value"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}

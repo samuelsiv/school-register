@@ -15,15 +15,16 @@ import {
 } from "@/components/ui/card"
 
 import {GradesChart} from "@/components/charts/GradesChart";
+import {Grade} from "@/types/grade";
 
 
 // last in list has to be the current one
-export function DashboardAverageCard({grades}: {grades: {grade: number, day: string}[]}) {
+export function DashboardAverageCard({grades}: {grades: Grade[]}) {
     return (
         <Card className="border-t border-t-[2px]">
             <CardHeader>
                 <CardTitle>Grade Average</CardTitle>
-                <h2 className="text-2xl font-bold">{grades.at(-1)?.grade || "/"}</h2>
+                <h2 className="text-2xl font-bold">{grades[0]?.value || "/"}</h2>
                 <CardDescription>
                     Last 14 active school days
                 </CardDescription>
