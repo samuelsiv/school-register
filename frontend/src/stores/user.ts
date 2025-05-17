@@ -77,20 +77,16 @@ const UserStore = createContainer(() => {
 			setSelectedStudent(storedChild);
 		}
 	}, [isParent]);
-
-	if (selectedStudent) {
-		const { data: gradesData } = useSWR<Grade[]>(
-			`/api/v1/students/${selectedStudent.studentId}/grades`,
-			fetcher,
-			{ keepPreviousData: true }
-		);
-
-		useEffect(() => {
-			if (gradesData) {
-				setGrades(gradesData);
-			}
-		}, []);
-	}
+	const { data: gradesData } = useSWR<{allGrades: Grade[]}>(
+		`/api/v1/students/${selectedStudent?.studentId}/grades`,
+		fetcher,
+		{ keepPreviousData: true }
+	);
+	useEffect(() => {
+		if (gradesData) {
+			setGrades(gradesData.allGrades);
+		}
+	}, [gradesData]);
 
 	return {
 		userId,

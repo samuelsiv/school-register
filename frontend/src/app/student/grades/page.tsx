@@ -39,8 +39,7 @@ export default function Grades() {
 						{ name: "History", teacher: "Jane Doe", grade: 5, id: 3211, grades: [{ name: "History", date: "11/05/2025", grade: 5, id: 321 }] },
 						{ name: "History", teacher: "Jane Doe", grade: 5, id: 3211, grades: [{ name: "History", date: "11/05/2025", grade: 5, id: 321 }] },
 					]} />
-				<GradesListCard grades={[{ name: "Maths", date: "09/02/2025", grade: 6, id: 321, description: "Quadratic formula" },
-				{ name: "History", date: "11/05/2025", grade: 5, id: 321, description: "The roman empire" }]} />
+				<GradesListCard grades={userStore.grades} />
 			</div>
 		</main>
 	</div>
