@@ -10,3 +10,9 @@ export type Grade = {
     subjectName: string,
     teacherName: string
 }
+
+export type GradeResponse = {
+    allGrades: Grade[],
+    average: number,
+    averagesByDay: {date: number, average: number}[]
+}

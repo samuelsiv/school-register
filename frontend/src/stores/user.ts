@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
 import { UserInfo } from "@/types/userInfo";
-import { Grade } from "@/types/grade";
+import {Grade, GradeResponse} from "@/types/grade";
 
 const ignoredPaths = ["/login"];
 
@@ -26,6 +26,8 @@ const UserStore = createContainer(() => {
 
 			managedStudents: [],
 			grades: [],
+			average: 0,
+			averageByDay: []
 		};
 	}
 
@@ -36,6 +38,8 @@ const UserStore = createContainer(() => {
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
 	const [grades, setGrades] = useState<Grade[]>([]);
+	const [average, setAverage] = useState<number>(0);
+	const [averageByDay, setAverageByDay] = useState<{date: number, average: number}[]>([]);
 
 	const selectStudent = (student: Student) => {
 		setSelectedStudent(student);
@@ -77,7 +81,7 @@ const UserStore = createContainer(() => {
 			setSelectedStudent(storedChild);
 		}
 	}, [isParent]);
-	const { data: gradesData } = useSWR<{allGrades: Grade[]}>(
+	const { data: gradesData } = useSWR<GradeResponse>(
 		`/api/v1/students/${selectedStudent?.studentId}/grades`,
 		fetcher,
 		{ keepPreviousData: true }
@@ -85,6 +89,8 @@ const UserStore = createContainer(() => {
 	useEffect(() => {
 		if (gradesData) {
 			setGrades(gradesData.allGrades);
+			setAverage(gradesData.average);
+			setAverageByDay(gradesData.averagesByDay)
 		}
 	}, [gradesData]);
 
@@ -98,6 +104,8 @@ const UserStore = createContainer(() => {
 
 		managedStudents,
 		grades,
+		average,
+		averageByDay
 	};
 });
 
