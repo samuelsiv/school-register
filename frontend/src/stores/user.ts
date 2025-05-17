@@ -79,11 +79,7 @@ const UserStore = createContainer(() => {
 	}, [isParent]);
 
 	if (selectedStudent) {
-		const { data, error, isLoading } = useSWR<{
-				success: boolean,
-				user: UserInfo
-				assignedStudents: Student[]
-		}>(`/api/v1/students/${selectedStudent.studentId}/grades`, fetcher, { keepPreviousData: true });
+		const { data, error, isLoading } = useSWR<Grade[]>(`/api/v1/students/${selectedStudent.studentId}/grades`, fetcher, { keepPreviousData: true });
 			
 		useEffect(() => {
 			if (!selectedStudent) return;
