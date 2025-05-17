@@ -40,7 +40,7 @@ const items = [
 	}
 ]
 
-export function AppSidebar({ activeChild, onSelectChildAction }: { activeChild: Student | null, onSelectChildAction: (student: Student) => void }) {
+export function AppSidebar() {
 	const userStore = UserStore.useContainer();
 	const { open } = useSidebar();
 	const activeItem = usePathname();
@@ -50,15 +50,15 @@ export function AppSidebar({ activeChild, onSelectChildAction }: { activeChild: 
 			<SidebarHeader hidden={open}>
 				<b className="text-primary">SR</b>
 			</SidebarHeader>
-			<SidebarHeader hidden={!open}>
-				<b className="text-primary">School Register</b>
+			<SidebarHeader hidden={!open} className="text-start">
+				<b className="text-primary px-2">School Register</b>
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarGroupLabel>YOUR CHILDREN</SidebarGroupLabel>
 					{userStore.managedStudents.map((student: Student) => (
-						<SidebarMenuItem key={student.studentId} onClick={() => onSelectChildAction(student)}>
-							<SidebarMenuButton asChild isActive={activeChild == student}>
+						<SidebarMenuItem key={student.studentId} onClick={() => userStore.selectStudent(student)}>
+							<SidebarMenuButton asChild isActive={userStore.selectedStudent?.studentId == student.studentId}>
 								<a>
 									<BabyIcon />
 									<span>{student.name} {student.surname}</span>

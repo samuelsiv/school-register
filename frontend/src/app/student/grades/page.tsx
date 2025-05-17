@@ -12,7 +12,7 @@ export default function Grades() {
 	//const { grades, isLoadingGrades, isErrorGrades } = useGrades()
 
 	return <div className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted h-full">
-		<AppSidebar activeChild={userStore.selectedStudent} onSelectChildAction={userStore.selectStudent} />
+		<AppSidebar />
 
 		<main className="flex flex-col w-full items-center justify-center gap-6">
 			<div id="title" className="flex flex-row gap-12 w-full justify-between items-center">

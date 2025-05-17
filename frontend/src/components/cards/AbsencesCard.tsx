@@ -4,7 +4,7 @@ import {EventType} from "@/types/eventType";
 
 export function EventsCard({events}: {events: {id: number, type: EventType, date: string}[]}) {
     return (
-        <Card>
+        <Card className="border-t-[2px]">
             <CardHeader>
                 <CardTitle>Events</CardTitle>
                 <CardDescription>
