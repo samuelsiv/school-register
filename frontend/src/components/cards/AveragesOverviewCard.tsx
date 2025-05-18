@@ -38,7 +38,7 @@ export function AveragesOverviewCard({average, generalAverageByDays, averagesByS
         <Card className="border-t-[2px]">
             <CardHeader>
                 {(selectedAverage == null) && <>
-                    <CardTitle className="text-3xl font-bold">Averages</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Averages</CardTitle>
                     <h2 className="text-4xl font-bold">{average || "/"}</h2>
                     <CardDescription>
                         The average for the last 14 active school days
@@ -86,7 +86,7 @@ export function AveragesOverviewCard({average, generalAverageByDays, averagesByS
                     </div>}
                     {(selectedAverage != null) && <div>
                         {selectedAverage.grades.map((grade) =>
-                            <GradeCard grade={grade}/>
+                            <GradeCard grade={grade} key={grade.id}/>
                         )}
                     </div>
                     }

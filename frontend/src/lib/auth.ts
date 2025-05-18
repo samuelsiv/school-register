@@ -20,7 +20,7 @@ export const getAuthInfo = async (
             role: data.payload.role,
             authenticated: true,
         };
-    } catch (e) {
+    } catch {
         return {
             role: null,
             authenticated: false,

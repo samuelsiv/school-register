@@ -6,7 +6,7 @@ export function EventsCard({events}: { events: { id: number, type: EventType, da
     return (
         <Card className="border-t-[2px]">
             <CardHeader>
-                <CardTitle>Events</CardTitle>
+                <CardTitle className="text-2xl">Events</CardTitle>
                 <CardDescription>
                     Events to justify
                 </CardDescription>

@@ -6,7 +6,7 @@ export function HomeworksCard({homeworks}: { homeworks: Homework[] }) {
     return (
         <Card className="border-t-[2px]">
             <CardHeader>
-                <CardTitle>Homeworks</CardTitle>
+                <CardTitle className="text-2xl">Homeworks</CardTitle>
                 <CardDescription>
                     Next homeworks to do
                 </CardDescription>

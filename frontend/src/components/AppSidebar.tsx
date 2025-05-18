@@ -11,11 +11,11 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
-import {BabyIcon, BookOpenCheckIcon, ChartAreaIcon, LayoutDashboardIcon} from "lucide-react";
+import {BabyIcon, BookOpenCheckIcon, ChartAreaIcon, LayoutDashboardIcon, LogOutIcon} from "lucide-react";
 import Link from "next/link";
 import {Student} from "@/types/student";
 import UserStore from "@/stores/user";
-import {usePathname} from "next/navigation";
+import {redirect, usePathname} from "next/navigation";
 
 const items = [
     {
@@ -78,7 +78,17 @@ export function AppSidebar() {
                 </SidebarGroup>
                 <SidebarGroup/>
             </SidebarContent>
-            <SidebarFooter/>
+            <SidebarFooter>
+                <SidebarMenuButton asChild onClick={() => {
+                    document.cookie = "auth_token=; Max-Age=1";
+                    redirect("/login");
+                }}>
+                    <div>
+                        <LogOutIcon />
+                        <a>Logout</a>
+                    </div>
+                </SidebarMenuButton>
+            </SidebarFooter>
         </Sidebar>
     )
 }

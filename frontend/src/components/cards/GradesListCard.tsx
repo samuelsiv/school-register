@@ -1,6 +1,6 @@
 "use client"
 
-import {ArrowDown, ArrowLeftIcon, ArrowRightIcon} from "lucide-react"
+import {ArrowLeftIcon, ArrowRightIcon} from "lucide-react"
 
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
 import {Gauge} from "@/components/ui/gauge";
@@ -14,13 +14,13 @@ export function GradesListCard({grades, cols}: { grades: Grade[], cols?: number 
     return (
         <Card className="border-t-[2px]">
             <CardHeader>
-                <CardTitle className="text-3xl font-bold">Latest Grades</CardTitle>
+                <CardTitle className="text-2xl font-bold">Latest Grades</CardTitle>
             </CardHeader>
             <CardContent>
                 {(selectedGrade == null) && <div className={`grid grid-cols-${cols || '3'} gap-6`}>
                     {grades.map((grade) =>
                         <Card
-                            className="flex flex-row gap-12 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
+                            className="flex flex-row gap-6 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
                             key={grade.gradeId} onClick={() => setGrade(grade)}>
                             <h1 className="text-2xl font-bold">{grade.value}</h1>
                             <div className="flex flex-col gap-2 justify-center items-center">
@@ -29,9 +29,8 @@ export function GradesListCard({grades, cols}: { grades: Grade[], cols?: number 
                                 {grade.comment != "" &&
                                     <p className="text-m font-light">{grade.comment}</p>
                                 }
-                                {(cols || 3 <= 2) && <ArrowDown/>}
                             </div>
-                            {(cols || 3 > 2) && <ArrowRightIcon/>}
+                            <ArrowRightIcon/>
                         </Card>
                     )}
                 </div>}
