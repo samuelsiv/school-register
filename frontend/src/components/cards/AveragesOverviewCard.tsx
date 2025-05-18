@@ -10,6 +10,7 @@ import AverageCard from "@/components/cards/AverageCard";
 import {useState} from "react";
 import GradeCard from "@/components/cards/GradeCard";
 import {AnimatePresence, motion} from "framer-motion";
+import {Grade} from "@/types/grade";
 
 function timestampToDdMm(timestamp: number): string {
     const date = new Date(timestamp);
@@ -22,18 +23,9 @@ function timestampToDdMm(timestamp: number): string {
 export function AveragesOverviewCard({average, generalAverageByDays, averagesBySubject}: {
     average: number,
     generalAverageByDays: { date: number; average: number }[],
-    averagesBySubject: {
-        grade: number, name: string, teacher: string, id: number, grades:
-            { grade: number, name: string, id: number, date: string }[]
-    }[]
+    averagesBySubject: { average: number, grades: Grade[], subject: string, subjectId: number, teacherId: number, teacher: string }[]
 }) {
-    const [selectedAverage, setSelectedAverage] = useState<{
-        grade: number,
-        name: string,
-        teacher: string,
-        id: number,
-        grades: { grade: number, name: string, id: number, date: string }[]
-    } | null>(null)
+    const [selectedAverage, setSelectedAverage] = useState<{ average: number, grades: Grade[], subject: string, subjectId: number, teacherId: number, teacher: string } | null>(null)
 
     return (
         <motion.div layout whileInView={{opacity: 1}}>
@@ -52,7 +44,7 @@ export function AveragesOverviewCard({average, generalAverageByDays, averagesByS
             <CardContent>
                 <div>
                         {(selectedAverage == null) && <motion.div><h2 className="text-xl font-semibold col-span-3">Subjects</h2>
-                            <div className="grid grid-cols-3 grid-rows-3 gap-x-6">
+                            <div className="grid grid-cols-3 grid-rows-1 gap-x-6">
                                 <div className="text-center row-span-2">
                                     <GradesChart grades={generalAverageByDays.sort(a => a.date).reverse().slice(0, 14)
                                         .map((grade) => {
@@ -61,44 +53,46 @@ export function AveragesOverviewCard({average, generalAverageByDays, averagesByS
                                 </div>
 
                                 {averagesBySubject.map((average) =>
-                                    <AverageCard average={average} key={average.id} onArrowClick={() => {
+                                    <AverageCard average={average} key={average.subjectId} onArrowClick={() => {
                                         setSelectedAverage(average)
                                     }}/>
                                 )}
                             </div>
                         </motion.div>}
-                        {(selectedAverage != null) &&
-                            <motion.div layout key={selectedAverage.id} layoutId={selectedAverage.id.toString()}>
+                    <AnimatePresence key={"subject"}>
+                    {(selectedAverage != null) &&
+                            <motion.div layout key={selectedAverage.subjectId} layoutId={selectedAverage.subjectId.toString()}>
                                 <Card className="flex items-center gap-2 px-4 py-2 my-2 border-t border-t-[2px]"
-                                      key={selectedAverage.id}>
+                                      key={selectedAverage.subjectId}>
                                     <div className="grid w-full">
 
                                         <div className="col-start-1 row-start-1 w-full items-center">
-                                            <motion.h1 className={"text-xl font-semibold"}
-                                                       layoutId={`${selectedAverage.id}-name`}
-                                                       layout={"position"}>{selectedAverage.name}</motion.h1>
+                                            <motion.p className={"text-xl font-semibold"}
+                                                       layoutId={`${selectedAverage.subjectId}-name`}
+                                                       layout>{selectedAverage.subject}</motion.p>
                                         </div>
                                         <div className="col-start-1 row-start-1 w-full flex justify-start">
-                                            <motion.div style={{ rotate: 180 }} layoutId={`${selectedAverage.id}-arrow`}><ChevronRight onClick={() =>
+                                            <motion.div style={{ rotate: 180 }} layoutId={`${selectedAverage.subjectId}-arrow`}><ChevronRight onClick={() =>
                                                 setSelectedAverage(null)
                                             }/></motion.div>
                                         </div>
                                     </div>
                                     <motion.h2 className={"text-l font-light"}
-                                               layoutId={`${selectedAverage.id}-teacher`}
+                                               layoutId={`${selectedAverage.subjectId}-teacher`}
                                                layout>{selectedAverage.teacher}</motion.h2>
                                     <Gauge color={
-                                    (selectedAverage.grade >= 6) ? "text-[hsla(110,51%,44%,1)]" :
-                                        (selectedAverage.grade >= 5) ? "text-[hsla(40,51%,44%,1)]" :
+                                    (selectedAverage.average >= 6) ? "text-[hsla(110,51%,44%,1)]" :
+                                        (selectedAverage.average >= 5) ? "text-[hsla(40,51%,44%,1)]" :
                                             "text-[hsla(0,51%,44%,1)]"
-                                } value={selectedAverage.grade} gradeId={selectedAverage.id}
+                                } value={selectedAverage.average} gradeId={selectedAverage.subjectId}
                                        size={"medium"} showValue={true}/>
                                 {selectedAverage.grades.map((grade) =>
-                                    <GradeCard grade={grade} key={grade.id}/>
+                                    <GradeCard grade={grade} key={grade.subjectId}/>
                                 )}
                                 </Card>
                             </motion.div>
                         }
+                    </AnimatePresence>
                 </div>
             </CardContent>
         </Card>

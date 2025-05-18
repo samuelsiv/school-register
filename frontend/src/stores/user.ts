@@ -28,7 +28,8 @@ const UserStore = createContainer(() => {
 			managedStudents: [],
 			grades: [],
 			average: 0,
-			averageByDay: []
+			averageByDay: [],
+			averageBySubject: []
 		};
 	}
 
@@ -41,6 +42,7 @@ const UserStore = createContainer(() => {
 	const [grades, setGrades] = useState<Grade[]>([]);
 	const [average, setAverage] = useState<number>(0);
 	const [averageByDay, setAverageByDay] = useState<{ date: number, average: number }[]>([]);
+	const [averageBySubject, setAverageBySubject] = useState<{ average: number, grades: Grade[], subject: string, subjectId: number, teacherId: number, teacher: string }[]>([]);
 
 	const selectStudent = (student: Student) => {
 		setSelectedStudent(student);
@@ -91,9 +93,10 @@ const UserStore = createContainer(() => {
 	
 	useEffect(() => {
 		if (gradesData) {
-			setGrades(gradesData.allGrades);
+			setGrades(gradesData.allGrades.reverse());
 			setAverage(gradesData.average);
 			setAverageByDay(gradesData.averagesByDay)
+			setAverageBySubject(gradesData.averagesBySubject)
 		}
 	}, [gradesData]);
 
@@ -108,7 +111,8 @@ const UserStore = createContainer(() => {
 		managedStudents,
 		grades,
 		average,
-		averageByDay
+		averageByDay,
+		averageBySubject
 	};
 });
 

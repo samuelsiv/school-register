@@ -9,8 +9,6 @@ import UserStore from "@/stores/user";
 
 export default function Grades() {
     const userStore = UserStore.useContainer();
-    //const { grades, isLoadingGrades, isErrorGrades } = useGrades()
-
     return <div
         className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted h-full">
         <AppSidebar/>
@@ -32,58 +30,7 @@ export default function Grades() {
                 <AveragesOverviewCard
                     average={userStore.average}
                     generalAverageByDays={userStore.averageByDay}
-                    averagesBySubject={[
-                        {
-                            name: "Maths",
-                            teacher: "John Doe",
-                            grade: 6,
-                            id: 3201,
-                            grades: [{name: "Math", date: "09/02/2025", grade: 6, id: 321}]
-                        },
-                        {
-                            name: "History",
-                            teacher: "Jane Doe",
-                            grade: 5,
-                            id: 30211,
-                            grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
-                        },
-                        {
-                            name: "History",
-                            teacher: "Jane Doe",
-                            grade: 5,
-                            id: 322110,
-                            grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
-                        },
-
-                        {
-                            name: "Maths",
-                            teacher: "John Doe",
-                            grade: 6,
-                            id: 30201,
-                            grades: [{name: "Math", date: "09/02/2025", grade: 6, id: 321}]
-                        },
-                        {
-                            name: "History",
-                            teacher: "Jane Doe",
-                            grade: 5,
-                            id: 32711,
-                            grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
-                        },
-                        {
-                            name: "History",
-                            teacher: "Jane Doe",
-                            grade: 5,
-                            id: 32511,
-                            grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
-                        },
-                        {
-                            name: "History",
-                            teacher: "Jane Doe",
-                            grade: 5,
-                            id: 32191,
-                            grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
-                        },
-                    ]}/>
+                    averagesBySubject={userStore.averageBySubject || []} />
                 <GradesListCard grades={userStore.grades}/>
             </div>
         </main>
