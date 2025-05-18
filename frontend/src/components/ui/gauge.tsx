@@ -1,11 +1,15 @@
+import {motion} from "framer-motion";
+
 export const Gauge = ({
                           value,
+                          gradeId,
                           size = "small",
                           showValue = true,
                           color = "text-[hsla(131,41%,46%,1)]",
                           bgcolor = "text-[#333]",
                       }: {
     value: number;
+    gradeId?: number | null;
     size: "small" | "medium" | "large";
     showValue: boolean;
     color?: string;
@@ -76,7 +80,7 @@ export const Gauge = ({
             </svg>
             {showValue ? (
                 <div className="absolute flex opacity-100 animate-gauge_fadeIn">
-                    <p className={`${sizes[size].textSize}`}>{value}</p>
+                    <motion.p layoutId={gradeId == undefined ? undefined : `${gradeId}-grade`} className={`${sizes[size].textSize}`}>{value}</motion.p>
                 </div>
             ) : null}
         </div>

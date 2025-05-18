@@ -3,6 +3,7 @@
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
 
 import {GradesChart} from "@/components/charts/GradesChart";
+import {motion} from "framer-motion";
 
 function timestampToDdMm(timestamp: number): string {
     const date = new Date(timestamp);
