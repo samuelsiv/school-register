@@ -23,7 +23,7 @@ const loginSchema = z.object({
     captcha: z.string({required_error: "Captcha is required"}).min(6, {message: "Captcha is required"}),
 });
 
-export function LoginForm() {
+function LoginForm() {
     const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 

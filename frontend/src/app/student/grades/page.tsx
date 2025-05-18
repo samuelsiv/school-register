@@ -25,8 +25,8 @@ export default function Grades() {
                 </div>
                 <br/>
             </div>
-            {userStore.isParent &&
-                <KidInfoAlert name={userStore.selectedStudent?.name!}/>
+            {userStore.isParent && userStore.selectedStudent != null &&
+                <KidInfoAlert name={userStore.selectedStudent.name}/>
             }
             <div className="grid grid-rows-2 grid-cols-1 gap-12">
                 <AveragesOverviewCard

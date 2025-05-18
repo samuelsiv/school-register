@@ -27,8 +27,8 @@ export default function HomePage() {
                 </div>
                 <br/>
             </div>
-            {userStore.isParent &&
-                <KidInfoAlert name={userStore.selectedStudent?.name!}/>
+            {userStore.isParent && userStore.selectedStudent != null &&
+                <KidInfoAlert name={userStore.selectedStudent.name}/>
             }
             <div className="grid grid-rows-2 grid-cols-3 gap-12">
                 <DashboardAverageCard average={userStore.average} grades={userStore.averageByDay}/>
@@ -51,7 +51,7 @@ export default function HomePage() {
                     date: "17/04/2025"
                 }]}/>
 
-                <GradesListCard grades={userStore.grades} cols={2}/>
+                <GradesListCard grades={userStore.grades} cols={1}/>
             </div>
         </main>
     </div>

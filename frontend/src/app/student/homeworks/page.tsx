@@ -43,8 +43,8 @@ export default function Homeworks() {
                 </div>
                 <br/>
             </div>
-            {userStore.isParent &&
-                <KidInfoAlert name={userStore.selectedStudent?.name!}/>
+            {userStore.isParent && userStore.selectedStudent != null &&
+                <KidInfoAlert name={userStore.selectedStudent.name}/>
             }
             <Card className="border-t border-t-[2px]">
                 <Calendar
