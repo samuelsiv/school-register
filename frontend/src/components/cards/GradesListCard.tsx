@@ -21,7 +21,7 @@ export function GradesListCard({grades, cols}: { grades: Grade[], cols?: number 
                 <AnimatePresence mode="popLayout">
                 {(selectedGrade == null) && <div className={`grid grid-cols-${cols || '3'} gap-6`} key={"grades"}>
                     {grades.map((grade) =>
-                        <motion.div layout layoutId={grade.gradeId.toString()}>
+                        <motion.div layout key={grade.gradeId} layoutId={grade.gradeId.toString()}>
                         <Card
                             className="flex flex-row gap-6 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
                             key={grade.gradeId} onClick={() => setGrade(grade)}>
@@ -61,7 +61,6 @@ export function GradesListCard({grades, cols}: { grades: Grade[], cols?: number 
                                 </div>
                             </div>
 
-
                             <Gauge color={
                                 (selectedGrade.value >= 6) ? "text-[hsla(110,51%,44%,1)]" :
                                     (selectedGrade.value >= 5) ? "text-[hsla(40,51%,44%,1)]" :
@@ -74,7 +73,6 @@ export function GradesListCard({grades, cols}: { grades: Grade[], cols?: number 
                             }
                             <motion.p layout layoutId={`${selectedGrade.gradeId}-inserted`}
                                       className="text-l font-light">{selectedGrade.insertedAt}</motion.p>
-
                         </Card>
                     </motion.div>}
                 </AnimatePresence>
