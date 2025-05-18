@@ -4,7 +4,7 @@ import { teachersSubjects } from './teacherSubjects.js';
 import { homeworks } from './homeworks.js';
 
 export const subjects = pgTable('subjects', {
-  subjectId: serial('subjet_id').primaryKey(),
+  subjectId: serial('subject_id').primaryKey(),
   subjectName: varchar('subject_name', { length: 255 }).notNull().unique(),
   description: text('description'),
 });

@@ -19,8 +19,8 @@ export function GradesListCard({grades, cols}: { grades: Grade[], cols?: number 
             </CardHeader>
             <CardContent>
                 <AnimatePresence mode="popLayout">
-                {(selectedGrade == null) && <div className={`grid grid-cols-${cols || '3'} gap-6`} key={"grades"}>
-                    {grades.map((grade) =>
+                {(selectedGrade == null) && <div className={`grid grid-cols-${cols || '3'} gap-3`} key={"grades"}>
+                    {grades.slice(0, 3).map((grade) =>
                         <motion.div layout key={grade.gradeId} layoutId={grade.gradeId.toString()}>
                         <Card
                             className="flex flex-row gap-6 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"

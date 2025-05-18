@@ -7,7 +7,7 @@ import { parentStudents } from "../../db/schema/parentStudents.js";
 import {subjects} from "../../db/schema/subjects.js";
 import {teachers} from "../../db/schema/teachers.js";
 import {users} from "../../db/schema/users.js";
-import {calculateAveragesByDay, calculateGeneralAverage} from "../../lib/average.js";
+import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "../../lib/average.js";
 
 export default async function () {
   const router = new Hono().basePath("/api/v1/students");
@@ -58,7 +58,7 @@ export default async function () {
         }
     });
 
-    return c.json({ allGrades, average: calculateGeneralAverage(allGrades), averagesByDay: calculateAveragesByDay(allGrades) });
+    return c.json({ allGrades, average: calculateGeneralAverage(allGrades), averagesByDay: calculateAveragesByDay(allGrades), averagesBySubject: calculateAveragesBySubject(allGrades) });
   });
 
   return router;

@@ -31,7 +31,7 @@ export default function HomePage() {
                 <KidInfoAlert name={userStore.selectedStudent.name}/>
             }
             <div className="grid grid-rows-2 grid-cols-3 gap-12">
-                <DashboardAverageCard average={userStore.average} grades={userStore.averageByDay}/>
+                <DashboardAverageCard average={userStore.average} averages={userStore.averageByDay} averagesBySubject={userStore.averageBySubject}/>
                 <HomeworksCard homeworks={[{
                     teacherName: "Jane Doe",
                     subjectName: "Maths",
