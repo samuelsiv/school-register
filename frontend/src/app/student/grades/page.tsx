@@ -37,21 +37,21 @@ export default function Grades() {
                             name: "Maths",
                             teacher: "John Doe",
                             grade: 6,
-                            id: 321,
+                            id: 3201,
                             grades: [{name: "Math", date: "09/02/2025", grade: 6, id: 321}]
                         },
                         {
                             name: "History",
                             teacher: "Jane Doe",
                             grade: 5,
-                            id: 3211,
+                            id: 30211,
                             grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
                         },
                         {
                             name: "History",
                             teacher: "Jane Doe",
                             grade: 5,
-                            id: 3211,
+                            id: 322110,
                             grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
                         },
 
@@ -59,28 +59,28 @@ export default function Grades() {
                             name: "Maths",
                             teacher: "John Doe",
                             grade: 6,
-                            id: 321,
+                            id: 30201,
                             grades: [{name: "Math", date: "09/02/2025", grade: 6, id: 321}]
                         },
                         {
                             name: "History",
                             teacher: "Jane Doe",
                             grade: 5,
-                            id: 3211,
+                            id: 32711,
                             grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
                         },
                         {
                             name: "History",
                             teacher: "Jane Doe",
                             grade: 5,
-                            id: 3211,
+                            id: 32511,
                             grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
                         },
                         {
                             name: "History",
                             teacher: "Jane Doe",
                             grade: 5,
-                            id: 3211,
+                            id: 32191,
                             grades: [{name: "History", date: "11/05/2025", grade: 5, id: 321}]
                         },
                     ]}/>
