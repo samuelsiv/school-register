@@ -2,7 +2,7 @@ import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} f
 import {Button} from "@/components/ui/button";
 import {EventType} from "@/types/eventType";
 
-export function EventsCard({events}: {events: {id: number, type: EventType, date: string}[]}) {
+export function EventsCard({events}: { events: { id: number, type: EventType, date: string }[] }) {
     return (
         <Card className="border-t-[2px]">
             <CardHeader>

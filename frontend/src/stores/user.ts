@@ -1,112 +1,113 @@
 "use client";
 
-import { fetcher } from "@/lib/request";
-import { getJsonStore, setJsonStore } from "@/lib/storage";
-import { Student } from "@/types/student";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import {fetcher} from "@/lib/request";
+import {getJsonStore, setJsonStore} from "@/lib/storage";
+import {Student} from "@/types/student";
+import {usePathname} from "next/navigation";
+import {useEffect, useState} from "react";
 import useSWR from "swr";
-import { createContainer } from "unstated-next";
-import { UserInfo } from "@/types/userInfo";
+import {createContainer} from "unstated-next";
+import {UserInfo} from "@/types/userInfo";
 import {Grade, GradeResponse} from "@/types/grade";
 
 const ignoredPaths = ["/login"];
 
 const UserStore = createContainer(() => {
-	const pathname = usePathname();
+    const pathname = usePathname();
 
-	if (ignoredPaths.includes(pathname)) {
-		return {
-			userId: null,
-			getName: () => "",
-			isParent: false,
+    if (ignoredPaths.includes(pathname)) {
+        return {
+            userId: null,
+            getName: () => "",
+            isParent: false,
 
-			selectedStudent: null,
-			selectStudent: () => {},
+            selectedStudent: null,
+            selectStudent: () => {
+            },
 
-			managedStudents: [],
-			grades: [],
-			average: 0,
-			averageByDay: []
-		};
-	}
+            managedStudents: [],
+            grades: [],
+            average: 0,
+            averageByDay: []
+        };
+    }
 
-	const [userId, setUserId] = useState<number | null>(null);
-	const [name, setName] = useState<string | null>(null);
+    const [userId, setUserId] = useState<number | null>(null);
+    const [name, setName] = useState<string | null>(null);
 
-	const [isParent, setIsParent] = useState(false);
-	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
-	const [grades, setGrades] = useState<Grade[]>([]);
-	const [average, setAverage] = useState<number>(0);
-	const [averageByDay, setAverageByDay] = useState<{date: number, average: number}[]>([]);
+    const [isParent, setIsParent] = useState(false);
+    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+    const [managedStudents, setManagedStudents] = useState<Student[]>([]);
+    const [grades, setGrades] = useState<Grade[]>([]);
+    const [average, setAverage] = useState<number>(0);
+    const [averageByDay, setAverageByDay] = useState<{ date: number, average: number }[]>([]);
 
-	const selectStudent = (student: Student) => {
-		setSelectedStudent(student);
-		setJsonStore<Student>("selected_student", student);
-	};
+    const selectStudent = (student: Student) => {
+        setSelectedStudent(student);
+        setJsonStore<Student>("selected_student", student);
+    };
 
-	const getName = (getParentName: boolean = false) => {
-		if (isParent && !getParentName) {
-			return `${selectedStudent?.name || ""} ${selectedStudent?.surname || ""}`;
-		}
-		return name || "";
-	};
+    const getName = (getParentName: boolean = false) => {
+        if (isParent && !getParentName) {
+            return `${selectedStudent?.name || ""} ${selectedStudent?.surname || ""}`;
+        }
+        return name || "";
+    };
 
-	const { data: userData } = useSWR<{
-		success: boolean;
-		user: UserInfo;
-		assignedStudents: Student[];
-	}>("/api/v1/user/info", fetcher, { keepPreviousData: true });
+    const {data: userData} = useSWR<{
+        success: boolean;
+        user: UserInfo;
+        assignedStudents: Student[];
+    }>("/api/v1/user/info", fetcher, {keepPreviousData: true});
 
-	useEffect(() => {
-		if (userData) {
-			setUserId(userData.user.userId);
-			setName(userData.user.name);
-			setIsParent(userData.user.role === "parent");
+    useEffect(() => {
+        if (userData) {
+            setUserId(userData.user.userId);
+            setName(userData.user.name);
+            setIsParent(userData.user.role === "parent");
 
-			setSelectedStudent(userData.assignedStudents[0]);
+            setSelectedStudent(userData.assignedStudents[0]);
 
-			if (userData.user.role === "parent") {
-				setManagedStudents(userData.assignedStudents);
-			}
-		}
-	}, [userData]);
+            if (userData.user.role === "parent") {
+                setManagedStudents(userData.assignedStudents);
+            }
+        }
+    }, [userData]);
 
-	useEffect(() => {
-		if (!isParent) return;
+    useEffect(() => {
+        if (!isParent) return;
 
-		const storedChild = getJsonStore<Student | null>("selected_student");
-		if (storedChild) {
-			setSelectedStudent(storedChild);
-		}
-	}, [isParent]);
-	const { data: gradesData } = useSWR<GradeResponse>(
-		`/api/v1/students/${selectedStudent?.studentId}/grades`,
-		fetcher,
-		{ keepPreviousData: true }
-	);
-	useEffect(() => {
-		if (gradesData) {
-			setGrades(gradesData.allGrades);
-			setAverage(gradesData.average);
-			setAverageByDay(gradesData.averagesByDay)
-		}
-	}, [gradesData]);
+        const storedChild = getJsonStore<Student | null>("selected_student");
+        if (storedChild) {
+            setSelectedStudent(storedChild);
+        }
+    }, [isParent]);
+    const {data: gradesData} = useSWR<GradeResponse>(
+        `/api/v1/students/${selectedStudent?.studentId}/grades`,
+        fetcher,
+        {keepPreviousData: true}
+    );
+    useEffect(() => {
+        if (gradesData) {
+            setGrades(gradesData.allGrades);
+            setAverage(gradesData.average);
+            setAverageByDay(gradesData.averagesByDay)
+        }
+    }, [gradesData]);
 
-	return {
-		userId,
-		getName,
-		isParent,
+    return {
+        userId,
+        getName,
+        isParent,
 
-		selectedStudent,
-		selectStudent,
+        selectedStudent,
+        selectStudent,
 
-		managedStudents,
-		grades,
-		average,
-		averageByDay
-	};
+        managedStudents,
+        grades,
+        average,
+        averageByDay
+    };
 });
 
 export default UserStore;

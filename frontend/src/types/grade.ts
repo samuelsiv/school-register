@@ -14,5 +14,5 @@ export type Grade = {
 export type GradeResponse = {
     allGrades: Grade[],
     average: number,
-    averagesByDay: {date: number, average: number}[]
+    averagesByDay: { date: number, average: number }[]
 }

@@ -2,7 +2,7 @@ import {BabyIcon} from "lucide-react";
 import {CardDescription, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
-export default function KidInfoAlert({name}: {name: string}) {
+export default function KidInfoAlert({name}: { name: string }) {
     return <div
         className="bg-card text-card-foreground flex flex-cols gap-6 rounded-xl border-t p-6 shadow-md w-[50%] justify-between align-center items-center">
         <div className="flex flex-row gap-4">
