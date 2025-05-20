@@ -61,6 +61,9 @@ services:
       POSTGRES_USER: sr
       POSTGRES_PASSWORD: sr
       POSTGRES_DB: schoolregister
+    volumes:
+      - ./backend/sql/demo.sql:/docker-entrypoint-initdb.d/init.sql
+
     networks:
       - traefik
 
