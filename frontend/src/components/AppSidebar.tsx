@@ -16,6 +16,7 @@ import Link from "next/link";
 import {Student} from "@/types/student";
 import UserStore from "@/stores/user";
 import {redirect, usePathname} from "next/navigation";
+import user from "@/stores/user";
 
 const items = [
     {
@@ -50,7 +51,7 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>YOUR CHILDREN</SidebarGroupLabel>
+                    {userStore.isParent && <SidebarGroupLabel>YOUR CHILDREN</SidebarGroupLabel> }
                     {userStore.managedStudents.map((student: Student) => (
                         <SidebarMenuItem key={student.studentId} onClick={() => userStore.selectStudent(student)}>
                             <SidebarMenuButton asChild

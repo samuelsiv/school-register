@@ -16,6 +16,8 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {LockIcon, MailIcon, Shield} from "lucide-react";
 import {redirect} from "next/navigation";
 import {UserInfo} from "@/types/userInfo";
+import {isDev} from "@/lib/data";
+import {Config} from "@/types/config";
 
 const loginSchema = z.object({
     email: z.string().email({message: "Invalid email address"}),
@@ -26,10 +28,12 @@ const loginSchema = z.object({
 function LoginForm() {
     const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isDemo, setDemo] = useState<boolean>(false)
 
     useEffect(() => {
-        request("GET", "/api/v1/misc/config").then((json) => {
+        request("GET", "/api/v1/misc/config").then((json: Config) => {
             setTurnstileSiteKey(json.turnstile.siteKey);
+            setDemo(json.features.demo)
         });
     }, []);
 
@@ -87,8 +91,10 @@ function LoginForm() {
             <CardHeader className="space-y-1">
                 <CardTitle className="text-2xl font-bold text-center">Sign In</CardTitle>
                 <CardDescription className="text-center">
-                    Login with your school account credentials
+                    Login with your school account credentials<br/>
+                    <p style={{display: isDemo ? "initial" : "none"}}>Demo credentials:<br/>- <b>Student</b>: student@demo.local : demo123</p>
                 </CardDescription>
+
             </CardHeader>
             <CardContent>
                 <Form {...form}>
