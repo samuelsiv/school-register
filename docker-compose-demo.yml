@@ -1,0 +1,100 @@
+name: "School Register DEMO"
+
+services:
+  api:
+    build: backend
+    command: >
+      sh -c "npx drizzle-kit push && npm run prod"
+    volumes:
+      - ./backend:/app/
+      - /app/node_modules
+    ports:
+      - "4983:4983"
+    depends_on:
+      - db
+      - cache
+    environment:
+      DATABASE_URL: postgres://sr:sr@db/schoolregister
+      REDIS_URL: redis://localhost/
+      PORT: 3001
+      JWT_SECRET: DO_NOT_USE_DEV_IN_PROD_UNSAFE_JWT_KEY
+      TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+      DEMO: 1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.services.api.loadbalancer.server.port=3001"
+    networks:
+      - traefik
+
+  web:
+    build: frontend
+    command: sh -c 'npm run build && npm run start'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.web.entrypoints=web"
+      - "traefik.http.routers.web.priority=1"
+      - "traefik.http.services.web.loadbalancer.server.port=3000"
+
+    volumes:
+      - ./frontend:/app/
+      - /app/node_modules
+    environment:
+      JWT_SECRET: DO_NOT_USE_DEV_IN_PROD_UNSAFE_JWT_KEY
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync
+          path: ./app/frontend
+          target: ./frontend
+
+    networks:
+      - traefik
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: sr
+      POSTGRES_PASSWORD: sr
+      POSTGRES_DB: schoolregister
+    networks:
+      - traefik
+
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+    networks:
+      - traefik
+
+  traefik:
+    image: traefik:v3.0  # or v2.11 if not using v3
+    command:
+      - "--log.level=DEBUG"
+      - "--entrypoints.web.address=:3000"
+      - "--providers.docker=true"
+      - "--api.dashboard=true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik
+
+volumes:
+  cache:
+    driver: local
+  postgres-data:
+    driver: local
+
+networks:
+  traefik:
+    external: false

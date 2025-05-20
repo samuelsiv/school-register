@@ -21,7 +21,9 @@ services:
       TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
 
   web:
-    build: frontend
+    build:
+        context: frontend
+        dockerfile: dev.Dockerfile
     command: npm run dev
     volumes:
       - ./frontend:/app/
