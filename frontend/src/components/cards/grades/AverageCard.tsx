@@ -8,9 +8,9 @@ export default function AverageCard({average, onArrowClick}: {
     average: { average: number, grades: Grade[], subject: string, subjectId: number, teacherId: number, teacher: string },
     onArrowClick: () => void
 }) {
-    return <motion.div layout key={average.subjectId} layoutId={average.subjectId.toString()}>
+    return <motion.div layout key={"avercard-" + average.subjectId} layoutId={"avercard-" + average.subjectId.toString()}>
         <Card className="flex flex-row gap-12 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
-              key={average.subjectId}>
+              key={"avercard-" + average.subjectId}>
             <Gauge color={
                 (average.average >= 6) ? "text-[hsla(110,51%,44%,1)]" :
                     (average.average >= 5) ? "text-[hsla(40,51%,44%,1)]" :

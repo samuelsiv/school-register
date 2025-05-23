@@ -16,7 +16,6 @@ const chartConfig = {
 
 // last in list has to be the current one
 export function GradesChart({grades, className}: { grades: { date: string; average: number }[], className?: string }) {
-    console.log(grades)
     return (
         <ChartContainer config={chartConfig} className={className}>
             <AreaChart
