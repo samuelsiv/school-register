@@ -2,7 +2,7 @@ import {ArrowRightIcon, ChevronRight} from "lucide-react";
 import {Card} from "@/components/ui/card";
 import {Grade} from "@/types/grade";
 import {motion} from "framer-motion";
-export default function GradeCard({grade, expand}: { grade: Grade, expand: () => void }) {
+export default function GradeCard({grade, expand}: { grade: Grade, expand?: (() => void) }) {
     return <Card
         className="flex flex-row gap-6 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
         key={grade.gradeId} onClick={expand}>
@@ -17,6 +17,6 @@ export default function GradeCard({grade, expand}: { grade: Grade, expand: () =>
                           className="text-m font-light">{grade.comment}</motion.p>
             }
         </div>
-        <motion.div style={{ rotate: 0 }} layoutId={`${grade.gradeId}-arrow`}><ChevronRight/></motion.div>
+        {expand && <motion.div style={{ rotate: 0 }} layoutId={`${grade.gradeId}-arrow`}><ChevronRight/></motion.div> }
     </Card>
 }
