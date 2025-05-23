@@ -5,8 +5,8 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/comp
 import {GradesChart} from "@/components/charts/GradesChart";
 import {AnimatePresence, motion} from "framer-motion";
 import {Grade} from "@/types/grade";
-import GradeCard from "@/components/cards/GradeCard";
-import AverageCard from "@/components/cards/AverageCard";
+import GradeCard from "@/components/cards/grades/GradeCard";
+import AverageCard from "@/components/cards/grades/AverageCard";
 import {useState} from "react";
 import {ChevronRight} from "lucide-react";
 import {Gauge} from "@/components/ui/gauge";
