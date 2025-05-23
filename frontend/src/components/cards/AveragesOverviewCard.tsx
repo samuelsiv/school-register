@@ -45,7 +45,7 @@ export function AveragesOverviewCard({average, generalAverageByDays, averagesByS
             <CardContent>
                 <div>
                     {(selectedAverage == null) && <motion.div><h2 className="text-xl font-semibold col-span-3">Subjects</h2>
-                        <div className="grid grid-cols-3 grid-rows-1 gap-x-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-1 gap-x-6">
                             <div className="text-center row-span-2">
                                 <GradesChart grades={generalAverageByDays.sort(a => a.date).reverse().slice(0, 14)
                                     .map((grade) => {

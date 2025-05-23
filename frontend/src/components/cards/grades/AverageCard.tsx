@@ -9,8 +9,10 @@ export default function AverageCard({average, onArrowClick}: {
     onArrowClick: () => void
 }) {
     return <motion.div layout key={"avercard-" + average.subjectId} layoutId={"avercard-" + average.subjectId.toString()}>
-        <Card className="flex flex-row gap-12 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
-              key={"avercard-" + average.subjectId}>
+        <Card className="flex flex-col lg:flex-row gap-12 md:gap-4 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
+              key={"avercard-" + average.subjectId} onClick={() =>
+            onArrowClick()
+        }>
             <Gauge color={
                 (average.average >= 6) ? "text-[hsla(110,51%,44%,1)]" :
                     (average.average >= 5) ? "text-[hsla(40,51%,44%,1)]" :
@@ -23,8 +25,6 @@ export default function AverageCard({average, onArrowClick}: {
                 <motion.h2 className={"text-m font-light"}
                            layoutId={`${average.subjectId}-teacher`} layout>{average.teacher}</motion.h2>
             </div>
-            <motion.div style={{rotate: 0}} layoutId={`${average.subjectId}-arrow`}><ChevronRight onClick={() =>
-                onArrowClick()
-            }/></motion.div>
+            <motion.div style={{rotate: 0}} layoutId={`${average.subjectId}-arrow`}><ChevronRight /></motion.div>
         </Card></motion.div>
 }
