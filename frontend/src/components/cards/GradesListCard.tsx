@@ -19,7 +19,7 @@ export function GradesListCard({grades, cols}: { grades: Grade[], cols?: number 
             </CardHeader>
             <CardContent>
                 <AnimatePresence mode="popLayout">
-                {(selectedGrade == null) && <div className={`grid grid-cols-${cols || '3'} gap-3`} key={"grades"}>
+                {(selectedGrade == null) && <div className={`grid lg:grid-cols-${cols || '3'} grid-cols-1 gap-3`} key={"grades"}>
                     {grades.slice(0, 3).map((grade) =>
                         <motion.div layout key={grade.gradeId} layoutId={grade.gradeId.toString()}>
                             <GradeCard grade={grade} expand={() => setGrade(grade)} />
