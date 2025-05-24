@@ -1,37 +1,20 @@
 import { Hono } from "hono";
-import { authMiddleware } from "../../middleware/auth.js";
-import { db } from "../../db/index.js";
-import { grades } from "../../db/schema/grades.js";
+import { db } from "@/db/index.js";
+import { grades } from "@/db/schema/grades.js";
 import { and, eq } from "drizzle-orm";
-import { parentStudents } from "../../db/schema/parentStudents.js";
-import {subjects} from "../../db/schema/subjects.js";
-import {teachers} from "../../db/schema/teachers.js";
-import {users} from "../../db/schema/users.js";
-import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "../../lib/average.js";
+import { parentStudents } from "@/db/schema/parentStudents.js";
+import {subjects} from "@/db/schema/subjects.js";
+import {users} from "@/db/schema/users.js";
+import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
+import { parentAssociationMiddleware } from "@/middleware/parentAssociation.js";
 
 export default async function () {
   const router = new Hono().basePath("/api/v1/students");
 
-  router.get("/:studentId/grades",  async (c) => {
+  router.use("/:studentId/grades", parentAssociationMiddleware);
+  router.get("/:studentId/grades", async (c) => {
     const user = c.get("user");
-
-    let dbCondition = eq(grades.studentId, user.userId);
-    
-    if (user.role === "parent") {
-      const studentId = parseInt(c.req.param("studentId") as string);
-
-      const student = await db
-        .select()
-        .from(parentStudents)
-        .where(and(
-          eq(parentStudents.parentId, user.userId),
-          eq(parentStudents.studentId, studentId)
-        ));
-      
-      if (student.length === 0) return c.json({ error: "You are not authorized to view this student's grades" }, 403);
-      
-      dbCondition = eq(grades.studentId, studentId);
-    }
+    const studentId = c.get("studentId");
 
     const allGrades: {
       gradeId: number, subjectName: string
@@ -48,7 +31,7 @@ export default async function () {
         comment: grades.comment, teacherName: users.name
       })
       .from(grades)
-      .where(dbCondition)
+      .where(eq(grades.studentId, studentId))
       .innerJoin(subjects, eq(subjects.subjectId, grades.subjectId))
       .innerJoin(users, eq(users.userId, grades.teacherId))).map((grade) => {
         return {
