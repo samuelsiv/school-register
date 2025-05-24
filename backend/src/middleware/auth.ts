@@ -1,7 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import jwt from 'jsonwebtoken';
-import type { JwtData } from '../types.js';
-import {getCookie} from "hono/cookie";
+import type { JwtData } from '@/types.js';
 
 export const authMiddleware = createMiddleware(async (c, next) => {
     const token = c.req.header('Authorization')?.split(' ')[1];
