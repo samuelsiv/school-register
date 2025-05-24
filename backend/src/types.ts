@@ -23,6 +23,7 @@ export interface JwtData {
 declare module "hono" {
   interface ContextVariableMap {
     user: JwtData;
+    studentId: number;
   }
 }
 

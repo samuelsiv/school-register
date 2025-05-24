@@ -4,15 +4,11 @@ import { z } from "zod";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
-import { checkTurnstileToken } from "../../lib/turnstile.js";
-import { db } from "../../db/index.js";
-import { users } from "../../db/schema/users.js";
+import { checkTurnstileToken } from "@/lib/turnstile.js";
+import { db } from "@/db/index.js";
+import { users } from "@/db/schema/users.js";
 import {
-  getCookie,
-  getSignedCookie,
-  setCookie,
-  setSignedCookie,
-  deleteCookie,
+  setCookie
 } from 'hono/cookie'
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

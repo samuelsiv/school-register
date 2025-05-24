@@ -1,10 +1,10 @@
 import { Hono } from "hono";
 import { eq } from 'drizzle-orm';
-import { db } from "../../db/index.js";
-import { users } from "../../db/schema/users.js";
-import { authMiddleware } from "../../middleware/auth.js";
-import { students } from "../../db/schema/students.js";
-import { parentStudents } from "../../db/schema/parentStudents.js";
+import { db } from "@/db/index.js";
+import { users } from "@/db/schema/users.js";
+import { authMiddleware } from "@/middleware/auth.js";
+import { students } from "@/db/schema/students.js";
+import { parentStudents } from "@/db/schema/parentStudents.js";
 
 export default async function () {
 	const router = new Hono().basePath("/api/v1/user");

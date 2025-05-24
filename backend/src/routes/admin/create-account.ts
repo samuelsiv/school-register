@@ -4,12 +4,12 @@ import { z } from "zod";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
-import { checkTurnstileToken } from "../../lib/turnstile.js";
-import { db } from "../../db/index.js";
-import { users } from "../../db/schema/users.js";
-import { authMiddleware } from "../../middleware/auth.js";
-import { students } from "../../db/schema/students.js";
-import { teachers } from "../../db/schema/teachers.js";
+import { checkTurnstileToken } from "@/lib/turnstile.js";
+import { db } from "@/db/index.js";
+import { users } from "@/db/schema/users.js";
+import { authMiddleware } from "@/middleware/auth.js";
+import { students } from "@/db/schema/students.js";
+import { teachers } from "@/db/schema/teachers.js";
 
 /*
 export const teachers = pgTable('teachers', {
