@@ -4,7 +4,6 @@ import { parentStudents } from "@/db/schema/parentStudents.js";
 import { and, eq } from "drizzle-orm";
 import { students, type Student } from "@/db/schema/students.js";
 import { classes } from "@/db/schema/classes.js";
-import { error } from "console";
 
 export const studentDataMiddleware = createMiddleware(async (c, next) => {
   const user = c.get("user");
