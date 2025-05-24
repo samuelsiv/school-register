@@ -3,7 +3,7 @@ import { zValidator } from '@hono/zod-validator'
 import { z } from "zod";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 import { checkTurnstileToken } from "@/lib/turnstile.js";
 import { db } from "@/db/index.js";
 import { users } from "@/db/schema/users.js";
@@ -11,16 +11,10 @@ import { authMiddleware } from "@/middleware/auth.js";
 import { students } from "@/db/schema/students.js";
 import { teachers } from "@/db/schema/teachers.js";
 
-/*
-export const teachers = pgTable('teachers', {
-	teacherId: serial('teacher_id').primaryKey(),
-	userId: integer('user_id').notNull().unique().references(() => users.userId, { onDelete: 'cascade' }),
-});
-*/
-
 const createAccountSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  username: z.string().min(1),
   name: z.string().min(1),
   surname: z.string().min(1),
   role: z.enum(['student', 'teacher']),
@@ -31,14 +25,19 @@ export default async function () {
   const router = new Hono().basePath("/api/v1/admin");
 
   router.post("/create-account", zValidator('json', createAccountSchema), async (c) => {
-		const { email, password, name, surname, role, turnstileToken } = c.req.valid('json');
+		const { email, password, username, name, surname, role, turnstileToken } = c.req.valid('json');
 
 		if (!await checkTurnstileToken(turnstileToken)) return c.json({ error: "Invalid Turnstile token" }, 400);
 
 		const existingUser = await db
 			.select()
 			.from(users)
-			.where(eq(users.email, email))
+			.where(
+        or(
+          eq(users.username, username),
+          eq(users.email, email)
+        )
+      )
 			.limit(1)
 			.execute();
 
