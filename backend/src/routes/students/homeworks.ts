@@ -13,17 +13,6 @@ import { teachers } from "@/db/schema/teachers.js";
 export default async function () {
   const router = new Hono().basePath("/api/v1/students");
 
-  /*
-    homeworkId: serial('homework_id').primaryKey(),
-    classId: integer('class_id').notNull().references(() => classes.classId, { onDelete: 'cascade' }),
-    subjectId: integer('subject_id').notNull().references(() => subjects.subjectId, { onDelete: 'cascade' }),
-    teacherId: integer('teacher_id').references(() => teachers.teacherId, { onDelete: 'set null' }),
-    title: varchar('title', { length: 255 }).notNull(),
-    description: text('description'),
-    createdAt: date('created_at').defaultNow(),
-    dueDate: date('due_date'),
-  */
-
   router.use("/:studentId/homeworks", studentDataMiddleware);
   router.get("/:studentId/homeworks", async (c) => {
     const studentClass = c.get("class");
