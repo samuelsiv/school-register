@@ -1,3 +1,6 @@
+import type { Class } from "./db/schema/classes.js";
+import type { Student } from "./db/schema/students.js";
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -23,7 +26,8 @@ export interface JwtData {
 declare module "hono" {
   interface ContextVariableMap {
     user: JwtData;
-    studentId: number;
+    student: Student;
+    class: Class;
   }
 }
 

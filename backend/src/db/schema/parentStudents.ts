@@ -20,3 +20,5 @@ export const parentStudentsRelations = relations(parentStudents, ({ one }) => ({
         references: [students.studentId],
     }),
 }));
+
+export type ParentStudentCombination = typeof parentStudents.$inferSelect;

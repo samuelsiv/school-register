@@ -29,3 +29,5 @@ export const eventsRelations = relations(events, ({ one }) => ({
     references: [classes.classId]
   })
 }));
+
+export type Event = typeof events.$inferSelect;

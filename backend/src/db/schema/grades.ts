@@ -30,3 +30,5 @@ export const gradesRelations = relations(grades, ({ one }) => ({
     references: [subjects.subjectId],
   }),
 }));
+
+export type Grade = typeof grades.$inferSelect;

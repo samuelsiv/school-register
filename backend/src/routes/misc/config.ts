@@ -11,7 +11,7 @@ export default async function () {
 			features: {
 				login: true,
 				forgotPassword: true,
-				demo: process.env.DEMO == "1"
+				demo: parseInt(process.env.DEMO ?? "0") === 1,
 			}
 		});
 	});
