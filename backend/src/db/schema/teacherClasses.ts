@@ -20,3 +20,5 @@ export const teacherClassesRelations = relations(teacherClasses, ({ one }) => ({
     references: [classes.classId],
   }),
 }));
+
+export type TeacherClassCombination = typeof teacherClasses.$inferSelect;

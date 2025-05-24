@@ -20,3 +20,5 @@ export const teachersSubjectsRelations = relations(teachersSubjects, ({ one }) =
     references: [subjects.subjectId],
   }),
 }));
+
+export type TeacherSubjectCombination = typeof teachersSubjects.$inferSelect;

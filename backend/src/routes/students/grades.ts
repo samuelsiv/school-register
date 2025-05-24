@@ -6,15 +6,14 @@ import { parentStudents } from "@/db/schema/parentStudents.js";
 import {subjects} from "@/db/schema/subjects.js";
 import {users} from "@/db/schema/users.js";
 import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
-import { parentAssociationMiddleware } from "@/middleware/parentAssociation.js";
+import { studentDataMiddleware } from "@/middleware/studentData.js";
 
 export default async function () {
   const router = new Hono().basePath("/api/v1/students");
 
-  router.use("/:studentId/grades", parentAssociationMiddleware);
+  router.use("/:studentId/grades", studentDataMiddleware);
   router.get("/:studentId/grades", async (c) => {
-    const user = c.get("user");
-    const studentId = c.get("studentId");
+    const student = c.get("student");
 
     const allGrades: {
       gradeId: number, subjectName: string
@@ -31,7 +30,7 @@ export default async function () {
         comment: grades.comment, teacherName: users.name
       })
       .from(grades)
-      .where(eq(grades.studentId, studentId))
+      .where(eq(grades.studentId, student.studentId))
       .innerJoin(subjects, eq(subjects.subjectId, grades.subjectId))
       .innerJoin(users, eq(users.userId, grades.teacherId))).map((grade) => {
         return {

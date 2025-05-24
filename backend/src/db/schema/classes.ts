@@ -21,3 +21,5 @@ export const classesRelations = relations(classes, ({ many, one }) => ({
   homeworks: many(homeworks),
   events: many(events),
 }));
+
+export type Class = typeof classes.$inferSelect;

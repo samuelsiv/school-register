@@ -30,3 +30,5 @@ export const homeworksRelations = relations(homeworks, ({ one, many }) => ({
     references: [teachers.teacherId],
   }),
 }));
+
+export type Homework = typeof homeworks.$inferSelect;
