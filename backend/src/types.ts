@@ -27,7 +27,7 @@ declare module "hono" {
   interface ContextVariableMap {
     user: JwtData;
     student: Student;
-    class: Class;
+    class: Class | null; // student might not be enrolled
   }
 }
 

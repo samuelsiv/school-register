@@ -45,18 +45,18 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
     student = dbResult[0];
   }
 
-  if (!student)
+  if (!student) {
     return c.json({
       error: "Student not found"
-      }, 404);  
+    }, 404);  
+  }
       
-
-  const classEntry = await db
+  const classEntries = await db
     .select()
     .from(classes)
     .where(eq(classes.classId,  student.studentId));
 
-  c.set("class", classEntry[0]);
+  c.set("class", classEntries.length <= 0 ? null : classEntries[0]);
 
   await next();
 });
