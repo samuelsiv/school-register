@@ -13,7 +13,9 @@ export default async function () {
 
   router.use("/:studentId/grades", studentDataMiddleware);
   router.get("/:studentId/grades", async (c) => {
+    console.log('StudentId param:', c.req.param('studentId'));
     const student = c.get("student");
+    console.log('Student data:', student);
 
     const allGrades: {
       gradeId: number, subjectName: string

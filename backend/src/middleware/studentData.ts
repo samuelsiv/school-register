@@ -28,9 +28,9 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
     }
 
     const studentEntries = await db
-        .select()
-        .from(students)
-        .where(eq(students.studentId, studentId));
+      .select()
+      .from(students)
+      .where(eq(students.studentId, studentId));
 
     student = studentEntries[0];
   } else if (user.role === "student") {
@@ -50,10 +50,13 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
     }, 404);  
   }
       
+  // Set the student in the context
+  c.set("student", student);
+
   const classEntries = await db
     .select()
     .from(classes)
-    .where(eq(classes.classId,  student.studentId));
+    .where(eq(classes.classId, student.classId!)); // Changed from studentId to classId
 
   c.set("class", classEntries.length <= 0 ? null : classEntries[0]);
 
