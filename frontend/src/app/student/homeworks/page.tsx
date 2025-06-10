@@ -5,10 +5,12 @@ import {AppSidebar} from "@/components/AppSidebar";
 import KidInfoAlert from "@/components/alert/KidInfoAlert";
 import UserStore from "@/stores/user";
 import {Calendar} from "@/components/ui/calendar";
-import HomeworkCard from "@/components/cards/HomeworkCard";
+import HomeworkCard from "@/components/cards/homeworks/HomeworkCard";
 import {Homework} from "@/types/homework";
 import {useState, useMemo} from "react";
 import {Card} from "@/components/ui/card";
+import {Grade} from "@/types/grade";
+import HomeworkExpandedCard from "@/components/cards/homeworks/HomeworkExpandedCard";
 
 export default function Homeworks() {
     const userStore = UserStore.useContainer();
@@ -23,6 +25,9 @@ export default function Homeworks() {
                 homeworkDate.getFullYear() === selectedDay.getFullYear();
         }), [userStore.homeworks, selectedDay]
     );
+
+    const [selectedHomework, setSelectedHomework] = useState<Homework | null>(null)
+
 
     return <div
         className="w-full  text-foreground flex items-center p-3 gap-6 text-center h-full">
@@ -53,9 +58,11 @@ export default function Homeworks() {
                 />
             </Card>
 
-            <div className="grid grid-rows-2 grid-cols-3 gap-12">
-                {monthHomeworks.map((homework: Homework) => <HomeworkCard homework={homework}
-                                                                         key={homework.homeworkId}/>)}
+            <div className="grid grid-rows-2 grid-cols-3 gap-12 w-full">
+                { selectedHomework == null && monthHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} onArrowClick={() => {
+                    setSelectedHomework(homework)
+                }}/>)}
+                {(selectedHomework != null) && <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)} /> }
             </div>
         </main>
     </div>

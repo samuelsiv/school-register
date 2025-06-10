@@ -23,6 +23,7 @@ export default async function () {
         dueDate: homeworks.dueDate,
         subjectName: subjects.subjectName,
           teacherName: users.name,
+          homeworkId: homeworks.homeworkId
       })
       .from(homeworks)
       .where(eq(homeworks.classId, studentClass.classId))
