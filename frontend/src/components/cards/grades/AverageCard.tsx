@@ -9,7 +9,7 @@ export default function AverageCard({average, onArrowClick}: {
     onArrowClick: () => void
 }) {
     return <motion.div layout key={"avercard-" + average.subjectId} layoutId={"avercard-" + average.subjectId.toString()}>
-        <Card className="flex flex-col lg:flex-row gap-12 md:gap-4 items-center px-4 py-2 my-2 justify-between border-t border-t-[2px]"
+        <Card className="flex flex-col lg:flex-row gap-12 md:gap-4 items-center px-4 py-2 my-2 justify-between border-t-[2px]"
               key={"avercard-" + average.subjectId} onClick={() =>
             onArrowClick()
         }>
