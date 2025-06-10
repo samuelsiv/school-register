@@ -1,10 +1,6 @@
 import { Hono } from "hono";
-import { grades } from "@/db/schema/grades.js";
 import { and, desc, eq } from "drizzle-orm";
-import { parentStudents } from "@/db/schema/parentStudents.js";
 import {subjects} from "@/db/schema/subjects.js";
-import {users} from "@/db/schema/users.js";
-import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
 import { studentDataMiddleware } from "@/middleware/studentData.js";
 import { homeworks } from "@/db/schema/homeworks.js";
 import { db } from "@/db/index.js";
