@@ -7,28 +7,23 @@ import UserStore from "@/stores/user";
 import {Calendar} from "@/components/ui/calendar";
 import HomeworkCard from "@/components/cards/HomeworkCard";
 import {Homework} from "@/types/homework";
-import {useState} from "react";
+import {useState, useMemo} from "react";
 import {Card} from "@/components/ui/card";
 
 export default function Homeworks() {
     const userStore = UserStore.useContainer();
     //const { grades, isLoadingGrades, isErrorGrades } = useGrades()
     const [selectedDay, setDay] = useState<Date>(new Date())
+    // filter me the homeworks based on the month
+    const monthHomeworks = useMemo(() =>
+        userStore.homeworks.filter(homework => {
+            const homeworkDate = new Date(homework.dueDate);
+            return !isNaN(homeworkDate.getTime()) &&
+                homeworkDate.getMonth() === selectedDay.getMonth() &&
+                homeworkDate.getFullYear() === selectedDay.getFullYear();
+        }), [userStore.homeworks, selectedDay]
+    );
 
-    const testHomeworks: Homework[] = [
-        {
-            teacherName: "Jane Doe",
-            subjectName: "Maths",
-            title: "Do the homeworks",
-            description: "Homework where you have to do your homeworks",
-            homeworkId: 123,
-            subjectId: 123,
-            dueDate: "27/07/2027",
-            classId: 132,
-            createdAt: "26/07/2027",
-            teacherId: 111
-        }
-    ]
     return <div
         className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted h-full">
         <AppSidebar/>
@@ -58,9 +53,8 @@ export default function Homeworks() {
                 />
             </Card>
 
-            {selectedDay.getMonth()}
             <div className="grid grid-rows-2 grid-cols-3 gap-12">
-                {testHomeworks.map((homework: Homework) => <HomeworkCard homework={homework}
+                {monthHomeworks.map((homework: Homework) => <HomeworkCard homework={homework}
                                                                          key={homework.homeworkId}/>)}
             </div>
         </main>
