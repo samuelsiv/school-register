@@ -13,7 +13,7 @@ import UserStore from "@/stores/user";
 export default function HomePage() {
     const userStore = UserStore.useContainer();
     return <div
-        className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted">
+        className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <AppSidebar/>
         <main className="flex flex-col w-full items-center justify-center gap-6">
             <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
