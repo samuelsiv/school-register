@@ -1,6 +1,6 @@
 "use client"
 
-import {SidebarTrigger} from "@/components/ui/sidebar";
+import {SidebarMenuButton, SidebarTrigger} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/AppSidebar";
 import {HomeworksCard} from "@/components/cards/HomeworksCard";
 import {EventsCard} from "@/components/cards/AbsencesCard";
@@ -11,7 +11,9 @@ import {GradesListCard} from "@/components/cards/GradesListCard";
 import UserStore from "@/stores/user";
 import {useMemo} from "react";
 import {Card} from "@/components/ui/card";
-import {GraduationCapIcon} from "lucide-react";
+import {GraduationCapIcon, LogOutIcon} from "lucide-react";
+import {redirect} from "next/navigation";
+import {Button} from "@/components/ui/button";
 
 export default function HomePage() {
     const userStore = UserStore.useContainer();
@@ -28,7 +30,7 @@ export default function HomePage() {
                 <br/>
             </div>
 
-            <div className="grid grid-rows-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
+            <div className="grid grid-rows-1 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
                 {userStore.teacherClasses.map(teacherClass => <Card className={"p-4 border-t-[2px] gap-2 items-center"}>
                     <GraduationCapIcon />
                     <h1 className="font-bold text-2xl">{teacherClass.className}</h1>
@@ -36,6 +38,15 @@ export default function HomePage() {
                     <h2 className="font-semibold text-l">Coordinator: {teacherClass.coordinator}</h2>
                 </Card>)}
             </div>
+            <Button asChild onClick={() => {
+                document.cookie = "auth_token=; Max-Age=1";
+                redirect("/login");
+            }} className="mt-4">
+                <div className="w-[40%]">
+                    <LogOutIcon />
+                    <a>Logout</a>
+                </div>
+            </Button>
         </main>
     </div>
 }
