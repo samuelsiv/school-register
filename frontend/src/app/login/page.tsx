@@ -75,7 +75,6 @@ function LoginForm() {
                             redirect("/teachers");
                         }
                     })
-                    .catch(() => window.location.href = "/student");
             })
             .catch((err) => {
                 console.log(err);
@@ -205,7 +204,7 @@ function LoginForm() {
 export default function LoginPage() {
     return (
         <div
-            className="min-h-screen w-full flex flex-col items-center justify-center w-full h-full p-4">
+            className="min-h-screen flex flex-col items-center justify-center w-full h-full p-4">
             <div className="w-full max-w-md mx-auto space-y-6 text-center mb-6">
                 <h1 className="text-4xl font-extrabold tracking-tight text-primary">School Register</h1>
             </div>
