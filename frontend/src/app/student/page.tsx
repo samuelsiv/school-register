@@ -9,9 +9,18 @@ import KidInfoAlert from "@/components/alert/KidInfoAlert";
 import {DashboardAverageCard} from "@/components/cards/DashboardAverageCard";
 import {GradesListCard} from "@/components/cards/GradesListCard";
 import UserStore from "@/stores/user";
+import {useMemo} from "react";
 
 export default function HomePage() {
     const userStore = UserStore.useContainer();
+    const nextHomeworks = useMemo(() =>
+        userStore.homeworks.filter(homework => {
+            const homeworkDate = new Date(homework.dueDate);
+            return !isNaN(homeworkDate.getTime()) &&
+                new Date() < homeworkDate &&
+                homeworkDate < new Date(Date.now() + 1000 * 60 * 60 * 24 * 3);
+        }), [userStore.homeworks]
+    );
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <AppSidebar/>
@@ -32,18 +41,7 @@ export default function HomePage() {
             }
             <div className="grid grid-rows-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
                 <DashboardAverageCard average={userStore.average} averages={userStore.averageByDay} averagesBySubject={userStore.averageBySubject}/>
-                <HomeworksCard homeworks={[{
-                    teacherName: "Jane Doe",
-                    subjectName: "Maths",
-                    title: "Do the homeworks",
-                    description: "Homework where you have to do your homeworks",
-                    homeworkId: 123,
-                    subjectId: 123,
-                    dueDate: "27/07/2027",
-                    classId: 132,
-                    createdAt: "26/07/2027",
-                    teacherId: 111
-                }]}/>
+                <HomeworksCard homeworks={nextHomeworks}/>
 
                 <EventsCard events={[{
                     id: 123,
