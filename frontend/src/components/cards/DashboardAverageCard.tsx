@@ -28,7 +28,7 @@ export function DashboardAverageCard({average, averages, averagesBySubject}: {
     const [selectedAverage, setSelectedAverage] = useState<{ average: number, grades: Grade[], subject: string, subjectId: number, teacherId: number, teacher: string } | null>(null)
 
     return (
-        <Card className="border-t border-t-[2px]">
+        <Card className="border-t-[2px]">
             <CardHeader>
                 <CardTitle>Grade Average</CardTitle>
                 <h2 className="text-2xl font-bold">{average || "/"}</h2>

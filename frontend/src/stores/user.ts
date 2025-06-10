@@ -10,6 +10,7 @@ import { createContainer } from "unstated-next";
 import { UserInfo } from "@/types/userInfo";
 import { Grade, GradeResponse } from "@/types/grade";
 import { Homework } from '@/types/homework'
+import {Class, ClassRes} from "@/types/class";
 const ignoredPaths = ["/login"];
 
 const UserStore = createContainer(() => {
@@ -30,7 +31,8 @@ const UserStore = createContainer(() => {
 			average: 0,
 			averageByDay: [],
 			averageBySubject: [],
-			homeworks: []
+			homeworks: [],
+			teacherClasses: []
 		};
 	}
 
@@ -38,6 +40,7 @@ const UserStore = createContainer(() => {
 	const [name, setName] = useState<string | null>(null);
 
 	const [isParent, setIsParent] = useState(false);
+	const [isTeacher, setIsTeacher] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
 	const [grades, setGrades] = useState<Grade[]>([]);
@@ -45,6 +48,7 @@ const UserStore = createContainer(() => {
 	const [average, setAverage] = useState<number>(0);
 	const [averageByDay, setAverageByDay] = useState<{ date: number, average: number }[]>([]);
 	const [averageBySubject, setAverageBySubject] = useState<{ average: number, grades: Grade[], subject: string, subjectId: number, teacherId: number, teacher: string }[]>([]);
+	const [teacherClasses, setTeacherClasses] = useState<Class[]>([]);
 
 	const selectStudent = (student: Student) => {
 		setSelectedStudent(student);
@@ -69,6 +73,7 @@ const UserStore = createContainer(() => {
 			setUserId(userData.user.userId);
 			setName(userData.user.name);
 			setIsParent(userData.user.role === "parent");
+			setIsTeacher(userData.user.role === "teacher");
 
 			setSelectedStudent(userData.assignedStudents[0]);
 
@@ -116,6 +121,19 @@ const UserStore = createContainer(() => {
 		}
 	}, [gradesData]);
 
+	const { data: teacherClassesData } = useSWR<ClassRes>(
+		isTeacher ? `/api/v1/teachers/classes` : null,
+		fetcher,
+		{ keepPreviousData: true }
+	);
+
+
+	useEffect(() => {
+		if (teacherClassesData && isTeacher) {
+			setTeacherClasses(teacherClassesData.allClasses);
+		}
+	}, [teacherClassesData]);
+
 	return {
 		userId,
 		getName,
@@ -129,7 +147,8 @@ const UserStore = createContainer(() => {
 		average,
 		averageByDay,
 		averageBySubject,
-		homeworks
+		homeworks,
+		teacherClasses
 	};
 });
 
