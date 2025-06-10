@@ -29,9 +29,11 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-rows-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
-                {userStore.teacherClasses.map(teacherClass => <Card className={"p-4 border-t-[2px] gap-4 items-center"}>
+                {userStore.teacherClasses.map(teacherClass => <Card className={"p-4 border-t-[2px] gap-2 items-center"}>
                     <GraduationCapIcon />
                     <h1 className="font-bold text-2xl">{teacherClass.className}</h1>
+                    <h2 className="font-semibold text-xl">{teacherClass.studentCount} students</h2>
+                    <h2 className="font-semibold text-l">Coordinator: {teacherClass.coordinator}</h2>
                 </Card>)}
             </div>
         </main>
