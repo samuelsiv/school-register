@@ -25,7 +25,7 @@ export default function Homeworks() {
     );
 
     return <div
-        className="bg-background text-foreground flex items-center p-3 gap-6 text-center bg-gradient-to-b from-background to-muted h-full">
+        className="w-full  text-foreground flex items-center p-3 gap-6 text-center h-full">
         <AppSidebar/>
 
         <main className="flex flex-col w-full items-center justify-center gap-6">
