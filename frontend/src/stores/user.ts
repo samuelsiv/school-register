@@ -9,7 +9,7 @@ import useSWR from "swr";
 import { createContainer } from "unstated-next";
 import { UserInfo } from "@/types/userInfo";
 import { Grade, GradeResponse } from "@/types/grade";
-
+import { Homework } from '@/types/homework'
 const ignoredPaths = ["/login"];
 
 const UserStore = createContainer(() => {
@@ -29,7 +29,8 @@ const UserStore = createContainer(() => {
 			grades: [],
 			average: 0,
 			averageByDay: [],
-			averageBySubject: []
+			averageBySubject: [],
+			homeworks: []
 		};
 	}
 
@@ -40,6 +41,7 @@ const UserStore = createContainer(() => {
 	const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 	const [managedStudents, setManagedStudents] = useState<Student[]>([]);
 	const [grades, setGrades] = useState<Grade[]>([]);
+	const [homeworks, setHomeworks] = useState<Homework[]>([]);
 	const [average, setAverage] = useState<number>(0);
 	const [averageByDay, setAverageByDay] = useState<{ date: number, average: number }[]>([]);
 	const [averageBySubject, setAverageBySubject] = useState<{ average: number, grades: Grade[], subject: string, subjectId: number, teacherId: number, teacher: string }[]>([]);
@@ -90,6 +92,8 @@ const UserStore = createContainer(() => {
 		fetcher,
 		{ keepPreviousData: true }
 	);
+
+
 	
 	useEffect(() => {
 		if (gradesData) {
@@ -97,6 +101,18 @@ const UserStore = createContainer(() => {
 			setAverage(gradesData.average);
 			setAverageByDay(gradesData.averagesByDay)
 			setAverageBySubject(gradesData.averagesBySubject)
+		}
+	}, [gradesData]);
+
+	const { data: homeworksData } = useSWR<Homework[]>(
+		selectedStudent ? `/api/v1/students/${selectedStudent.studentId}/homeworks` : null,
+		fetcher,
+		{ keepPreviousData: true }
+	);
+
+	useEffect(() => {
+		if (homeworksData) {
+			setHomeworks(homeworksData);
 		}
 	}, [gradesData]);
 
@@ -112,7 +128,8 @@ const UserStore = createContainer(() => {
 		grades,
 		average,
 		averageByDay,
-		averageBySubject
+		averageBySubject,
+		homeworks
 	};
 });
 

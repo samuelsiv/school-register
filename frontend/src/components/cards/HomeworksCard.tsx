@@ -13,7 +13,6 @@ export function HomeworksCard({homeworks}: { homeworks: Homework[] }) {
             </CardHeader>
             <CardContent>
                 {homeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={homework.homeworkId}/>)}
-
             </CardContent>
         </Card>
     )
