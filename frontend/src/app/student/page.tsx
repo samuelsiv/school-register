@@ -43,11 +43,11 @@ export default function HomePage() {
                 <DashboardAverageCard average={userStore.average} averages={userStore.averageByDay} averagesBySubject={userStore.averageBySubject}/>
                 <HomeworksCard homeworks={nextHomeworks}/>
 
-                <EventsCard events={[{
+                { /*<EventsCard events={[{
                     id: 123,
                     type: EventType.ABSENCE,
                     date: "17/04/2025"
-                }]}/>
+                }]}/> */ }
 
                 <GradesListCard grades={userStore.grades} cols={1}/>
             </div>
