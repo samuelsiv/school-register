@@ -12,7 +12,7 @@ import UserStore from "@/stores/user";
 import {useMemo, useState} from "react";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
 import {Student} from "@/types/student";
-import {AlertCircleIcon, ChevronRightIcon, UserIcon} from "lucide-react";
+import {AlertCircleIcon, ChevronRightIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
 import {Card} from "@/components/ui/card";
 
 export default function HomePage() {
@@ -46,7 +46,8 @@ export default function HomePage() {
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
                     </div>
                     {students.map(student =>
-                        <Card className="flex flex-row items-center gap-4 px-2 py-2 w-full justify-start">
+                        <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
+                        onClick={() => setSelectedUser(student)}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
                                 <UserIcon />
                                 <span className="text-lg font-semibold">{student.name} {student.surname}</span>
@@ -60,9 +61,18 @@ export default function HomePage() {
                         <div className="w-full h-full flex align-center items-center justify-center flex-col gap-4">
                             <AlertCircleIcon size="36" />
                             <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No student selected</h2>
-
                         </div>
                     }
+                    {selectedUser != null && <div className="w-full h-full flex items-center flex-col gap-4">
+                        <UserCircleIcon size={72} />
+                        <h1 className="text-3xl font-semibold">{selectedUser.name} {selectedUser.surname}</h1>
+                        <div className={"w-full flex justify-start px-4 flex-col gap-4 items-start"}>
+                            <h1 className="text-2xl font-semibold">Average: 2</h1>
+                            <h1 className="text-2xl font-semibold">Comes from: Milan</h1>
+                            <h1 className="text-2xl font-semibold">other info</h1>
+
+                        </div>
+                    </div>}
                 </Card>
             </div>
         </main>
