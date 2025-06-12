@@ -14,6 +14,7 @@ import {Card} from "@/components/ui/card";
 import {GraduationCapIcon, LogOutIcon} from "lucide-react";
 import {redirect} from "next/navigation";
 import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
 export default function HomePage() {
     const userStore = UserStore.useContainer();
@@ -31,12 +32,13 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-rows-1 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
-                {userStore.teacherClasses.map(teacherClass => <Card className={"p-4 border-t-[2px] gap-2 items-center"}>
+                {userStore.teacherClasses.map(teacherClass => <Link href={`/teachers/${teacherClass.classId }`} key={teacherClass.classId}>
+                    <Card className={"p-4 border-t-[2px] gap-2 items-center"}>
                     <GraduationCapIcon />
                     <h1 className="font-bold text-2xl">{teacherClass.className}</h1>
                     <h2 className="font-semibold text-xl">{teacherClass.studentCount} students</h2>
                     <h2 className="font-semibold text-l">Coordinator: {teacherClass.coordinator}</h2>
-                </Card>)}
+                </Card></Link>)}
             </div>
             <Button asChild onClick={() => {
                 document.cookie = "auth_token=; Max-Age=1";

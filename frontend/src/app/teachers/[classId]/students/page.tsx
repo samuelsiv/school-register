@@ -1,0 +1,70 @@
+"use client"
+
+import {SidebarTrigger} from "@/components/ui/sidebar";
+import {AppSidebar} from "@/components/AppSidebar";
+import {HomeworksCard} from "@/components/cards/HomeworksCard";
+import {EventsCard} from "@/components/cards/AbsencesCard";
+import {EventType} from "@/types/eventType";
+import KidInfoAlert from "@/components/alert/KidInfoAlert";
+import {DashboardAverageCard} from "@/components/cards/DashboardAverageCard";
+import {GradesListCard} from "@/components/cards/GradesListCard";
+import UserStore from "@/stores/user";
+import {useMemo, useState} from "react";
+import {TeacherSidebar} from "@/components/TeacherSidebar";
+import {Student} from "@/types/student";
+import {AlertCircleIcon, ChevronRightIcon, UserIcon} from "lucide-react";
+import {Card} from "@/components/ui/card";
+
+export default function HomePage() {
+    const userStore = UserStore.useContainer();
+    const [selectedUser, setSelectedUser] = useState<Student | null>(null)
+    const students: Student[] = [{
+        studentId: 1,
+        username: "marcop",
+        classId: 1,
+        name: "marco",
+        surname: "polo"
+    }]
+    return <div
+        className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
+        <TeacherSidebar/>
+        <main className="flex flex-col w-full items-center h-full justify-center gap-6">
+            <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
+                <SidebarTrigger/>
+                <div>
+                    <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
+                        Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
+                    </h1>
+                    <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your students&#39; school
+                        progress and attendance</h2>
+                </div>
+                <br/>
+            </div>
+            <div className="grid grid-rows-2 w-full h-full md:grid-rows-1 xl:grid-rows-1 grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-12">
+                <div className="flex flex-col gap-6 w-full justify-start">
+                    <div className="flex flex-row items-center gap-4 py-2 w-full justify-start">
+                        <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
+                    </div>
+                    {students.map(student =>
+                        <Card className="flex flex-row items-center gap-4 px-2 py-2 w-full justify-start">
+                            <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
+                                <UserIcon />
+                                <span className="text-lg font-semibold">{student.name} {student.surname}</span>
+                            </div>
+                            <ChevronRightIcon />
+                        </Card>
+                    )}
+                </div>
+                <Card className="flex flex-col gap-6 w-full h-[80vh] justify-start">
+                    {selectedUser == null &&
+                        <div className="w-full h-full flex align-center items-center justify-center flex-col gap-4">
+                            <AlertCircleIcon size="36" />
+                            <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No student selected</h2>
+
+                        </div>
+                    }
+                </Card>
+            </div>
+        </main>
+    </div>
+}
