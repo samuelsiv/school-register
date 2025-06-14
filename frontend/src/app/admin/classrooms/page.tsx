@@ -12,18 +12,19 @@ import UserStore from "@/stores/user";
 import {useMemo, useState} from "react";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
 import {Student} from "@/types/student";
-import {AlertCircleIcon, ChevronRightIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
+import {AlertCircleIcon, ChevronRightIcon, GroupIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
 import {Card} from "@/components/ui/card";
+import { Class } from "@/types/class";
 
-export default function TeacherStudentsPage() {
+export default function AdminClassroomsPage() {
     const userStore = UserStore.useContainer();
-    const [selectedUser, setSelectedUser] = useState<Student | null>(null)
-    const students: Student[] = [{
-        studentId: 1,
-        username: "marcop",
+    const [selectedClass, setSelectedClass] = useState<Class | null>(null)
+    const classes: Class[] = [{
+        className: "5^B",
         classId: 1,
-        name: "marco",
-        surname: "polo"
+        coordinator: "Marco Francesco",
+        studentCount: 6,
+        schoolYear: "2025"
     }]
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
@@ -35,7 +36,7 @@ export default function TeacherStudentsPage() {
                     <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
                         Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
                     </h1>
-                    <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your students&#39; school
+                    <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your school&#39;s
                         progress and attendance</h2>
                 </div>
                 <br/>
@@ -43,34 +44,33 @@ export default function TeacherStudentsPage() {
             <div className="grid grid-rows-2 w-full h-full md:grid-rows-1 xl:grid-rows-1 grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-12">
                 <div className="flex flex-col gap-6 w-full justify-start">
                     <div className="flex flex-row items-center gap-4 py-2 w-full justify-start">
-                        <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
+                        <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Classrooms</h2>
                     </div>
-                    {students.map(student =>
-                        <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
-                        onClick={() => setSelectedUser(student)}>
+                    {classes.map(classroom =>
+                        <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedClass?.classId == classroom.classId) ? " ring-1" : "")}
+                        onClick={() => setSelectedClass(classroom)}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
-                                <UserIcon />
-                                <span className="text-lg font-semibold">{student.name} {student.surname}</span>
+                                <GroupIcon />
+                                <span className="text-lg font-semibold">{classroom.className}</span>
                             </div>
                             <ChevronRightIcon />
                         </Card>
                     )}
                 </div>
                 <Card className="flex flex-col gap-6 w-full h-[80vh] justify-start">
-                    {selectedUser == null &&
+                    {selectedClass == null &&
                         <div className="w-full h-full flex align-center items-center justify-center flex-col gap-4">
                             <AlertCircleIcon size="36" />
-                            <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No student selected</h2>
+                            <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No classroom selected</h2>
                         </div>
                     }
-                    {selectedUser != null && <div className="w-full h-full flex items-center flex-col gap-4">
+                    {selectedClass != null && <div className="w-full h-full flex items-center flex-col gap-4">
                         <UserCircleIcon size={72} />
-                        <h1 className="text-3xl font-semibold">{selectedUser.name} {selectedUser.surname}</h1>
+                        <h1 className="text-3xl font-semibold">{selectedClass.className}</h1>
                         <div className={"w-full flex justify-start px-4 flex-col gap-4 items-start"}>
-                            <h1 className="text-2xl font-semibold">Average: 2</h1>
-                            <h1 className="text-2xl font-semibold">Comes from: Milan</h1>
-                            <h1 className="text-2xl font-semibold">other info</h1>
-
+                            <h1 className="text-2xl font-semibold">Student count: {selectedClass.studentCount}</h1>
+                            <h1 className="text-2xl font-semibold">School year: {selectedClass.schoolYear}</h1>
+                            <h1 className="text-2xl font-semibold">Coordinated by {selectedClass.coordinator}</h1>
                         </div>
                     </div>}
                 </Card>
