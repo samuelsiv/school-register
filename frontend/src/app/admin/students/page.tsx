@@ -15,7 +15,7 @@ import {Student} from "@/types/student";
 import {AlertCircleIcon, ChevronRightIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
 import {Card} from "@/components/ui/card";
 
-export default function TeacherStudentsPage() {
+export default function AdminStudentsPage() {
     const userStore = UserStore.useContainer();
     const [selectedUser, setSelectedUser] = useState<Student | null>(null)
     const students: Student[] = [{
@@ -35,7 +35,7 @@ export default function TeacherStudentsPage() {
                     <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
                         Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
                     </h1>
-                    <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your students&#39; school
+                    <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your school&#39;s
                         progress and attendance</h2>
                 </div>
                 <br/>
@@ -70,7 +70,6 @@ export default function TeacherStudentsPage() {
                             <h1 className="text-2xl font-semibold">Average: 2</h1>
                             <h1 className="text-2xl font-semibold">Comes from: Milan</h1>
                             <h1 className="text-2xl font-semibold">other info</h1>
-
                         </div>
                     </div>}
                 </Card>
