@@ -17,17 +17,14 @@ const createAccountSchema = z.object({
   username: z.string().min(1),
   name: z.string().min(1),
   surname: z.string().min(1),
-  role: z.enum(['student', 'teacher']),
-  turnstileToken: z.string(),
+  role: z.enum(['student', 'teacher'])
 });
 
 export default async function () {
   const router = new Hono().basePath("/api/v1/admin");
 
   router.post("/create-account", zValidator('json', createAccountSchema), async (c) => {
-		const { email, password, username, name, surname, role, turnstileToken } = c.req.valid('json');
-
-		if (!await checkTurnstileToken(turnstileToken)) return c.json({ error: "Invalid Turnstile token" }, 400);
+		const { email, password, username, name, surname, role } = c.req.valid('json');
 
 		const existingUser = await db
 			.select()

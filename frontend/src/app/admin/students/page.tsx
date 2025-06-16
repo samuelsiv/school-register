@@ -12,9 +12,12 @@ import UserStore from "@/stores/user";
 import {useMemo, useState} from "react";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
 import {Student} from "@/types/student";
-import {AlertCircleIcon, ChevronRightIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
+import {AlertCircleIcon, ChevronRightIcon, PlusIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
 import {Card} from "@/components/ui/card";
 import {AdminSidebar} from "@/components/AdminSidebar";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {CreateStudentDialog} from "@/components/dialog/CreateStudentDialog";
+import {Class} from "@/types/class";
 
 export default function AdminStudentsPage() {
     const userStore = UserStore.useContainer();
@@ -25,6 +28,13 @@ export default function AdminStudentsPage() {
         classId: 1,
         name: "marco",
         surname: "polo"
+    }]
+    const classes: Class[] = [{
+        className: "5^B",
+        classId: 1,
+        coordinator: "Marco Francesco",
+        studentCount: 6,
+        schoolYear: "2025"
     }]
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
@@ -43,12 +53,13 @@ export default function AdminStudentsPage() {
             </div>
             <div className="grid grid-rows-2 w-full h-full md:grid-rows-1 xl:grid-rows-1 grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-12">
                 <div className="flex flex-col gap-6 w-full justify-start">
-                    <div className="flex flex-row items-center gap-4 py-2 w-full justify-start">
+                    <div className="flex flex-row items-center gap-4 py-2 w-full justify-between">
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
+                        <CreateStudentDialog classes={classes}/>
                     </div>
                     {students.map(student =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
-                        onClick={() => setSelectedUser(student)}>
+                        onClick={() => setSelectedUser(student)} key={student.studentId}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
                                 <UserIcon />
                                 <span className="text-lg font-semibold">{student.name} {student.surname}</span>

@@ -57,7 +57,8 @@ export default function AdminClassroomsPage() {
                     </div>
                     {classes.map(classroom =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedClass?.classId == classroom.classId) ? " ring-1" : "")}
-                        onClick={() => setSelectedClass(classroom)}>
+                        onClick={() => setSelectedClass(classroom)}
+                        key={classroom.classId}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
                                 <UsersIcon />
                                 <span className="text-lg font-semibold">{classroom.className}</span>
