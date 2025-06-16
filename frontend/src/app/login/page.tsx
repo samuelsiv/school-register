@@ -71,8 +71,10 @@ function LoginForm() {
                     }) => {
                         if (data.user.role == "student" || data.user.role == "parent") {
                             redirect("/student");
-                        } else {
+                        } else if (data.user.role == "teacher") {
                             redirect("/teachers");
+                        } else {
+                            redirect("/admin");
                         }
                     })
             })

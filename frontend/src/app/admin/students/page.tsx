@@ -14,6 +14,7 @@ import {TeacherSidebar} from "@/components/TeacherSidebar";
 import {Student} from "@/types/student";
 import {AlertCircleIcon, ChevronRightIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
 import {Card} from "@/components/ui/card";
+import {AdminSidebar} from "@/components/AdminSidebar";
 
 export default function AdminStudentsPage() {
     const userStore = UserStore.useContainer();
@@ -27,7 +28,7 @@ export default function AdminStudentsPage() {
     }]
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
-        <TeacherSidebar/>
+        <AdminSidebar/>
         <main className="flex flex-col w-full items-center h-full justify-center gap-6">
             <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
                 <SidebarTrigger/>

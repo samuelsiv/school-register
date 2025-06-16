@@ -12,9 +12,18 @@ import UserStore from "@/stores/user";
 import {useMemo, useState} from "react";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
 import {Student} from "@/types/student";
-import {AlertCircleIcon, ChevronRightIcon, GroupIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
+import {
+    AlertCircleIcon,
+    ChevronRightIcon,
+    GroupIcon,
+    UserCircle,
+    UserCircleIcon,
+    UserIcon,
+    UsersIcon
+} from "lucide-react";
 import {Card} from "@/components/ui/card";
 import { Class } from "@/types/class";
+import {AdminSidebar} from "@/components/AdminSidebar";
 
 export default function AdminClassroomsPage() {
     const userStore = UserStore.useContainer();
@@ -28,7 +37,7 @@ export default function AdminClassroomsPage() {
     }]
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
-        <TeacherSidebar/>
+        <AdminSidebar/>
         <main className="flex flex-col w-full items-center h-full justify-center gap-6">
             <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
                 <SidebarTrigger/>
@@ -50,7 +59,7 @@ export default function AdminClassroomsPage() {
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedClass?.classId == classroom.classId) ? " ring-1" : "")}
                         onClick={() => setSelectedClass(classroom)}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
-                                <GroupIcon />
+                                <UsersIcon />
                                 <span className="text-lg font-semibold">{classroom.className}</span>
                             </div>
                             <ChevronRightIcon />

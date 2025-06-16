@@ -14,7 +14,9 @@ export async function GET(request: NextRequest) {
     }
     if (authInfo.role == "student" || authInfo.role == "parent") {
         redirect("/student");
-    } else {
+    } else if (authInfo.role == "teacher") {
         redirect("/teachers");
+    } else {
+        redirect("/admin");
     }
 }
