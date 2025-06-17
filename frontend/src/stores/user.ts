@@ -9,6 +9,7 @@ import { createContainer } from "unstated-next";
 import { UserInfo } from "@/types/userInfo";
 import { Grade, GradeResponse } from "@/types/grade";
 import { Homework } from '@/types/homework'
+import {redirect} from "next/navigation";
 
 const UserStore = createContainer(() => {
 
@@ -44,6 +45,9 @@ const UserStore = createContainer(() => {
 
 	useEffect(() => {
 		if (userData) {
+			if (userData.user.role !== "parent" && userData.user.role !== "student") {
+				redirect("/");
+			}
 			setUserId(userData.user.userId);
 			setName(userData.user.name);
 			setIsParent(userData.user.role === "parent");

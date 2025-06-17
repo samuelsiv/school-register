@@ -3,7 +3,7 @@
 import { fetcher } from "@/lib/request";
 import { getJsonStore, setJsonStore } from "@/lib/storage";
 import { Student } from "@/types/student";
-import {useParams, usePathname} from "next/navigation";
+import {redirect, useParams, usePathname} from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
@@ -28,6 +28,9 @@ const TeacherStore = createContainer(() => {
 
 	useEffect(() => {
 		if (userData) {
+			if (userData.user.role !== "teacher") {
+				redirect("/");
+			}
 			setUserId(userData.user.userId);
 			setName(userData.user.name);
 		}

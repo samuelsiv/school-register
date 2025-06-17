@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
 import {ExtendedUserInfo, UserInfo} from "@/types/userInfo";
+import {redirect} from "next/navigation";
 
 const AdminStore = createContainer(() => {
 	const [userId, setUserId] = useState<number | null>(null);
@@ -20,13 +21,9 @@ const AdminStore = createContainer(() => {
 
 	useEffect(() => {
 		if (userData) {
-			setUserId(userData.user.userId);
-			setName(userData.user.name);
-		}
-	}, [userData]);
-
-	useEffect(() => {
-		if (userData) {
+			if (userData.user.role !== "admin") {
+				redirect("/");
+			}
 			setUserId(userData.user.userId);
 			setName(userData.user.name);
 		}
@@ -37,9 +34,8 @@ const AdminStore = createContainer(() => {
 	}>("/api/v1/admin/users", fetcher, { keepPreviousData: true });
 
 	useEffect(() => {
-		if (usersList) {
+		if (usersList?.users) {
 			setStudents(usersList.users.filter(user => user.studentId !== null));
-			
 		}
 	}, [usersList]);
 
