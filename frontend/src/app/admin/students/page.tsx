@@ -19,17 +19,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import {CreateStudentDialog} from "@/components/dialog/CreateStudentDialog";
 import {Class} from "@/types/class";
 import AdminStore from "@/stores/admin";
+import {ExtendedUserInfo} from "@/types/userInfo";
 
 export default function AdminStudentsPage() {
     const adminStore = AdminStore.useContainer();
-    const [selectedUser, setSelectedUser] = useState<Student | null>(null)
-    const students: Student[] = [{
-        studentId: 1,
-        username: "marcop",
-        classId: 1,
-        name: "marco",
-        surname: "polo"
-    }]
+    const [selectedUser, setSelectedUser] = useState<ExtendedUserInfo | null>(null)
+
     const classes: Class[] = [{
         className: "5^B",
         classId: 1,
@@ -37,6 +32,7 @@ export default function AdminStudentsPage() {
         studentCount: 6,
         schoolYear: "2025"
     }]
+
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <AdminSidebar/>
@@ -58,7 +54,7 @@ export default function AdminStudentsPage() {
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
                         <CreateStudentDialog classes={classes}/>
                     </div>
-                    {students.map(student =>
+                    {adminStore.students.map(student =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
                         onClick={() => setSelectedUser(student)} key={student.studentId}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">

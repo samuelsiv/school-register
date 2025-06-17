@@ -8,3 +8,8 @@ export type UserInfo = {
     creationDate: string,
     lastLoginDate: string,
 }
+
+export type ExtendedUserInfo = {
+    studentId: number | null,
+    teacherId: number | null,
+} & UserInfo
