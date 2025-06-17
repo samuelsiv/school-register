@@ -19,13 +19,7 @@ import TeacherStore from "@/stores/teacher";
 export default function TeacherStudentsPage() {
     const teacherStore = TeacherStore.useContainer();
     const [selectedUser, setSelectedUser] = useState<Student | null>(null)
-    const students: Student[] = [{
-        studentId: 1,
-        username: "marcop",
-        classId: 1,
-        name: "marco",
-        surname: "polo"
-    }]
+
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <TeacherSidebar/>
@@ -46,7 +40,7 @@ export default function TeacherStudentsPage() {
                     <div className="flex flex-row items-center gap-4 py-2 w-full justify-start">
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
                     </div>
-                    {students.map(student =>
+                    {teacherStore.classStudents.map(student =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
                         onClick={() => setSelectedUser(student)}
                         key={student.studentId}>
