@@ -11,17 +11,10 @@ import {GradesListCard} from "@/components/cards/GradesListCard";
 import UserStore from "@/stores/user";
 import {useMemo} from "react";
 import {AdminSidebar} from "@/components/AdminSidebar";
+import AdminStore from "@/stores/admin";
 
 export default function HomePage() {
-    const userStore = UserStore.useContainer();
-    const nextHomeworks = useMemo(() =>
-        userStore.homeworks.filter(homework => {
-            const homeworkDate = new Date(homework.dueDate);
-            return !isNaN(homeworkDate.getTime()) &&
-                new Date() < homeworkDate &&
-                homeworkDate < new Date(Date.now() + 1000 * 60 * 60 * 24 * 3);
-        }), [userStore.homeworks]
-    );
+    const adminStore = AdminStore.useContainer();
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <AdminSidebar/>
@@ -30,7 +23,7 @@ export default function HomePage() {
                 <SidebarTrigger/>
                 <div>
                     <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-                        Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
+                        Welcome, <span className="text-primary">{adminStore.name || ""}!</span>
                     </h1>
                     <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your school&#39;s
                         progress and attendance</h2>

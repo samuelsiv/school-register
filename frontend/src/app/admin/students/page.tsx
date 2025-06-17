@@ -18,9 +18,10 @@ import {AdminSidebar} from "@/components/AdminSidebar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {CreateStudentDialog} from "@/components/dialog/CreateStudentDialog";
 import {Class} from "@/types/class";
+import AdminStore from "@/stores/admin";
 
 export default function AdminStudentsPage() {
-    const userStore = UserStore.useContainer();
+    const adminStore = AdminStore.useContainer();
     const [selectedUser, setSelectedUser] = useState<Student | null>(null)
     const students: Student[] = [{
         studentId: 1,
@@ -44,7 +45,7 @@ export default function AdminStudentsPage() {
                 <SidebarTrigger/>
                 <div>
                     <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-                        Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
+                        Welcome, <span className="text-primary">{adminStore.name || ""}!</span>
                     </h1>
                     <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your school&#39;s
                         progress and attendance</h2>

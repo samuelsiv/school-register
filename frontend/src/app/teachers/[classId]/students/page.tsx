@@ -48,7 +48,8 @@ export default function TeacherStudentsPage() {
                     </div>
                     {students.map(student =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
-                        onClick={() => setSelectedUser(student)}>
+                        onClick={() => setSelectedUser(student)}
+                        key={student.studentId}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
                                 <UserIcon />
                                 <span className="text-lg font-semibold">{student.name} {student.surname}</span>

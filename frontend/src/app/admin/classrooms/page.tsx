@@ -24,9 +24,10 @@ import {
 import {Card} from "@/components/ui/card";
 import { Class } from "@/types/class";
 import {AdminSidebar} from "@/components/AdminSidebar";
+import AdminStore from "@/stores/admin";
 
 export default function AdminClassroomsPage() {
-    const userStore = UserStore.useContainer();
+    const adminStore = AdminStore.useContainer();
     const [selectedClass, setSelectedClass] = useState<Class | null>(null)
     const classes: Class[] = [{
         className: "5^B",
@@ -43,7 +44,7 @@ export default function AdminClassroomsPage() {
                 <SidebarTrigger/>
                 <div>
                     <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-                        Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
+                        Welcome, <span className="text-primary">{adminStore.name || ""}!</span>
                     </h1>
                     <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your school&#39;s
                         progress and attendance</h2>
