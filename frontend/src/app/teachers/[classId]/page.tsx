@@ -11,9 +11,10 @@ import {GradesListCard} from "@/components/cards/GradesListCard";
 import UserStore from "@/stores/user";
 import {useMemo} from "react";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
+import TeacherStore from "@/stores/teacher";
 
 export default function HomePage() {
-    const userStore = UserStore.useContainer();
+    const teacherStore = TeacherStore.useContainer();
 
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
@@ -23,7 +24,7 @@ export default function HomePage() {
                 <SidebarTrigger/>
                 <div>
                     <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-                        Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
+                        Welcome, <span className="text-primary">{teacherStore.name || ""}!</span>
                     </h1>
                     <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your students&#39; school
                         progress and attendance</h2>

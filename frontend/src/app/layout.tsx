@@ -2,7 +2,6 @@
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import {ThemeProvider} from "@/components/ThemeProvider";
-import UserStore from "@/stores/user";
 import {SidebarProvider} from "@/components/ui/sidebar";
 import {Providers} from "@/app/providers";
 
@@ -26,11 +25,9 @@ export default function RootLayout({
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background bg-gradient-to-b from-background to-muted`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <Providers>
-                <UserStore.Provider>
-                    <SidebarProvider>
-                        {children}
-                    </SidebarProvider>
-                </UserStore.Provider>
+                <SidebarProvider>
+                    {children}
+                </SidebarProvider>
             </Providers>
         </ThemeProvider>
         </body>

@@ -14,9 +14,10 @@ import {TeacherSidebar} from "@/components/TeacherSidebar";
 import {Student} from "@/types/student";
 import {AlertCircleIcon, ChevronRightIcon, UserCircle, UserCircleIcon, UserIcon} from "lucide-react";
 import {Card} from "@/components/ui/card";
+import TeacherStore from "@/stores/teacher";
 
 export default function TeacherStudentsPage() {
-    const userStore = UserStore.useContainer();
+    const teacherStore = TeacherStore.useContainer();
     const [selectedUser, setSelectedUser] = useState<Student | null>(null)
     const students: Student[] = [{
         studentId: 1,
@@ -33,7 +34,7 @@ export default function TeacherStudentsPage() {
                 <SidebarTrigger/>
                 <div>
                     <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-                        Welcome, <span className="text-primary">{userStore.getName(true).toString()}!</span>
+                        Welcome, <span className="text-primary">{teacherStore.name || ""}!</span>
                     </h1>
                     <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your students&#39; school
                         progress and attendance</h2>
