@@ -13,17 +13,9 @@ export default async function () {
 
   router.use("/:studentId/grades", studentDataMiddleware);
   router.get("/:studentId/grades", async (c) => {
-    console.log('StudentId param:', c.req.param('studentId'));
     const student = c.get("student");
-    console.log('Student data:', student);
 
-    const allGrades: {
-      gradeId: number, subjectName: string
-      studentId: number, teacherId: number,
-      subjectId: number, value: number,
-      weight: number, insertedAt: string | null,
-      comment: string | null, teacherName: string
-    }[] = (await db
+    const allGrades = (await db
       .select({
         gradeId: grades.gradeId, subjectName: subjects.subjectName,
         studentId: grades.studentId, teacherId: grades.teacherId,
