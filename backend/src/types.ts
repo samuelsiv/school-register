@@ -31,7 +31,7 @@ declare module "hono" {
   }
 }
 
-export type TokenData = {
-  userId: number,
-  role: string
+export interface TokenData {
+  userId: number;
+  role: string;
 }

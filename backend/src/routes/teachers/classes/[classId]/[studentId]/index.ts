@@ -1,19 +1,19 @@
-import { Hono } from "hono";
 import { db } from "@/db/index.js";
-import {eq, count, desc} from "drizzle-orm";
 import { classes } from "@/db/schema/classes.js";
+import {events} from "@/db/schema/events.js";
+import {grades} from "@/db/schema/grades.js";
+import {homeworks} from "@/db/schema/homeworks.js";
+import {parentStudents} from "@/db/schema/parentStudents.js";
+import {students} from "@/db/schema/students.js";
+import {subjects} from "@/db/schema/subjects.js";
 import { teacherClasses } from "@/db/schema/teacherClasses.js";
 import { teachers } from "@/db/schema/teachers.js";
 import { users } from "@/db/schema/users.js";
-import {students} from "@/db/schema/students.js";
 import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
-import {homeworks} from "@/db/schema/homeworks.js";
-import {parentStudents} from "@/db/schema/parentStudents.js";
-import {grades} from "@/db/schema/grades.js";
-import {subjects} from "@/db/schema/subjects.js";
-import {events} from "@/db/schema/events.js";
+import {count, desc, eq} from "drizzle-orm";
+import { Hono } from "hono";
 
-export default async function () {
+export default async function() {
     const router = new Hono().basePath("/api/v1/admin/students/:studentId");
     router.get("", async (c) => {
         const studentId = parseInt(c.req.param("studentId"));
@@ -43,9 +43,8 @@ export default async function () {
 
         if (!student) {
             console.log("Student is falsy:", student);
-            return c.json({error: "Student not found "+studentId}, 404);
+            return c.json({error: "Student not found " + studentId}, 404);
         }
-
 
         const parentsList = await db
             .select({
@@ -59,14 +58,13 @@ export default async function () {
             .where(eq(parentStudents.studentId, studentId))
             .execute();
 
-
         const allGrades = (await db
             .select({
                 gradeId: grades.gradeId, subjectName: subjects.subjectName,
                 studentId: grades.studentId, teacherId: grades.teacherId,
                 subjectId: grades.subjectId, value: grades.value,
                 weight: grades.weight, insertedAt: grades.insertedAt,
-                comment: grades.comment, teacherName: users.name
+                comment: grades.comment, teacherName: users.name,
             })
             .from(grades)
             .where(eq(grades.studentId, student.studentId))
@@ -75,8 +73,8 @@ export default async function () {
             return {
                 ...grade,
                 value: parseFloat(grade.value),
-                weight: parseInt(grade.weight)
-            }
+                weight: parseInt(grade.weight),
+            };
         });
 
         const studentEvents = await db
@@ -93,21 +91,20 @@ export default async function () {
 
         const isCoordinator = teacher.userId === student.coordinatorId;
 
-        const filteredGrades = isCoordinator ? allGrades : allGrades.filter(grade => grade.teacherId === teacher.userId);
-
+        const filteredGrades = isCoordinator ? allGrades : allGrades.filter((grade) => grade.teacherId === teacher.userId);
 
         return c.json({
             student,
             parents: parentsList,
             allGrades: filteredGrades,
             average: filteredGrades.length == 0 ? null : calculateGeneralAverage(filteredGrades),
-            averagesByDay: filteredGrades.length == 0 ? null :calculateAveragesByDay(filteredGrades),
+            averagesByDay: filteredGrades.length == 0 ? null : calculateAveragesByDay(filteredGrades),
             averagesBySubject: filteredGrades.length == 0 ? null : calculateAveragesBySubject(filteredGrades),
             events: studentEvents,
-            homeworks: studentHomeworks
+            homeworks: studentHomeworks,
         });
     });
 
     return router;
 }
-
+

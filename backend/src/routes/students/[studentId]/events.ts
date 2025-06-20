@@ -1,15 +1,15 @@
-import { Hono } from "hono";
 import { db } from "@/db/index.js";
+import {events} from "@/db/schema/events.js";
 import { grades } from "@/db/schema/grades.js";
-import { and, eq } from "drizzle-orm";
 import { parentStudents } from "@/db/schema/parentStudents.js";
 import {subjects} from "@/db/schema/subjects.js";
 import {users} from "@/db/schema/users.js";
 import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
 import { studentDataMiddleware } from "@/middleware/studentData.js";
-import {events} from "@/db/schema/events.js";
+import { and, eq } from "drizzle-orm";
+import { Hono } from "hono";
 
-export default async function () {
+export default async function() {
   const router = new Hono().basePath("/api/v1/students/:studentId");
 
   router.get("/events", async (c) => {
@@ -21,7 +21,7 @@ export default async function () {
         studentId: events.studentId, teacherId: events.teacherId,
         eventHour: events.eventHour, eventDescription: events.eventDescription,
         eventType: events.eventType, classId: events.classId,
-        teacherName: users.name
+        teacherName: users.name,
       })
       .from(events)
       .where(eq(events.studentId, student.studentId))

@@ -1,10 +1,10 @@
-import { Hono } from "hono";
 import { db } from "@/db/index.js";
 import { students } from "@/db/schema/students.js";
 import { users } from "@/db/schema/users.js";
 import { eq } from "drizzle-orm";
+import { Hono } from "hono";
 
-export default async function () {
+export default async function() {
   const router = new Hono().basePath("/api/v1/teachers/classes/:classId");
 
   router.get("/students", async (c) => {

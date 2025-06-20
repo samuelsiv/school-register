@@ -1,11 +1,11 @@
-import { pgTable, integer, primaryKey } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import { teachers } from './teachers.js';
-import { classes } from './classes.js';
+import { relations } from "drizzle-orm";
+import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
+import { classes } from "./classes.js";
+import { teachers } from "./teachers.js";
 
-export const teacherClasses = pgTable('teachers_classes', {
-  teacherId: integer('teacher_id').notNull().references(() => teachers.teacherId, { onDelete: 'cascade' }),
-  classId: integer('class_id').notNull().references(() => classes.classId, { onDelete: 'cascade' }),
+export const teacherClasses = pgTable("teachers_classes", {
+  teacherId: integer("teacher_id").notNull().references(() => teachers.teacherId, { onDelete: "cascade" }),
+  classId: integer("class_id").notNull().references(() => classes.classId, { onDelete: "cascade" }),
 }, (table) => [
   primaryKey({ columns: [table.teacherId, table.classId] }),
 ]);

@@ -1,22 +1,22 @@
-import { Hono } from "hono";
-import { eq } from 'drizzle-orm';
 import { db } from "@/db/index.js";
+import { parentStudents } from "@/db/schema/parentStudents.js";
+import { students } from "@/db/schema/students.js";
 import { users } from "@/db/schema/users.js";
 import { authMiddleware } from "@/middleware/auth.js";
-import { students } from "@/db/schema/students.js";
-import { parentStudents } from "@/db/schema/parentStudents.js";
+import { eq } from "drizzle-orm";
+import { Hono } from "hono";
 
-export default async function () {
+export default async function() {
 	const router = new Hono().basePath("/api/v1/user");
 
 	router.get("/info", async (c) => {
 		const { userId } = c.get("user");
 		const [ userFound ] = await db.select().from(users).where(eq(users.userId, userId)).limit(1);
 
-		let assignedStudents: {
+		let assignedStudents: Array<{
 			studentId: number;
 			classId: number | null;
-		}[] = [];
+		}> = [];
 
 		if (userFound.role === "parent") {
 			assignedStudents = (await db
@@ -27,7 +27,7 @@ export default async function () {
 						classId: students.classId,
 						name: users.name,
 						surname: users.surname,
-						username: users.username
+						username: users.username,
 					},
 				})
 				.from(parentStudents)
@@ -42,14 +42,14 @@ export default async function () {
 					classId: students.classId,
 					name: users.name,
 					surname: users.surname,
-					username: users.username
+					username: users.username,
 				})
 				.from(students)
 				.where(eq(students.userId, userId))
 				.innerJoin(users, eq(students.userId, userId))
 				.limit(1))
 				.map((entry) => entry);
-			
+
 			assignedStudents = studentEntry.map((entry) => entry);
 		}
 
@@ -57,7 +57,7 @@ export default async function () {
 		return c.json({
 			success: true,
 			user: userInfo,
-			assignedStudents
+			assignedStudents,
 		});
 	});
 

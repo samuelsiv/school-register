@@ -1,16 +1,16 @@
-import { Hono } from "hono";
 import { db } from "@/db/index.js";
-import {eq, count, ne, isNotNull} from "drizzle-orm";
 import { classes } from "@/db/schema/classes.js";
+import {students} from "@/db/schema/students.js";
 import { teacherClasses } from "@/db/schema/teacherClasses.js";
 import { teachers } from "@/db/schema/teachers.js";
 import { users } from "@/db/schema/users.js";
-import {students} from "@/db/schema/students.js";
+import {count, eq, isNotNull, ne} from "drizzle-orm";
+import { Hono } from "hono";
 
-export default async function () {
+export default async function() {
     const router = new Hono().basePath("/api/v1/admin/classes");
 
-        router.get("", async (c) => {
+    router.get("", async (c) => {
             const user = c.get("user");
 
             // Prima query: ottieni tutte le classi con i coordinatori
@@ -55,9 +55,9 @@ export default async function () {
             }, {} as Record<number, any[]>);
 
             // Combina le classi con i loro studenti
-            const classesWithStudents = allClasses.map(cls => ({
+            const classesWithStudents = allClasses.map((cls) => ({
                 ...cls,
-                students: studentsByClass[cls.classId] || []
+                students: studentsByClass[cls.classId] || [],
             }));
 
             return c.json({ allClasses: classesWithStudents });

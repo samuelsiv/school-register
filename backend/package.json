@@ -21,11 +21,15 @@
     "hono": "^4.7.9",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.15.6",
+    "tslint": "^5.20.1",
     "zod": "^3.24.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.29.0",
     "@types/node": "^20.17.46",
+    "eslint": "^9.29.0",
     "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.34.1"
   }
 }

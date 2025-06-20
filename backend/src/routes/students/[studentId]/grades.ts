@@ -1,14 +1,14 @@
-import { Hono } from "hono";
 import { db } from "@/db/index.js";
 import { grades } from "@/db/schema/grades.js";
-import { and, eq } from "drizzle-orm";
 import { parentStudents } from "@/db/schema/parentStudents.js";
 import {subjects} from "@/db/schema/subjects.js";
 import {users} from "@/db/schema/users.js";
 import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
 import { studentDataMiddleware } from "@/middleware/studentData.js";
+import { and, eq } from "drizzle-orm";
+import { Hono } from "hono";
 
-export default async function () {
+export default async function() {
   const router = new Hono().basePath("/api/v1/students/:studentId");
 
   router.get("/grades", async (c) => {
@@ -20,7 +20,7 @@ export default async function () {
         studentId: grades.studentId, teacherId: grades.teacherId,
         subjectId: grades.subjectId, value: grades.value,
         weight: grades.weight, insertedAt: grades.insertedAt,
-        comment: grades.comment, teacherName: users.name
+        comment: grades.comment, teacherName: users.name,
       })
       .from(grades)
       .where(eq(grades.studentId, student.studentId))
@@ -29,8 +29,8 @@ export default async function () {
         return {
           ...grade,
           value: parseFloat(grade.value),
-          weight: parseInt(grade.weight)
-        }
+          weight: parseInt(grade.weight),
+        };
     });
 
     return c.json({ allGrades, average: calculateGeneralAverage(allGrades), averagesByDay: calculateAveragesByDay(allGrades), averagesBySubject: calculateAveragesBySubject(allGrades) });

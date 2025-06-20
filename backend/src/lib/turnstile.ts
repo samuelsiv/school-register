@@ -15,13 +15,13 @@ export async function checkTurnstileToken(token: string): Promise<boolean> {
       {
         secret: process.env.TURNSTILE_SECRET_KEY,
         response: token,
-        idempotency_key: crypto.randomUUID()
+        idempotency_key: crypto.randomUUID(),
     },
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      }
+      },
     );
 
     const outcome = (await result.data) as SiteVerifyResponse;

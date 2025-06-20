@@ -1,12 +1,12 @@
-import { Hono } from "hono";
 import { db } from "@/db/index.js";
-import { users } from "@/db/schema/users.js";
+import {classes} from "@/db/schema/classes.js";
 import { students } from "@/db/schema/students.js";
 import { teachers } from "@/db/schema/teachers.js";
-import {classes} from "@/db/schema/classes.js";
+import { users } from "@/db/schema/users.js";
 import {eq} from "drizzle-orm";
+import { Hono } from "hono";
 
-export default async function () {
+export default async function() {
     const router = new Hono().basePath("/api/v1/admin/users");
 
     router.get("", async (c) => {
@@ -28,21 +28,21 @@ export default async function () {
                 userId: students.userId,
                 studentId: students.studentId,
                 classId: students.classId,
-                className: classes.className
+                className: classes.className,
             })
             .from(students)
             .leftJoin(classes, eq(students.classId, classes.classId));
 
         const teacherRows = await db.select({userId: teachers.userId, teacherId: teachers.teacherId}).from(teachers);
 
-        const studentMap = new Map(studentRows.map(s => [s.userId, {
+        const studentMap = new Map(studentRows.map((s) => [s.userId, {
             studentId: s.studentId,
             classId: s.classId,
-            className: s.className
+            className: s.className,
         }]));
-        const teacherMap = new Map(teacherRows.map(t => [t.userId, t.teacherId]));
+        const teacherMap = new Map(teacherRows.map((t) => [t.userId, t.teacherId]));
 
-        const usersWithRoles = allUsers.map(u => {
+        const usersWithRoles = allUsers.map((u) => {
             const studentInfo = studentMap.get(u.userId);
             return {
                 ...u,

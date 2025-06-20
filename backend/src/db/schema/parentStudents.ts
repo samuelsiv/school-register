@@ -1,11 +1,11 @@
-import { pgTable, integer, primaryKey } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import { users } from './users.js';
-import { students } from './students.js';
+import { relations } from "drizzle-orm";
+import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
+import { students } from "./students.js";
+import { users } from "./users.js";
 
-export const parentStudents = pgTable('parent_students', {
-  parentId: integer('parent_id').notNull().references(() => users.userId, { onDelete: 'cascade' }),
-  studentId: integer('student_id').notNull().references(() => students.studentId, { onDelete: 'cascade' }),
+export const parentStudents = pgTable("parent_students", {
+  parentId: integer("parent_id").notNull().references(() => users.userId, { onDelete: "cascade" }),
+  studentId: integer("student_id").notNull().references(() => students.studentId, { onDelete: "cascade" }),
 }, (table) => [
   primaryKey({ columns: [table.parentId, table.studentId] }),
 ]);

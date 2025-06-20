@@ -1,14 +1,14 @@
-import { pgTable, serial, integer, date } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import { users } from './users.js';
-import { classes } from './classes.js';
-import { teachersSubjects } from './teacherSubjects.js';
-import { homeworks } from './homeworks.js';
-import { grades } from './grades.js';
+import { relations } from "drizzle-orm";
+import { date, integer, pgTable, serial } from "drizzle-orm/pg-core";
+import { classes } from "./classes.js";
+import { grades } from "./grades.js";
+import { homeworks } from "./homeworks.js";
+import { teachersSubjects } from "./teacherSubjects.js";
+import { users } from "./users.js";
 
-export const teachers = pgTable('teachers', {
-  teacherId: serial('teacher_id').primaryKey(),
-  userId: integer('user_id').notNull().unique().references(() => users.userId, { onDelete: 'cascade' }),
+export const teachers = pgTable("teachers", {
+  teacherId: serial("teacher_id").primaryKey(),
+  userId: integer("user_id").notNull().unique().references(() => users.userId, { onDelete: "cascade" }),
 });
 
 export const teachersRelations = relations(teachers, ({ one, many }) => ({
