@@ -1,28 +1,24 @@
 import { Hono } from "hono";
 import { zValidator } from '@hono/zod-validator'
 import { z } from "zod";
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import { eq, or } from 'drizzle-orm';
-import { checkTurnstileToken } from "@/lib/turnstile.js";
 import { db } from "@/db/index.js";
 import { users } from "@/db/schema/users.js";
 import { authMiddleware } from "@/middleware/auth.js";
 import { students } from "@/db/schema/students.js";
 import { teachers } from "@/db/schema/teachers.js";
 import {classes} from "@/db/schema/classes.js";
-import {teacherClasses} from "@/db/schema/teacherClasses.js";
 
-const linkTeacherSchema = z.object({
-    teacherId: z.number(),
+const linkStudentSchema = z.object({
     classId: z.number(),
 });
 
 export default async function () {
-    const router = new Hono().basePath("/api/v1/admin");
+    const router = new Hono().basePath("/api/v1/admin/students/:studentId");
 
-    router.post("/link-teacher-to-class", zValidator('json', linkTeacherSchema), async (c) => {
-        const { teacherId, classId } = c.req.valid('json');
+    router.post("/link-to-class", zValidator('json', linkStudentSchema), async (c) => {
+        const { classId } = c.req.valid('json');
+        const studentId = parseInt(c.req.param("studentId"));
 
         const existingClass = await db
             .select()
@@ -35,12 +31,11 @@ export default async function () {
 
         if (existingClass.length == 0) return c.json({ error: "Class doesn't exist" }, 400);
 
-        await db.insert(teacherClasses).values({
-            classId: classId,
-            teacherId: teacherId
-        }).onConflictDoNothing().execute();
+        await db.update(students).set({
+            classId: classId
+        }).where(eq(students.studentId, studentId)).execute();
 
-        return c.json({ message: "Teacher linked to class" }, 201);
+        return c.json({ message: "Student linked to class" }, 201);
     });
 
     return router;

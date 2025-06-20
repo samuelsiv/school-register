@@ -15,14 +15,14 @@ import {parentStudents} from "@/db/schema/parentStudents.js";
 
 const linkParentSchema = z.object({
     studentId: z.number(),
-    parentId: z.number(),
 });
 
 export default async function () {
-    const router = new Hono().basePath("/api/v1/admin");
+    const router = new Hono().basePath("/api/v1/admin/parents/:parentId");
 
-    router.post("/link-parent-to-student", zValidator('json', linkParentSchema), async (c) => {
-        const { studentId, parentId } = c.req.valid('json');
+    router.post("/link-to-student", zValidator('json', linkParentSchema), async (c) => {
+        const { studentId } = c.req.valid('json');
+        const parentId = parseInt(c.req.param("parentId"));
 
         const existingStudent = await db
             .select()
