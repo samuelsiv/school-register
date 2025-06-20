@@ -93,7 +93,7 @@ function LoginForm() {
                 <CardTitle className="text-2xl font-bold text-center">Sign In</CardTitle>
                 <CardDescription className="text-center">
                     Login with your school account credentials<br/>
-                    <p style={{display: isDemo ? "initial" : "none"}}>Demo credentials:<br/>- <b>Student</b>: student@demo.local : demo123</p>
+                    <p style={{display: isDemo ? "initial" : "none"}}>Demo credentials:<br/>- <b>Student</b>: student@demo.local : demo123<br/>- <b>Teacher</b>: teacher@demo.local : demo123<br/>- <b>Admin</b>: admin@demo.local : demo123</p>
                 </CardDescription>
 
             </CardHeader>

@@ -113,6 +113,7 @@ ALTER TABLE "teachers_subjects" ADD CONSTRAINT "teachers_subjects_subject_id_sub
 INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (1, 'Demo', 'Student', 'demostudent', 'student@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'student');
 INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (2, 'Demo', 'Teacher', 'demoteacher', 'teacher@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'teacher');
 INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (3, 'Demo', 'Parent', 'demoparent', 'parent@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'parent');
+INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (4, 'Demo', 'Admin', 'demoadmin', 'admin@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'admin');
 INSERT INTO "subjects" (subject_id, subject_name, description) VALUES (1, 'Maths', 'Maths subject');
 INSERT INTO "subjects" (subject_id, subject_name, description) VALUES (2, 'History', 'History subject');
 
@@ -126,8 +127,9 @@ INSERT INTO "teachers_classes" (teacher_id, class_id) VALUES (1, 1);
 INSERT INTO "students" (student_id, user_id, class_id) VALUES (1, 1, 1);
 INSERT INTO "parent_students" (parent_id, student_id) VALUES (3, 1);
 
-INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (1, 1, 1, 1, '8', '100', 'Additions', TO_DATE('20/05/2025', 'DD/MM/YYYY'));
-INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (2, 1, 1, 2, '9', '100', 'WW1', TO_DATE('16/05/2025', 'DD/MM/YYYY'));
-INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (4, 1, 1, 2, '10', '100', 'WW2', TO_DATE('18/05/2025', 'DD/MM/YYYY'));
+INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (1, 1, 1, 1, '8', '100', 'Additions', TO_DATE('20/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (2, 1, 1, 2, '9', '100', 'WW1', TO_DATE('16/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (4, 1, 1, 2, '10', '100', 'WW2', TO_DATE('18/06/2025', 'DD/MM/YYYY'));
 
-
+INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (1, 1, 1, 1, "Do 320 excercises", "From page 320 to page 326", TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (1, 1, 2, 1, "Study wars", "Study WW1 and WW2", TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'))
