@@ -7,9 +7,9 @@ import {eq} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
-    const router = new Hono().basePath("/api/v1/admin/users");
+    const router = new Hono().basePath("/api/v1/admin");
 
-    router.get("", async (c) => {
+    router.get("/users", async (c) => {
         const allUsers = await db
             .select({
                 userId: users.userId,

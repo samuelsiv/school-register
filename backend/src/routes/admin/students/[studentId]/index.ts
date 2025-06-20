@@ -15,7 +15,7 @@ import { Hono } from "hono";
 
 export default async function() {
 	const router = new Hono().basePath("/api/v1/admin/students/:studentId");
-	router.get("", async (c) => {
+	router.get("/overview", async (c) => {
 		const studentId = parseInt(c.req.param("studentId"));
 		if (isNaN(studentId)) {
 			return c.json({ error: "Invalid studentId " }, 400);

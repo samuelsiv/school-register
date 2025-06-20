@@ -8,9 +8,9 @@ import {count, eq, isNotNull, ne} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
-    const router = new Hono().basePath("/api/v1/admin/classes");
+    const router = new Hono().basePath("/api/v1/admin");
 
-    router.get("", async (c) => {
+    router.get("/classes", async (c) => {
             const user = c.get("user");
 
             // Prima query: ottieni tutte le classi con i coordinatori
