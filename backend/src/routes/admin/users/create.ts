@@ -23,7 +23,7 @@ const createAccountSchema = z.object({
 export default async function() {
 	const router = new Hono().basePath("/api/v1/admin/users");
 
-	router.post("/users", zValidator("json", createAccountSchema), async (c) => {
+	router.post("/create", zValidator("json", createAccountSchema), async (c) => {
 		const { email, password, username, name, surname, role } = c.req.valid("json");
 
 		const existingUser = await db

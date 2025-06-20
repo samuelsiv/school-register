@@ -72,7 +72,7 @@ const AdminStore = createContainer(() => {
 
 	const assignClass = (classId: string) => {
 		console.log(classId)
-		request("POST", "/api/v1/admin/students/" + selectedUser?.studentId + "/link-student-to-class", {
+		request("POST", "/api/v1/admin/students/" + selectedUser?.studentId + "/link-to-class", {
 			data: {
 				classId: parseInt(classId)
 			}

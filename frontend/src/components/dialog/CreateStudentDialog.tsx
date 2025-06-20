@@ -45,7 +45,7 @@ export function CreateStudentDialog({classes, inserted}: {classes: Class[], inse
 
     function onSubmit(values: NewUser) {
         setIsLoading(true);
-        request("POST", "/api/v1/admin/create-account", {
+        request("POST", "/api/v1/admin/users/create", {
             data: values
         })
             .then((data) => {

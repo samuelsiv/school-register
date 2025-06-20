@@ -40,7 +40,7 @@ export function CreateClassroomDialog({teachers, onCreate}: {teachers: ExtendedU
         coordinatorTeacherId: number
     }) {
         setIsLoading(true);
-        request("POST", "/api/v1/admin/create-classroom", {
+        request("POST", "/api/v1/admin/classes/create", {
             data: values
         })
             .then((data) => {

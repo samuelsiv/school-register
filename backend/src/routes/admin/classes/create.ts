@@ -19,7 +19,7 @@ const createClassroomSchema = z.object({
 export default async function() {
 	const router = new Hono().basePath("/api/v1/admin/classes");
 
-	router.post("", zValidator("json", createClassroomSchema), async (c) => {
+	router.post("/create", zValidator("json", createClassroomSchema), async (c) => {
 		const { className, schoolYear, coordinatorTeacherId } = c.req.valid("json");
 
 		const existingClass = await db
