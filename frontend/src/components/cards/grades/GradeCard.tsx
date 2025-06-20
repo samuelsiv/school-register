@@ -1,4 +1,4 @@
-import {ArrowRightIcon, ChevronRight} from "lucide-react";
+import {ChevronRight} from "lucide-react";
 import {Card} from "@/components/ui/card";
 import {Grade} from "@/types/grade";
 import {motion} from "framer-motion";

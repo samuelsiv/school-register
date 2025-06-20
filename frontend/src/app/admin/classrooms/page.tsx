@@ -1,24 +1,11 @@
 "use client"
 
 import {SidebarTrigger} from "@/components/ui/sidebar";
-import {AppSidebar} from "@/components/AppSidebar";
-import {HomeworksCard} from "@/components/cards/HomeworksCard";
-import {EventsCard} from "@/components/cards/AbsencesCard";
-import {EventType} from "@/types/eventType";
-import KidInfoAlert from "@/components/alert/KidInfoAlert";
-import {DashboardAverageCard} from "@/components/cards/DashboardAverageCard";
-import {GradesListCard} from "@/components/cards/GradesListCard";
-import UserStore from "@/stores/user";
-import {useMemo, useState} from "react";
-import {TeacherSidebar} from "@/components/TeacherSidebar";
-import {Student} from "@/types/student";
+import {useState} from "react";
 import {
     AlertCircleIcon,
     ChevronRightIcon,
-    GroupIcon,
-    UserCircle,
     UserCircleIcon,
-    UserIcon,
     UsersIcon
 } from "lucide-react";
 import {Card} from "@/components/ui/card";

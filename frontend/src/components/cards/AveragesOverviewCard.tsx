@@ -1,14 +1,11 @@
 "use client"
 
-import {ArrowLeftIcon, ChevronRight} from "lucide-react"
 
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
 
 import {GradesChart} from "@/components/charts/GradesChart";
-import {Gauge} from "@/components/ui/gauge";
 import AverageCard from "@/components/cards/grades/AverageCard";
 import {useState} from "react";
-import GradeCard from "@/components/cards/grades/GradeCard";
 import {AnimatePresence, motion} from "framer-motion";
 import {Grade} from "@/types/grade";
 import AverageExpandedCard from "@/components/cards/grades/AverageExpandedCard";

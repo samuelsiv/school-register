@@ -3,7 +3,7 @@ import {Homework} from "@/types/homework";
 import HomeworkCard from "@/components/cards/homeworks/HomeworkCard";
 import HomeworkExpandedCard from "@/components/cards/homeworks/HomeworkExpandedCard";
 import {useState} from "react";
-import {AlertCircleIcon, CheckCircle} from "lucide-react";
+import {CheckCircle} from "lucide-react";
 
 export function HomeworksCard({homeworks}: { homeworks: Homework[] }) {
     const [selectedHomework, setSelectedHomework] = useState<Homework | null>(null)
@@ -23,7 +23,7 @@ export function HomeworksCard({homeworks}: { homeworks: Homework[] }) {
                 </div>
                 }
 
-                { selectedHomework == null && homeworks.map((homework: Homework) => <HomeworkCard homework={homework} onArrowClick={() => {
+                { selectedHomework == null && homeworks.map((homework: Homework) => <HomeworkCard key={"hw-" + homework.homeworkId} homework={homework} onArrowClick={() => {
                     setSelectedHomework(homework)
                 }}/>)}
                 {(selectedHomework != null) && <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)} /> }

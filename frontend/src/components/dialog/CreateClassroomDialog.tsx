@@ -1,30 +1,22 @@
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import {LockIcon, MailIcon, PlusIcon, Shield} from "lucide-react";
+import {PlusIcon} from "lucide-react";
 import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select";
-import {Class} from "@/types/class";
 import { Button } from "../ui/button";
 import {Alert, AlertDescription} from "@/components/ui/alert";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {Turnstile} from "next-turnstile";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {fetcher, request} from "@/lib/request";
-import {preload} from "swr";
-import {ExtendedUserInfo, NewUser, UserInfo} from "@/types/userInfo";
-import {redirect} from "next/navigation";
+import {request} from "@/lib/request";
+import {ExtendedUserInfo} from "@/types/userInfo";
 import {useState} from "react";
-import genPwd from "@/lib/passgen";
 const createClassroomSchema = z.object({
     className: z.string(), schoolYear: z.string(), coordinatorTeacherId: z.number()
 });

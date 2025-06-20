@@ -2,6 +2,7 @@ import {Card} from "@/components/ui/card";
 import {Homework} from "@/types/homework";
 import {motion} from "framer-motion";
 import {ChevronRight} from "lucide-react";
+
 export default function HomeworkCard({homework, onArrowClick}: {
     homework: Homework, onArrowClick: () => void
 }) {

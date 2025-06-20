@@ -3,13 +3,9 @@
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
 
 import {GradesChart} from "@/components/charts/GradesChart";
-import {AnimatePresence, motion} from "framer-motion";
 import {Grade} from "@/types/grade";
-import GradeCard from "@/components/cards/grades/GradeCard";
 import AverageCard from "@/components/cards/grades/AverageCard";
 import {useState} from "react";
-import {ChevronRight} from "lucide-react";
-import {Gauge} from "@/components/ui/gauge";
 import AverageExpandedCard from "@/components/cards/grades/AverageExpandedCard";
 
 function timestampToDdMm(timestamp: number): string {

@@ -1,5 +1,5 @@
 import {Gauge} from "@/components/ui/gauge";
-import {ArrowRightIcon, ChevronRight} from "lucide-react";
+import {ChevronRight} from "lucide-react";
 import {Card} from "@/components/ui/card";
 import {motion} from "framer-motion";
 import {Grade} from "@/types/grade";

@@ -2,8 +2,6 @@ import {Card} from "@/components/ui/card";
 import {Homework} from "@/types/homework";
 import {motion} from "framer-motion";
 import {ChevronRight} from "lucide-react";
-import {Gauge} from "@/components/ui/gauge";
-import GradeCard from "@/components/cards/grades/GradeCard";
 export default function HomeworkExpandedCard({homework, goBack}: {
     homework: Homework, goBack: () => void
 }) {

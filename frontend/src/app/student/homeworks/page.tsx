@@ -9,7 +9,6 @@ import HomeworkCard from "@/components/cards/homeworks/HomeworkCard";
 import {Homework} from "@/types/homework";
 import {useState, useMemo} from "react";
 import {Card} from "@/components/ui/card";
-import {Grade} from "@/types/grade";
 import HomeworkExpandedCard from "@/components/cards/homeworks/HomeworkExpandedCard";
 
 export default function Homeworks() {
@@ -59,7 +58,7 @@ export default function Homeworks() {
             </Card>
 
             <div className="grid grid-rows-2 grid-cols-3 gap-12 w-full">
-                { selectedHomework == null && monthHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} onArrowClick={() => {
+                { selectedHomework == null && monthHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={"hw-" + homework.homeworkId} onArrowClick={() => {
                     setSelectedHomework(homework)
                 }}/>)}
                 {(selectedHomework != null) && <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)} /> }

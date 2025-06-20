@@ -16,7 +16,6 @@ import {Alert, AlertDescription} from "@/components/ui/alert";
 import {LockIcon, MailIcon, Shield} from "lucide-react";
 import {redirect} from "next/navigation";
 import {UserInfo} from "@/types/userInfo";
-import {isDev} from "@/lib/data";
 import {Config} from "@/types/config";
 
 const loginSchema = z.object({

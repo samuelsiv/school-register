@@ -131,5 +131,5 @@ INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", wei
 INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (2, 1, 1, 2, '9', '100', 'WW1', TO_DATE('16/06/2025', 'DD/MM/YYYY'));
 INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (4, 1, 1, 2, '10', '100', 'WW2', TO_DATE('18/06/2025', 'DD/MM/YYYY'));
 
-INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (1, 1, 1, 1, "Do 320 excercises", "From page 320 to page 326", TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'));
-INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (1, 1, 2, 1, "Study wars", "Study WW1 and WW2", TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'))
+INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (1, 1, 1, 1, 'Do 320 excercises', 'From page 320 to page 326', TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (2, 1, 2, 1, 'Study wars', 'Study WW1 and WW2', TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'))

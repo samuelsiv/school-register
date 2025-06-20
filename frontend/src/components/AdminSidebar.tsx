@@ -5,26 +5,19 @@ import {
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
 import {
-    BabyIcon,
-    BookOpenCheckIcon,
     ChartAreaIcon,
-    GroupIcon,
     LayoutDashboardIcon,
     LogOutIcon,
     UsersIcon
 } from "lucide-react";
 import Link from "next/link";
-import {Student} from "@/types/student";
-import UserStore from "@/stores/user";
-import {redirect, useParams, usePathname} from "next/navigation";
-import user from "@/stores/user";
+import {redirect, usePathname} from "next/navigation";
 
 const items = [
     {
