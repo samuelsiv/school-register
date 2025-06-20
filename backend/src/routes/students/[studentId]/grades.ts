@@ -9,10 +9,9 @@ import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAver
 import { studentDataMiddleware } from "@/middleware/studentData.js";
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/students");
+  const router = new Hono().basePath("/api/v1/students/:studentId");
 
-  router.use("/:studentId/grades", studentDataMiddleware);
-  router.get("/:studentId/grades", async (c) => {
+  router.get("/grades", async (c) => {
     const student = c.get("student");
 
     const allGrades = (await db

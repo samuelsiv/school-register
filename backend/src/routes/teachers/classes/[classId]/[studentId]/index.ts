@@ -15,7 +15,7 @@ import {events} from "@/db/schema/events.js";
 
 export default async function () {
     const router = new Hono().basePath("/api/v1/admin/students/:studentId");
-    router.get("/overview", async (c) => {
+    router.get("", async (c) => {
         const studentId = parseInt(c.req.param("studentId"));
         const teacher = c.get("user");
 

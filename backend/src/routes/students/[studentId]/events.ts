@@ -10,10 +10,9 @@ import { studentDataMiddleware } from "@/middleware/studentData.js";
 import {events} from "@/db/schema/events.js";
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/students");
+  const router = new Hono().basePath("/api/v1/students/:studentId");
 
-  router.use("/:studentId/events", studentDataMiddleware);
-  router.get("/:studentId/events", async (c) => {
+  router.get("/events", async (c) => {
     const student = c.get("student");
 
     const allEvents = await db
