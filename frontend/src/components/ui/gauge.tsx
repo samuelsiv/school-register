@@ -9,7 +9,7 @@ export const Gauge = ({
                           bgcolor = "text-[#333]",
                       }: {
     value: number;
-    gradeId?: number | null;
+    gradeId?: string | null;
     size: "small" | "medium" | "large";
     showValue: boolean;
     color?: string;

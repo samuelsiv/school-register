@@ -17,7 +17,7 @@ export default function AverageCard({average, onArrowClick}: {
                 (average.average >= 6) ? "text-[hsla(110,51%,44%,1)]" :
                     (average.average >= 5) ? "text-[hsla(40,51%,44%,1)]" :
                         "text-[hsla(0,51%,44%,1)]"
-            } value={average.average} gradeId={average.subjectId}
+            } value={average.average} gradeId={average.subjectId+"-aver"}
                    size={"medium"} showValue={true}/>
             <div className="flex flex-col gap-2 justify-center items-center">
                 <motion.p className={"text-xl font-semibold"}

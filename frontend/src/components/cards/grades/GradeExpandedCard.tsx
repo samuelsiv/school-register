@@ -23,7 +23,7 @@ export function GradeExpandedCard({selectedGrade, goBack}: {selectedGrade: Grade
                 (selectedGrade.value >= 6) ? "text-[hsla(110,51%,44%,1)]" :
                     (selectedGrade.value >= 5) ? "text-[hsla(40,51%,44%,1)]" :
                         "text-[hsla(0,51%,44%,1)]"
-            } value={selectedGrade.value} gradeId={selectedGrade.gradeId}
+            } value={selectedGrade.value} gradeId={selectedGrade.gradeId.toString()}
                    size={"medium"} showValue={true}/>
             {selectedGrade.comment != "" &&
                 <motion.p layoutId={`${selectedGrade.gradeId}-comment`} layout

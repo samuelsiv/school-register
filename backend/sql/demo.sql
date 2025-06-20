@@ -110,26 +110,26 @@ ALTER TABLE "teachers" ADD CONSTRAINT "teachers_user_id_users_user_id_fk" FOREIG
 ALTER TABLE "teachers_subjects" ADD CONSTRAINT "teachers_subjects_teacher_id_teachers_teacher_id_fk" FOREIGN KEY ("teacher_id") REFERENCES "public"."teachers"("teacher_id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "teachers_subjects" ADD CONSTRAINT "teachers_subjects_subject_id_subjects_subject_id_fk" FOREIGN KEY ("subject_id") REFERENCES "public"."subjects"("subject_id") ON DELETE cascade ON UPDATE no action;
 
-INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (1, 'Demo', 'Student', 'demostudent', 'student@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'student');
-INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (2, 'Demo', 'Teacher', 'demoteacher', 'teacher@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'teacher');
-INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (3, 'Demo', 'Parent', 'demoparent', 'parent@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'parent');
-INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (4, 'Demo', 'Admin', 'demoadmin', 'admin@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'admin');
-INSERT INTO "subjects" (subject_id, subject_name, description) VALUES (1, 'Maths', 'Maths subject');
-INSERT INTO "subjects" (subject_id, subject_name, description) VALUES (2, 'History', 'History subject');
+INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (10001, 'Demo', 'Student', 'demostudent', 'student@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'student');
+INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (10002, 'Demo', 'Teacher', 'demoteacher', 'teacher@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'teacher');
+INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (10003, 'Demo', 'Parent', 'demoparent', 'parent@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'parent');
+INSERT INTO "users" (user_id, name, surname, username, email, password, role) VALUES (10004, 'Demo', 'Admin', 'demoadmin', 'admin@demo.local', '$2a$12$VTS/Fgf/XZV1UgXSMgumgO2zT9fYhXoq4Qt4/rFQaa4dxHVDlDroC', 'admin');
+INSERT INTO "subjects" (subject_id, subject_name, description) VALUES (10001, 'Maths', 'Maths subject');
+INSERT INTO "subjects" (subject_id, subject_name, description) VALUES (10002, 'History', 'History subject');
 
-INSERT INTO "teachers" (teacher_id, user_id) VALUES (1, 2);
-INSERT INTO "teachers_subjects" (teacher_id, subject_id) VALUES (1, 1);
-INSERT INTO "teachers_subjects" (teacher_id, subject_id) VALUES (1, 2);
+INSERT INTO "teachers" (teacher_id, user_id) VALUES (10001, 10002);
+INSERT INTO "teachers_subjects" (teacher_id, subject_id) VALUES (10001, 10001);
+INSERT INTO "teachers_subjects" (teacher_id, subject_id) VALUES (10001, 10002);
 
-INSERT INTO "classes" (class_id, class_name, school_year, coordinator_teacher_id) VALUES (1, '1^A', '2025', 1);
+INSERT INTO "classes" (class_id, class_name, school_year, coordinator_teacher_id) VALUES (10001, '1^A', '2025', 10001);
 
-INSERT INTO "teachers_classes" (teacher_id, class_id) VALUES (1, 1);
-INSERT INTO "students" (student_id, user_id, class_id) VALUES (1, 1, 1);
-INSERT INTO "parent_students" (parent_id, student_id) VALUES (3, 1);
+INSERT INTO "teachers_classes" (teacher_id, class_id) VALUES (10001, 10001);
+INSERT INTO "students" (student_id, user_id, class_id) VALUES (10001, 10001, 10001);
+INSERT INTO "parent_students" (parent_id, student_id) VALUES (10003, 10001);
 
-INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (1, 1, 1, 1, '8', '100', 'Additions', TO_DATE('20/06/2025', 'DD/MM/YYYY'));
-INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (2, 1, 1, 2, '9', '100', 'WW1', TO_DATE('16/06/2025', 'DD/MM/YYYY'));
-INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (4, 1, 1, 2, '10', '100', 'WW2', TO_DATE('18/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (10001, 10001, 10001, 10001, '8', '100', 'Additions', TO_DATE('20/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (10002, 10001, 10001, 10002, '9', '100', 'WW1', TO_DATE('16/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "grades" (grade_id, student_id, teacher_id, subject_id, "value", weight, comment, inserted_at) VALUES (10003, 10001, 10001, 10002, '10', '100', 'WW2', TO_DATE('18/06/2025', 'DD/MM/YYYY'));
 
-INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (1, 1, 1, 1, 'Do 320 excercises', 'From page 320 to page 326', TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'));
-INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (2, 1, 2, 1, 'Study wars', 'Study WW1 and WW2', TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'))
+INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (10001, 10001, 10001, 10001, 'Do 320 excercises', 'From page 320 to page 326', TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'));
+INSERT INTO "homeworks" (homework_id, class_id, subject_id, teacher_id, title, description, created_at, due_date) VALUES (10002, 10001, 10002, 10001, 'Study wars', 'Study WW1 and WW2', TO_DATE('20/06/2025', 'DD/MM/YYYY'), TO_DATE('26/06/2025', 'DD/MM/YYYY'))

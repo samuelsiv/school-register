@@ -28,7 +28,7 @@ export default function AverageExpandedCard({selectedAverage, goBack}: {selected
             (selectedAverage.average >= 6) ? "text-[hsla(110,51%,44%,1)]" :
                 (selectedAverage.average >= 5) ? "text-[hsla(40,51%,44%,1)]" :
                     "text-[hsla(0,51%,44%,1)]"
-        } value={selectedAverage.average} gradeId={selectedAverage.subjectId}
+        } value={selectedAverage.average} gradeId={selectedAverage.subjectId+"-aver"}
                size={"medium"} showValue={true}/>
         {selectedAverage.grades.map((grade) =>
             <GradeCard grade={grade} key={grade.subjectId}/>
