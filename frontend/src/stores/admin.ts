@@ -76,7 +76,7 @@ const AdminStore = createContainer(() => {
 		averagesBySubject: number | null,
 		events: Event[],
 		homeworks: Homework[],
-	}>(selectedUser != null ? `/api/v1/admin/overview?studentId=${selectedUser?.studentId}` : null, fetcher, { keepPreviousData: true });
+	}>(selectedUser != null ? `/api/v1/admin/students/${selectedUser?.studentId}/overview` : null, fetcher, { keepPreviousData: true });
 
 	useEffect(() => {
 		if (studentData != null) {

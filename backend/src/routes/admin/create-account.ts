@@ -38,7 +38,7 @@ export default async function () {
 			.limit(1)
 			.execute();
 
-		if (existingUser.length > 1) return c.json({ error: "User already exists" }, 400);
+		if (existingUser.length == 1) return c.json({ error: "User already exists" }, 400);
 		const userData = {
 			username,
 			email,

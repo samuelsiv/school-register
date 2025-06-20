@@ -11,17 +11,18 @@ import { authMiddleware } from "@/middleware/auth.js";
 import { students } from "@/db/schema/students.js";
 import { teachers } from "@/db/schema/teachers.js";
 import {classes} from "@/db/schema/classes.js";
+import {teacherClasses} from "@/db/schema/teacherClasses.js";
 
-const linkStudentSchema = z.object({
-    studentId: z.number(),
+const linkTeacherSchema = z.object({
+    teacherId: z.number(),
     classId: z.number(),
 });
 
 export default async function () {
     const router = new Hono().basePath("/api/v1/admin");
 
-    router.post("/link-student-to-class", zValidator('json', linkStudentSchema), async (c) => {
-        const { studentId, classId } = c.req.valid('json');
+    router.post("/link-teacher-to-class", zValidator('json', linkTeacherSchema), async (c) => {
+        const { teacherId, classId } = c.req.valid('json');
 
         const existingClass = await db
             .select()
@@ -34,11 +35,12 @@ export default async function () {
 
         if (existingClass.length == 0) return c.json({ error: "Class doesn't exist" }, 400);
 
-        await db.update(students).set({
-            classId: classId
-        }).where(eq(students.studentId, studentId)).execute();
+        await db.insert(teacherClasses).values({
+            classId: classId,
+            teacherId: teacherId
+        }).onConflictDoNothing().execute();
 
-        return c.json({ message: "Student linked to class" }, 201);
+        return c.json({ message: "Teacher linked to class" }, 201);
     });
 
     return router;

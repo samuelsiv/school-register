@@ -6,7 +6,7 @@ export const calculateGeneralAverage = (grades: {
     subjectId: number, value: number,
     weight: number, insertedAt: string | null,
     comment: string | null, teacherName: string
-}[]) =>
+}[]) => grades.length == 0 ? null :
     Math.round(average(grades
         .filter((grade) => grade.weight != 0)
         .map((grade) => grade.value * (grade.weight / 100))
@@ -19,7 +19,7 @@ export const calculateAveragesByDay = (grades: {
     subjectId: number, value: number,
     weight: number, insertedAt: string | null,
     comment: string | null, teacherName: string
-}[]) =>
+}[]) => grades.length == 0 ? [] :
     [...new Map(grades
         .filter((grade) => grade.weight != 0)
         .map(v => [Date.parse(v.insertedAt!), v])).values()]
@@ -41,7 +41,7 @@ export const calculateAveragesBySubject = (grades: {
     subjectId: number, value: number,
     weight: number, insertedAt: string | null,
     comment: string | null, teacherName: string
-}[]) =>
+}[]) => grades.length == 0 ? [] :
     [...new Map(grades
         .filter((grade) => grade.weight != 0)
         .map(v => [v.subjectId, v])).values()]

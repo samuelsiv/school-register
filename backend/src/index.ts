@@ -12,8 +12,8 @@ import { roleMiddleware } from './middleware/role.js';
 import { logger } from 'hono/logger';
 dotenv.config();
 
-const app = new Hono(); 
-
+const app = new Hono();
+app.use(logger())
 app.use('*', cors({
   origin: '*', // this is for development only, change it to your domain in production
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

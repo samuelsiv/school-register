@@ -1,33 +1,29 @@
 import { Hono } from "hono";
 import { db } from "@/db/index.js";
-import { students } from "@/db/schema/students.js";
+import {eq, count, desc} from "drizzle-orm";
+import { classes } from "@/db/schema/classes.js";
+import { teacherClasses } from "@/db/schema/teacherClasses.js";
+import { teachers } from "@/db/schema/teachers.js";
 import { users } from "@/db/schema/users.js";
+import {students} from "@/db/schema/students.js";
+import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
+import {homeworks} from "@/db/schema/homeworks.js";
+import {parentStudents} from "@/db/schema/parentStudents.js";
 import {grades} from "@/db/schema/grades.js";
 import {subjects} from "@/db/schema/subjects.js";
 import {events} from "@/db/schema/events.js";
-import {homeworks} from "@/db/schema/homeworks.js";
-import {eq, sql, desc} from "drizzle-orm";
-import {parentStudents} from "@/db/schema/parentStudents.js";
-import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
-import {teachers} from "@/db/schema/teachers.js";
-import {classes} from "@/db/schema/classes.js";
 
 export default async function () {
-    const router = new Hono().basePath("/api/v1/teachers/classes/:classId/:studentId");
-
+    const router = new Hono().basePath("/api/v1/admin/students/:studentId");
     router.get("/overview", async (c) => {
-        const classId = parseInt(c.req.param("classId"));
         const studentId = parseInt(c.req.param("studentId"));
         const teacher = c.get("user");
 
-        if (isNaN(classId)) {
-            return c.json({ error: "Invalid classId" }, 400);
-        }
         if (isNaN(studentId)) {
             return c.json({ error: "Invalid studentId" }, 400);
         }
 
-        const student = await db
+        const studentResult = await db
             .select({
                 studentId: students.studentId,
                 userId: students.userId,
@@ -41,12 +37,15 @@ export default async function () {
             .from(students)
             .where(eq(students.studentId, studentId))
             .innerJoin(users, eq(students.userId, users.userId))
-            .innerJoin(classes, eq(students.classId, classes.classId))
-            .then(rows => rows[0]);
+            .leftJoin(classes, eq(students.classId, classes.classId));
+
+        const student = studentResult[0];
 
         if (!student) {
-            return c.json({error: "Student not found"}, 404);
+            console.log("Student is falsy:", student);
+            return c.json({error: "Student not found "+studentId}, 404);
         }
+
 
         const parentsList = await db
             .select({
@@ -57,7 +56,9 @@ export default async function () {
             })
             .from(parentStudents)
             .innerJoin(users, eq(parentStudents.parentId, users.userId))
-            .where(eq(parentStudents.studentId, studentId));
+            .where(eq(parentStudents.studentId, studentId))
+            .execute();
+
 
         const allGrades = (await db
             .select({
@@ -85,10 +86,10 @@ export default async function () {
 
         const studentHomeworks = student.classId == null ? [] :
             await db
-                    .select()
-                    .from(homeworks)
-                    .where(eq(homeworks.classId, student.classId))
-                    .orderBy(desc(homeworks.createdAt));
+                .select()
+                .from(homeworks)
+                .where(eq(homeworks.classId, student.classId))
+                .orderBy(desc(homeworks.createdAt));
 
         const isCoordinator = teacher.userId === student.coordinatorId;
 
@@ -109,3 +110,4 @@ export default async function () {
 
     return router;
 }
+
