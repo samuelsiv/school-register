@@ -12,13 +12,38 @@ export default async function() {
 
   router.get("/classes", async (c) => {
     const user = c.get("user");
+    
+    // Prima, verifica se l'utente è un insegnante
+    const teacherInfo = await db
+      .select({
+        teacherId: teachers.teacherId,
+        userId: teachers.userId,
+      })
+      .from(teachers)
+      .where(eq(teachers.userId, user.userId));
+    
+    console.log("Teacher info:", teacherInfo);
+    
+    if (teacherInfo.length === 0) {
+      return c.json({ error: "User is not a teacher", allClasses: [] });
+    }
+    
+    const teacherId = teacherInfo[0].teacherId;
+    
+    // Poi, verifica le associazioni teacherClasses
+    const teacherClassAssociations = await db
+      .select()
+      .from(teacherClasses)
+      .where(eq(teacherClasses.teacherId, teacherId));
+    
+    console.log("Teacher class associations:", teacherClassAssociations);
 
     const allClasses = await db
       .select({
         classId: classes.classId,
         className: classes.className,
-        schoolYear: classes.schoolYear,
         coordinator: users.name,
+        schoolYear: classes.schoolYear,
         studentCount: count(students.studentId),
       })
       .from(teacherClasses)
@@ -26,7 +51,7 @@ export default async function() {
       .innerJoin(teachers, eq(classes.coordinatorTeacherId, teachers.teacherId))
       .innerJoin(users, eq(teachers.userId, users.userId))
       .leftJoin(students, eq(students.classId, classes.classId))
-      .where(eq(teacherClasses.teacherId, user.userId))
+      .where(eq(teacherClasses.teacherId, teacherId)) // Usa teacherId invece di user.userId
       .groupBy(
         classes.classId,
         classes.className,

@@ -14,14 +14,26 @@ import {count, desc, eq} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
-    const router = new Hono().basePath("/api/v1/admin/students/:studentId");
-    router.get("", async (c) => {
+    const router = new Hono().basePath("/api/v1/teachers/classes/:classId/:studentId");
+    router.get("/overview", async (c) => {
         const studentId = parseInt(c.req.param("studentId"));
         const teacher = c.get("user");
 
         if (isNaN(studentId)) {
             return c.json({ error: "Invalid studentId" }, 400);
         }
+
+        const teacherData = (await db.select({
+            userId: teachers.userId,
+            teacherId: teachers.teacherId,
+            name: users.name,
+            surname: users.surname,
+            username: users.username,
+            email: users.email,
+        }).from(teachers)
+            .where(eq(teachers.userId, teacher.userId))
+            .innerJoin(users, eq(teachers.userId, users.userId))
+            .execute())[0];
 
         const studentResult = await db
             .select({
@@ -89,9 +101,10 @@ export default async function() {
                 .where(eq(homeworks.classId, student.classId))
                 .orderBy(desc(homeworks.createdAt));
 
-        const isCoordinator = teacher.userId === student.coordinatorId;
+        const isCoordinator = teacherData.teacherId === student.coordinatorId;
+        console.log(isCoordinator, teacher.userId, student.coordinatorId, allGrades)
 
-        const filteredGrades = isCoordinator ? allGrades : allGrades.filter((grade) => grade.teacherId === teacher.userId);
+        const filteredGrades = isCoordinator ? allGrades : allGrades.filter((grade) => grade.teacherId === teacherData.teacherId);
 
         return c.json({
             student,

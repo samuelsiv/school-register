@@ -7,15 +7,20 @@ import {redirect, useParams, usePathname} from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
-import { UserInfo } from "@/types/userInfo";
+import {ExtendedUserInfo, UserInfo} from "@/types/userInfo";
 import { Grade, GradeResponse } from "@/types/grade";
 import { Homework } from '@/types/homework'
 import {Class, ClassRes} from "@/types/class";
+import {Overview} from "@/types/overview";
+import {Teacher} from "@/types/teacher";
 
 const TeacherStore = createContainer(() => {
 	const [userId, setUserId] = useState<number | null>(null);
 	const [name, setName] = useState<string | null>(null);
 	const [teacherClasses, setTeacherClasses] = useState<Class[]>([]);
+	const [schoolTeachers, setSchoolTeachers] = useState<Teacher[]>([]);
+	const [selectedUser, setSelectedUser] = useState<Student | null>(null)
+	const [selectedUserInfo, setselectedUserInfo] = useState<Overview>(null);
 
 	const { classId } = useParams()
 
@@ -50,10 +55,25 @@ const TeacherStore = createContainer(() => {
 		}
 	}, [teacherClassesData]);
 
+	const { data: schoolTeachersData } = useSWR<{
+		teachers: Teacher[]
+	}>(
+		`/api/v1/teachers/teachers`,
+		fetcher,
+		{ keepPreviousData: true }
+	);
+
+
+	useEffect(() => {
+		if (schoolTeachersData) {
+			setSchoolTeachers(schoolTeachersData.teachers);
+		}
+	}, [schoolTeachersData]);
+
 	const { data: classStudentsData } = useSWR<{ 
 		students: Student[]
 	}>(
-		`/api/v1/teachers/classes/${classId}/students`,
+		classId != null ? `/api/v1/teachers/classes/${classId}/students` : null,
 		fetcher,
 		{ keepPreviousData: true }
 	);
@@ -64,11 +84,20 @@ const TeacherStore = createContainer(() => {
 		}
 	}, [classStudentsData]);
 
+	const { data: studentData } = useSWR<Overview>(selectedUser != null ? `/api/v1/teachers/classes/${classId}/${selectedUser?.studentId}/overview` : null, fetcher, { keepPreviousData: true });
+
+	useEffect(() => {
+		if (studentData != null) {
+			setselectedUserInfo(studentData);
+		}
+	}, [studentData]);
+
 	return {
 		userId,
 		name,
 		teacherClasses,
-		classStudents
+		classStudents, selectedUser, setSelectedUser, selectedUserInfo, classId,
+		schoolTeachers,
 	};
 });
 
