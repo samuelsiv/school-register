@@ -38,7 +38,7 @@ export default async function () {
 			.limit(1)
 			.execute();
 
-		if (existingUser.length > 0) return c.json({ error: "User already exists" }, 400);
+		if (existingUser.length > 1) return c.json({ error: "User already exists" }, 400);
 		const userData = {
 			email,
 			password: await bcrypt.hash(password, process.env.BCRYPT_SALT_ROUNDS),
@@ -47,21 +47,16 @@ export default async function () {
 			role,
 		};
 
-		await db.insert(users).values(userData).execute();
+		const newUser = await db.insert(users).values(userData).returning().execute();
 
 		if (role === 'student') {
-			await db.insert(users).values({
-				...userData,
-				role: 'parent'
-			}).execute();
-
 			await db.insert(students).values({
-				userId: existingUser[0].userId,
+				userId: newUser[0].userId,
 				classId: null,
 			}).execute();
 		} else if (role === 'teacher') {
 			await db.insert(teachers).values({
-				userId: existingUser[0].userId,
+				userId: newUser[0].userId,
 			}).execute();
 		}
 
