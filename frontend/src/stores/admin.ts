@@ -69,6 +69,7 @@ const AdminStore = createContainer(() => {
 			setClasses(classList.allClasses);
 		}
 	}, [classList]);
+
 	const assignClass = (classId: string) => {
 		console.log(classId)
 		request("POST", "/api/v1/admin/students/" + selectedUser?.studentId + "/link-student-to-class", {

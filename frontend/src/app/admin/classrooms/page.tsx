@@ -25,17 +25,11 @@ import {Card} from "@/components/ui/card";
 import { Class } from "@/types/class";
 import {AdminSidebar} from "@/components/AdminSidebar";
 import AdminStore from "@/stores/admin";
+import {CreateClassroomDialog} from "@/components/dialog/CreateClassroomDialog";
 
 export default function AdminClassroomsPage() {
     const adminStore = AdminStore.useContainer();
     const [selectedClass, setSelectedClass] = useState<Class | null>(null)
-    const classes: Class[] = [{
-        className: "5^B",
-        classId: 1,
-        coordinator: "Marco Francesco",
-        studentCount: 6,
-        schoolYear: "2025"
-    }]
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <AdminSidebar/>
@@ -53,10 +47,14 @@ export default function AdminClassroomsPage() {
             </div>
             <div className="grid grid-rows-2 w-full h-full md:grid-rows-1 xl:grid-rows-1 grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-12">
                 <div className="flex flex-col gap-6 w-full justify-start">
-                    <div className="flex flex-row items-center gap-4 py-2 w-full justify-start">
+                    <div className="flex flex-row items-center gap-4 py-2 w-full justify-between">
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Classrooms</h2>
+                        <CreateClassroomDialog teachers={adminStore.teachers} onCreate={() => {
+                            window.location.reload();
+
+                        }}/>
                     </div>
-                    {classes.map(classroom =>
+                    {adminStore.classes.map(classroom =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedClass?.classId == classroom.classId) ? " ring-1" : "")}
                         onClick={() => setSelectedClass(classroom)}
                         key={classroom.classId}>
