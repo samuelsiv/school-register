@@ -35,7 +35,7 @@ export default function AdminStudentsPage() {
                     <div className="flex flex-row items-center gap-4 py-2 w-full justify-between">
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
                         <CreateStudentDialog classes={adminStore.classes} inserted={(user) => {
-                            adminStore.reloadStudents()
+                            window.location.reload()
                             setNewUser(user)
                         }}/>
                         { newUser != null && <NewUserDialog user={newUser} /> }
