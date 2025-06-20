@@ -27,6 +27,7 @@ export default async function () {
             .leftJoin(students, eq(students.classId, classes.classId))
             .groupBy(
                 classes.classId,
+                students.studentId,
                 classes.className,
                 classes.schoolYear,
                 users.name

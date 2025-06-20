@@ -24,16 +24,7 @@ import { NewUserDialog } from "@/components/dialog/NewUserDialog";
 
 export default function AdminStudentsPage() {
     const adminStore = AdminStore.useContainer();
-    const [selectedUser, setSelectedUser] = useState<ExtendedUserInfo | null>(null)
     const [newUser, setNewUser] = useState<NewUser | null>(null)
-
-    const classes: Class[] = [{
-        className: "5^B",
-        classId: 1,
-        coordinator: "Marco Francesco",
-        studentCount: 6,
-        schoolYear: "2025"
-    }]
 
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
@@ -54,15 +45,15 @@ export default function AdminStudentsPage() {
                 <div className="flex flex-col gap-6 w-full justify-start">
                     <div className="flex flex-row items-center gap-4 py-2 w-full justify-between">
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
-                        <CreateStudentDialog classes={classes} inserted={(user) => {
+                        <CreateStudentDialog classes={adminStore.classes} inserted={(user) => {
                             adminStore.reloadStudents()
                             setNewUser(user)
                         }}/>
                         { newUser != null && <NewUserDialog user={newUser} /> }
                     </div>
                     {adminStore.students.map(student =>
-                        <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
-                        onClick={() => setSelectedUser(student)} key={student.studentId}>
+                        <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((adminStore.selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
+                        onClick={() => adminStore.setSelectedUser(student)} key={student.studentId}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
                                 <UserIcon />
                                 <span className="text-lg font-semibold">{student.name} {student.surname}</span>
@@ -72,17 +63,17 @@ export default function AdminStudentsPage() {
                     )}
                 </div>
                 <Card className="flex flex-col gap-6 w-full h-[80vh] justify-start">
-                    {selectedUser == null &&
+                    {adminStore.selectedUser == null &&
                         <div className="w-full h-full flex align-center items-center justify-center flex-col gap-4">
                             <AlertCircleIcon size="36" />
                             <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No student selected</h2>
                         </div>
                     }
-                    {selectedUser != null && <div className="w-full h-full flex items-center flex-col gap-4">
+                    {adminStore.selectedUser != null && <div className="w-full h-full flex items-center flex-col gap-4">
                         <UserCircleIcon size={72} />
-                        <h1 className="text-3xl font-semibold">{selectedUser.name} {selectedUser.surname}</h1>
+                        <h1 className="text-3xl font-semibold">{adminStore.selectedUser.name} {adminStore.selectedUser.surname}</h1>
                         <div className={"w-full flex justify-start px-4 flex-col gap-4 items-start"}>
-                            <h1 className="text-2xl font-semibold">Average: 2</h1>
+                            <h1 className="text-2xl font-semibold">Average: {adminStore.selectedUserInfo?.averagesByDay}</h1>
                             <h1 className="text-2xl font-semibold">Comes from: Milan</h1>
                             <h1 className="text-2xl font-semibold">other info</h1>
                         </div>
