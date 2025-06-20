@@ -1,6 +1,6 @@
 "use client";
 
-import { fetcher } from "@/lib/request";
+import {fetcher, request} from "@/lib/request";
 import { useEffect, useState } from "react";
 import useSWR, {preload} from "swr";
 import { createContainer } from "unstated-next";
@@ -10,26 +10,13 @@ import {Class, ClassRes} from "@/types/class";
 import {Student} from "@/types/student";
 import {Grade} from "@/types/grade";
 import {Homework} from "@/types/homework";
+import {Overview} from "@/types/overview";
 
 const AdminStore = createContainer(() => {
 	const [userId, setUserId] = useState<number | null>(null);
 	const [name, setName] = useState<string | null>(null);
 	const [students, setStudents] = useState<ExtendedUserInfo[]>([]);
-	const [selectedUserInfo, setselectedUserInfo] = useState<{
-		student: Student,
-		parents: {
-			parentId: string,
-			name: string,
-			surname: string,
-			email: string,
-		}[],
-		allGrades: Grade[],
-		average: number | null,
-		averagesByDay: number | null,
-		averagesBySubject: number | null,
-		events: Event[],
-		homeworks: Homework[],
-	} | null>(null);
+	const [selectedUserInfo, setselectedUserInfo] = useState<Overview>(null);
 	const [classes, setClasses] = useState<Class[]>([]);
 	const [teachers, setTeachers] = useState<ExtendedUserInfo[]>([]);
 	const [selectedUser, setSelectedUser] = useState<ExtendedUserInfo | null>(null)
@@ -59,24 +46,11 @@ const AdminStore = createContainer(() => {
 	useEffect(() => {
 		if (usersList?.users) {
 			setStudents(usersList.users.filter(user => user.studentId !== null));
+			setTeachers(usersList.users.filter(user => user.teacherId !== null));
 		}
 	}, [usersList]);
 
-	const { data: studentData } = useSWR<{
-		student: Student,
-		parents: {
-			parentId: string,
-			name: string,
-			surname: string,
-			email: string,
-		}[],
-		allGrades: Grade[],
-		average: number | null,
-		averagesByDay: number | null,
-		averagesBySubject: number | null,
-		events: Event[],
-		homeworks: Homework[],
-	}>(selectedUser != null ? `/api/v1/admin/students/${selectedUser?.studentId}/overview` : null, fetcher, { keepPreviousData: true });
+	const { data: studentData } = useSWR<Overview>(selectedUser != null ? (reloadCount >= 0 ? `/api/v1/admin/students/${selectedUser?.studentId}/overview` : null ) : null, fetcher, { keepPreviousData: true });
 
 	useEffect(() => {
 		if (studentData != null) {
@@ -95,7 +69,16 @@ const AdminStore = createContainer(() => {
 			setClasses(classList.allClasses);
 		}
 	}, [classList]);
-
+	const assignClass = (classId: string) => {
+		console.log(classId)
+		request("POST", "/api/v1/admin/students/" + selectedUser?.studentId + "/link-student-to-class", {
+			data: {
+				classId: parseInt(classId)
+			}
+		}).finally(() => {
+			setReloadCount(reloadCount + 1)
+		})
+	}
 	return {
 		userId,
 		name,
@@ -103,7 +86,8 @@ const AdminStore = createContainer(() => {
 		teachers,
 		classes,
 		reloadStudents,
-		selectedUser, setSelectedUser, selectedUserInfo
+		selectedUser, setSelectedUser, selectedUserInfo,
+		assignClass
 	};
 });
 

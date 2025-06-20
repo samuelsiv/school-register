@@ -21,6 +21,7 @@ import {Class} from "@/types/class";
 import AdminStore from "@/stores/admin";
 import {ExtendedUserInfo, NewUser} from "@/types/userInfo";
 import { NewUserDialog } from "@/components/dialog/NewUserDialog";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export default function AdminStudentsPage() {
     const adminStore = AdminStore.useContainer();
@@ -53,10 +54,11 @@ export default function AdminStudentsPage() {
                     </div>
                     {adminStore.students.map(student =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((adminStore.selectedUser?.studentId == student.studentId) ? " ring-1" : "")}
-                        onClick={() => adminStore.setSelectedUser(student)} key={student.studentId}>
+                        onClick={() => adminStore.setSelectedUser(student)} key={"st" + student.studentId}>
                             <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
                                 <UserIcon />
                                 <span className="text-lg font-semibold">{student.name} {student.surname}</span>
+                                <span className="text-md font-light">{student.username}</span>
                             </div>
                             <ChevronRightIcon />
                         </Card>
@@ -72,10 +74,39 @@ export default function AdminStudentsPage() {
                     {adminStore.selectedUser != null && <div className="w-full h-full flex items-center flex-col gap-4">
                         <UserCircleIcon size={72} />
                         <h1 className="text-3xl font-semibold">{adminStore.selectedUser.name} {adminStore.selectedUser.surname}</h1>
+                        <h1 className="text-xl font-light">{adminStore.selectedUser.username}</h1>
                         <div className={"w-full flex justify-start px-4 flex-col gap-4 items-start"}>
-                            <h1 className="text-2xl font-semibold">Average: {adminStore.selectedUserInfo?.averagesByDay}</h1>
-                            <h1 className="text-2xl font-semibold">Comes from: Milan</h1>
-                            <h1 className="text-2xl font-semibold">other info</h1>
+                            <div className="flex flex-row gap-4">
+                                <h1 className="text-2xl font-semibold">Class: {
+                                    adminStore.classes.find(
+                                        classroom => adminStore.selectedUserInfo?.student?.classId == classroom.classId
+                                    )?.className || ""
+                                } {
+                                    [adminStore.teachers.find(
+                                        teacher => adminStore.selectedUserInfo?.student?.coordinatorId == teacher.teacherId
+                                    )].map(t => t ? `(${t.name} ${t.surname})` : "")[0]
+                                }</h1>
+
+                                { adminStore.selectedUserInfo?.student?.classId == null && <Select onValueChange={classroom => {
+                                    adminStore.assignClass(classroom)
+                                }}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Classroom" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {adminStore.classes.map(classroom => <SelectItem value={classroom.classId.toString()} key={"cl-" + classroom.classId.toString()}>{classroom.className}</SelectItem>)}
+                                    </SelectContent>
+                                </Select> }
+                            </div>
+                            <h1 className="text-2xl font-semibold">Parents: </h1>
+                            <div className="ms-12">
+                                {adminStore.selectedUserInfo?.parents.map(parent =>
+                                    <li className="text-xl font-light" key={"parent" + parent.parentId}>{parent.name} {parent.surname} ({parent.email})</li>
+                                ) }
+                                {adminStore.selectedUserInfo?.parents?.length == 0 && <h1 className="text-xl font-light">None :/</h1> }
+
+                            </div>
+                            <h1 className="text-2xl font-semibold">Average: {adminStore.selectedUserInfo?.average ? adminStore.selectedUserInfo?.average : "no grades"}</h1>
                         </div>
                     </div>}
                 </Card>
