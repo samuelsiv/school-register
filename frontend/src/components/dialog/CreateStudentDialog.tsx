@@ -17,7 +17,8 @@ import {z} from "zod";
 import {request} from "@/lib/request";
 import {NewUser} from "@/types/userInfo";
 import {useState} from "react";
-import genPwd from "@/lib/passgen";
+import generatePassword from "@/lib/utils";
+
 const createAccountSchema = z.object({
     email: z.string().email(),
     password: z.string().min(8),
@@ -30,7 +31,7 @@ const createAccountSchema = z.object({
 export function CreateStudentDialog({classes, inserted}: {classes: Class[], inserted: (newUser: NewUser) => void}) {
     const defValues: NewUser = {
         email: "",
-        password: genPwd(12),
+        password: generatePassword(12),
         username: "",
         name: "",
         surname: "",
