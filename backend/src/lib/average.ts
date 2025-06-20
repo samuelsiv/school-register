@@ -59,4 +59,3 @@ export const calculateAveragesBySubject = (grades: Array<{
             };
         })
         .map((average) => ({...average, average: Math.round(average.average * 100) / 100}));
-

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export interface SiteVerifyResponse {
+export interface ISiteVerifyResponse {
     success: boolean;
     "error-codes": string[];
     challenge_ts?: Date;
@@ -24,6 +24,6 @@ export async function checkTurnstileToken(token: string): Promise<boolean> {
       },
     );
 
-    const outcome = (await result.data) as SiteVerifyResponse;
+    const outcome = (await result.data) as ISiteVerifyResponse;
     return outcome.success;
 }

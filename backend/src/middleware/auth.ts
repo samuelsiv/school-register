@@ -1,4 +1,4 @@
-import type { JwtData } from "@/types.js";
+import type { IJwtData } from "@/types.js";
 import { createMiddleware } from "hono/factory";
 import jwt from "jsonwebtoken";
 
@@ -7,7 +7,7 @@ export const authMiddleware = createMiddleware(async (c, next) => {
 	if (!token) { return c.json({ error: "Unauthorized" }, 401); }
 
 	try {
-		const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtData;
+		const decoded = jwt.verify(token, process.env.JWT_SECRET) as IJwtData;
 		if (!decoded) { return c.json({ error: "Unauthorized" }, 401); }
 		c.set("user", decoded);
 		await next();

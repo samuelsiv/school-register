@@ -11,7 +11,7 @@ export default async function() {
 
 	router.get("/info", async (c) => {
 		const { userId } = c.get("user");
-		const [ userFound ] = await db.select().from(users).where(eq(users.userId, userId)).limit(1);
+		const [userFound] = await db.select().from(users).where(eq(users.userId, userId)).limit(1);
 
 		let assignedStudents: Array<{
 			studentId: number;

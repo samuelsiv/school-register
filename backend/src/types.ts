@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-export interface JwtData {
+export interface IJwtData {
   userId: number;
   role: string;
   exp: number;
@@ -25,13 +25,8 @@ export interface JwtData {
 
 declare module "hono" {
   interface ContextVariableMap {
-    user: JwtData;
+    user: IJwtData;
     student: Student;
     class: Class | null; // student might not be enrolled
   }
-}
-
-export interface TokenData {
-  userId: number;
-  role: string;
 }
