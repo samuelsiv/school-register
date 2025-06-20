@@ -13,3 +13,12 @@ export type ExtendedUserInfo = {
     studentId: number | null,
     teacherId: number | null,
 } & UserInfo
+
+export type NewUser = {
+    email: string;
+    password: string;
+    username: string;
+    name: string;
+    surname: string;
+    role: "student" | "teacher";
+}

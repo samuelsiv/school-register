@@ -19,11 +19,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import {CreateStudentDialog} from "@/components/dialog/CreateStudentDialog";
 import {Class} from "@/types/class";
 import AdminStore from "@/stores/admin";
-import {ExtendedUserInfo} from "@/types/userInfo";
+import {ExtendedUserInfo, NewUser} from "@/types/userInfo";
+import { NewUserDialog } from "@/components/dialog/NewUserDialog";
 
 export default function AdminStudentsPage() {
     const adminStore = AdminStore.useContainer();
     const [selectedUser, setSelectedUser] = useState<ExtendedUserInfo | null>(null)
+    const [newUser, setNewUser] = useState<NewUser | null>(null)
 
     const classes: Class[] = [{
         className: "5^B",
@@ -52,7 +54,11 @@ export default function AdminStudentsPage() {
                 <div className="flex flex-col gap-6 w-full justify-start">
                     <div className="flex flex-row items-center gap-4 py-2 w-full justify-between">
                         <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">Students</h2>
-                        <CreateStudentDialog classes={classes}/>
+                        <CreateStudentDialog classes={classes} inserted={(user) => {
+                            adminStore.reloadStudents()
+                            setNewUser(user)
+                        }}/>
+                        { newUser != null && <NewUserDialog user={newUser} /> }
                     </div>
                     {adminStore.students.map(student =>
                         <Card className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((selectedUser?.studentId == student.studentId) ? " ring-1" : "")}

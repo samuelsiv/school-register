@@ -2,7 +2,7 @@
 
 import { fetcher } from "@/lib/request";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, {preload} from "swr";
 import { createContainer } from "unstated-next";
 import {ExtendedUserInfo, UserInfo} from "@/types/userInfo";
 import {redirect} from "next/navigation";
@@ -29,9 +29,11 @@ const AdminStore = createContainer(() => {
 		}
 	}, [userData]);
 
+	const [reloadCount, setReloadCount] = useState(0)
+
 	const { data: usersList } = useSWR<{
 		users: ExtendedUserInfo[]
-	}>("/api/v1/admin/users", fetcher, { keepPreviousData: true });
+	}>(reloadCount >= 0 ? "/api/v1/admin/users" : null, fetcher, { keepPreviousData: true });
 
 	useEffect(() => {
 		if (usersList?.users) {
@@ -39,12 +41,16 @@ const AdminStore = createContainer(() => {
 		}
 	}, [usersList]);
 
+	const reloadStudents = () => {
+		setReloadCount(reloadCount + 1)
+	}
 
 	return {
 		userId,
 		name,
 		students,
-		teachers
+		teachers,
+		reloadStudents
 	};
 });
 
