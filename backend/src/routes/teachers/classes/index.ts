@@ -34,7 +34,7 @@ export default async function() {
       .innerJoin(teachers, eq(classes.coordinatorTeacherId, teachers.teacherId))
       .innerJoin(users, eq(teachers.userId, users.userId))
       .leftJoin(students, eq(students.classId, classes.classId))
-      .where(eq(teacherClasses.teacherId, user.userId))
+      .where(eq(teacherClasses.teacherId, teachers.teacherId)) // Usa teacherId invece di user.userId
       .groupBy(
         classes.classId,
         classes.className,
