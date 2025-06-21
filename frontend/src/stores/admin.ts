@@ -1,95 +1,140 @@
 "use client";
 
-import {fetcher, request} from "@/lib/request";
+import { fetcher, request } from "@/lib/request";
 import { useEffect, useState } from "react";
-import useSWR, {preload} from "swr";
+import useSWR, { mutate } from "swr";
 import { createContainer } from "unstated-next";
-import {ExtendedUserInfo, UserInfo} from "@/types/userInfo";
-import {redirect} from "next/navigation";
-import {Class, ClassRes} from "@/types/class";
-import {Student} from "@/types/student";
-import {Grade} from "@/types/grade";
-import {Homework} from "@/types/homework";
-import {Overview} from "@/types/overview";
+import { ExtendedUserInfo, UserInfo } from "@/types/userInfo";
+import { redirect } from "next/navigation";
+import { Class, ClassRes } from "@/types/class";
+import { Overview } from "@/types/overview";
+
+const API_ENDPOINTS = {
+  user: "/api/v1/user",
+  users: "/api/v1/admin/users",
+  classes: "/api/v1/admin/classes",
+  studentOverview: (studentId: number) => `/api/v1/admin/students/${studentId}/overview`,
+  assignClass: (studentId: number) => `/api/v1/admin/students/${studentId}/link-to-class`
+} as const;
+
+const useAdminAuth = () => {
+  const { data: userData } = useSWR<{
+    success: boolean;
+    user: UserInfo;
+  }>(API_ENDPOINTS.user, fetcher, { keepPreviousData: true });
+
+  useEffect(() => {
+    if (userData?.user.role !== "admin") {
+      redirect("/");
+    }
+  }, [userData]);
+
+  return {
+    userId: userData?.user.userId ?? null,
+    name: userData?.user.name ?? null,
+    isLoading: !userData
+  };
+};
+
+const useUsers = () => {
+  const { data, error } = useSWR<{ users: ExtendedUserInfo[] }>(
+    API_ENDPOINTS.users, 
+    fetcher, 
+    { keepPreviousData: true }
+  );
+
+  const users = data?.users ?? [];
+  
+  return {
+    students: users.filter(user => user.studentId !== null),
+    teachers: users.filter(user => user.teacherId !== null),
+    allUsers: users,
+    isLoading: !data && !error,
+    error
+  };
+};
+
+const useClasses = () => {
+  const { data, error } = useSWR<ClassRes>(
+    API_ENDPOINTS.classes, 
+    fetcher, 
+    { keepPreviousData: true }
+  );
+  
+  return {
+    classes: data?.allClasses ?? [],
+    isLoading: !data && !error,
+    error
+  };
+};
+
+const useSelectedStudentOverview = (studentId: number | null) => {
+  const { data, error } = useSWR<Overview>(
+    studentId ? API_ENDPOINTS.studentOverview(studentId) : null,
+    fetcher,
+    { keepPreviousData: true }
+  );
+  
+  return {
+    overview: data ?? null,
+    isLoading: studentId && !data && !error,
+    error
+  };
+};
 
 const AdminStore = createContainer(() => {
-	const [userId, setUserId] = useState<number | null>(null);
-	const [name, setName] = useState<string | null>(null);
-	const [students, setStudents] = useState<ExtendedUserInfo[]>([]);
-	const [selectedUserInfo, setselectedUserInfo] = useState<Overview>(null);
-	const [classes, setClasses] = useState<Class[]>([]);
-	const [teachers, setTeachers] = useState<ExtendedUserInfo[]>([]);
-	const [selectedUser, setSelectedUser] = useState<ExtendedUserInfo | null>(null)
+  const [selectedUser, setSelectedUser] = useState<ExtendedUserInfo | null>(null);
+  
+  const { userId, name } = useAdminAuth();
+  const { students, teachers, allUsers } = useUsers();
+  const { classes } = useClasses();
+  const { overview: selectedUserInfo } = useSelectedStudentOverview(
+    selectedUser?.studentId ?? null
+  );
 
+  const reloadUsers = async () => {
+    await mutate(API_ENDPOINTS.users);
+  };
 
-	const { data: userData } = useSWR<{
-		success: boolean;
-		user: UserInfo;
-	}>("/api/v1/user/info", fetcher, { keepPreviousData: true });
+  const assignClass = async (classId: string) => {
+    if (!selectedUser?.studentId) {
+      console.error("No student selected");
+      return;
+    }
 
-	useEffect(() => {
-		if (userData) {
-			if (userData.user.role !== "admin") {
-				redirect("/");
-			}
-			setUserId(userData.user.userId);
-			setName(userData.user.name);
-		}
-	}, [userData]);
+    try {
+      await request("POST", API_ENDPOINTS.assignClass(selectedUser.studentId), {
+        data: { classId: parseInt(classId) }
+      });
+      
+      await Promise.all([
+        mutate(API_ENDPOINTS.users),
+        mutate(API_ENDPOINTS.studentOverview(selectedUser.studentId))
+      ]);
+    } catch (error) {
+      console.error("Failed to assign class:", error);
+    }
+  };
 
-	const [reloadCount, setReloadCount] = useState(0)
+  const selectUser = (user: ExtendedUserInfo | null) => {
+    setSelectedUser(user);
+  };
 
-	const { data: usersList } = useSWR<{
-		users: ExtendedUserInfo[]
-	}>(reloadCount >= 0 ? "/api/v1/admin/users" : null, fetcher, { keepPreviousData: true });
-
-	useEffect(() => {
-		if (usersList?.users) {
-			setStudents(usersList.users.filter(user => user.studentId !== null));
-			setTeachers(usersList.users.filter(user => user.teacherId !== null));
-		}
-	}, [usersList]);
-
-	const { data: studentData } = useSWR<Overview>(selectedUser != null ? (reloadCount >= 0 ? `/api/v1/admin/students/${selectedUser?.studentId}/overview` : null ) : null, fetcher, { keepPreviousData: true });
-
-	useEffect(() => {
-		if (studentData != null) {
-			setselectedUserInfo(studentData);
-		}
-	}, [studentData]);
-
-	const reloadStudents = () => {
-		setReloadCount(reloadCount + 1)
-	}
-
-	const { data: classList } = useSWR<ClassRes>(reloadCount >= 0 ? "/api/v1/admin/classes" : null, fetcher, { keepPreviousData: true });
-
-	useEffect(() => {
-		if (classList?.allClasses) {
-			setClasses(classList.allClasses);
-		}
-	}, [classList]);
-
-	const assignClass = (classId: string) => {
-		console.log(classId)
-		request("POST", "/api/v1/admin/students/" + selectedUser?.studentId + "/link-to-class", {
-			data: {
-				classId: parseInt(classId)
-			}
-		}).finally(() => {
-			setReloadCount(reloadCount + 1)
-		})
-	}
-	return {
-		userId,
-		name,
-		students,
-		teachers,
-		classes,
-		reloadStudents,
-		selectedUser, setSelectedUser, selectedUserInfo,
-		assignClass
-	};
+  return {
+    userId,
+    name,
+    
+    students,
+    teachers,
+    classes,
+    
+    selectedUser,
+    selectedUserInfo,
+    
+    setSelectedUser: selectUser,
+    reloadStudents: reloadUsers,
+    assignClass,
+  };
 });
 
 export default AdminStore;
