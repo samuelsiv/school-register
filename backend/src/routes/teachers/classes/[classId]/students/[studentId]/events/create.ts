@@ -1,11 +1,12 @@
-import { db } from "@/db/index.js";
-import { events } from "@/db/schema/events.js";
-import { students } from "@/db/schema/students.js";
-import { teachers } from "@/db/schema/teachers.js";
+import { db } from "@/db/index";
+import { events } from "@/db/schema/events";
+import { Student, students } from "@/db/schema/students";
+import { Teacher, teachers } from "@/db/schema/teachers";
 import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
+import { querySingleItem } from "@/db/utils";
 
 const createEventSchema = z.object({
   eventDate: z.string().refine((date) => !isNaN(Date.parse(date)), { message: "Invalid date format" }),
@@ -28,31 +29,22 @@ export default async function () {
     }
 
     // Verify if the teacher is assigned to the class
-    const teacherAssigned = await db
-      .select()
-      .from(teachers)
-      .where(eq(teachers.userId, teacher.userId))
-      .limit(1);
-
-    if (teacherAssigned.length === 0) {
+    const teacherAssigned = await querySingleItem<Teacher>(teachers, [eq(teachers.userId, teacher.userId)]);
+    if (!teacherAssigned) {
       return c.json({ error: "You are not authorized to create events for this class" }, 403);
     }
 
     // Verify if the student belongs to the class
-    const studentExists = await db
-      .select()
-      .from(students)
-      .where(eq(students.studentId, studentId))
-      .limit(1);
+    const studentEntry = await querySingleItem<Student>(students, [eq(students.studentId, studentId)]);
 
-    if (studentExists.length === 0 || studentExists[0].classId !== classId) {
+    if (!studentEntry || studentEntry.classId !== classId) {
       return c.json({ error: "Student does not belong to this class" }, 404);
     }
 
     // Insert the event into the database
     await db.insert(events).values({
         studentId,
-        teacherId: teacherAssigned[0].teacherId,
+        teacherId: teacherAssigned.teacherId,
         eventDate: new Date(eventDate).toISOString(), // Convert Date to ISO string
         eventHour,
         eventType,

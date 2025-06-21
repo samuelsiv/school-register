@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import { classes } from "./classes.js";
-import { teachers } from "./teachers.js";
+import { classes } from "./classes";
+import { teachers } from "./teachers";
 
 export const teacherClasses = pgTable("teachers_classes", {
   teacherId: integer("teacher_id").notNull().references(() => teachers.teacherId, { onDelete: "cascade" }),

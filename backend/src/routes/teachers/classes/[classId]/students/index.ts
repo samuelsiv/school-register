@@ -1,6 +1,6 @@
-import { db } from "@/db/index.js";
-import { students } from "@/db/schema/students.js";
-import { users } from "@/db/schema/users.js";
+import { db } from "@/db/index";
+import { students } from "@/db/schema/students";
+import { users } from "@/db/schema/users";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 

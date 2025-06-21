@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
 import { date, integer, pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
-import { classes } from "./classes.js";
-import { grades } from "./grades.js";
-import { subjects } from "./subjects.js";
-import { teachers } from "./teachers.js";
+import { classes } from "./classes";
+import { grades } from "./grades";
+import { subjects } from "./subjects";
+import { teachers } from "./teachers";
 
 export const homeworks = pgTable("homeworks", {
   homeworkId: serial("homework_id").primaryKey(),

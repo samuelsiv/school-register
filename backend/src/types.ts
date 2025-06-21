@@ -1,5 +1,5 @@
-import type { Class } from "./db/schema/classes.js";
-import type { Student } from "./db/schema/students.js";
+import type { Class } from "./db/schema/classes";
+import type { Student } from "./db/schema/students";
 
 declare global {
   namespace NodeJS {

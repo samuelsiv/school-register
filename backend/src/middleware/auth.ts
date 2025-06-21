@@ -1,4 +1,4 @@
-import type { IJwtData } from "@/types.js";
+import type { IJwtData } from "@/types";
 import { createMiddleware } from "hono/factory";
 import jwt from "jsonwebtoken";
 

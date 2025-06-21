@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
-import { students } from "./students.js";
-import { teachers } from "./teachers.js";
+import { students } from "./students";
+import { teachers } from "./teachers";
 
 export const users = pgTable("users", {
   userId: serial("user_id").primaryKey(),

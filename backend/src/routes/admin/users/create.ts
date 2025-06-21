@@ -1,9 +1,9 @@
-import { db } from "@/db/index.js";
-import { students } from "@/db/schema/students.js";
-import { teachers } from "@/db/schema/teachers.js";
-import { users } from "@/db/schema/users.js";
-import { checkTurnstileToken } from "@/lib/turnstile.js";
-import { authMiddleware } from "@/middleware/auth.js";
+import { db } from "@/db/index";
+import { students } from "@/db/schema/students";
+import { teachers } from "@/db/schema/teachers";
+import { users } from "@/db/schema/users";
+import { checkTurnstileToken } from "@/lib/turnstile";
+import { authMiddleware } from "@/middleware/auth";
 import { zValidator } from "@hono/zod-validator";
 import bcrypt from "bcrypt";
 import { eq, or } from "drizzle-orm";

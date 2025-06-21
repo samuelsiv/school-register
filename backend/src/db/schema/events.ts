@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
 import { date, integer, pgTable, serial, smallint, text, unique, varchar } from "drizzle-orm/pg-core";
-import {classes} from "./classes.js";
-import { students } from "./students.js";
-import { teachers } from "./teachers.js";
+import {classes} from "./classes";
+import { students } from "./students";
+import { teachers } from "./teachers";
 
 export const events = pgTable("events", {
   eventId: serial("event_id").primaryKey(),

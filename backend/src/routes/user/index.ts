@@ -1,8 +1,8 @@
-import { db } from "@/db/index.js";
-import { parentStudents } from "@/db/schema/parentStudents.js";
-import { students } from "@/db/schema/students.js";
-import { users } from "@/db/schema/users.js";
-import { authMiddleware } from "@/middleware/auth.js";
+import { db } from "@/db/index";
+import { parentStudents } from "@/db/schema/parentStudents";
+import { students } from "@/db/schema/students";
+import { users } from "@/db/schema/users";
+import { authMiddleware } from "@/middleware/auth";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 
@@ -12,6 +12,9 @@ export default async function() {
 	router.get("/user", async (c) => {
 		const { userId } = c.get("user");
 		const [userFound] = await db.select().from(users).where(eq(users.userId, userId)).limit(1);
+		if (!userFound) {
+			return c.json({ success: false, error: "User not found" }, 404);
+		}
 
 		let assignedStudents: Array<{
 			studentId: number;

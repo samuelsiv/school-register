@@ -1,6 +1,6 @@
-import { db } from "@/db/index.js";
-import { users } from "@/db/schema/users.js";
-import { checkTurnstileToken } from "@/lib/turnstile.js";
+import { db } from "@/db/index";
+import { users } from "@/db/schema/users";
+import { checkTurnstileToken } from "@/lib/turnstile";
 import { zValidator } from "@hono/zod-validator";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";

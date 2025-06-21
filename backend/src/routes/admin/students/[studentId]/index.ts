@@ -1,15 +1,15 @@
-import { db } from "@/db/index.js";
-import { classes } from "@/db/schema/classes.js";
-import { events } from "@/db/schema/events.js";
-import { grades } from "@/db/schema/grades.js";
-import { homeworks } from "@/db/schema/homeworks.js";
-import { parentStudents } from "@/db/schema/parentStudents.js";
-import { students } from "@/db/schema/students.js";
-import { subjects } from "@/db/schema/subjects.js";
-import { teacherClasses } from "@/db/schema/teacherClasses.js";
-import { teachers } from "@/db/schema/teachers.js";
-import { users } from "@/db/schema/users.js";
-import { calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage } from "@/lib/average.js";
+import { db } from "@/db/index";
+import { classes } from "@/db/schema/classes";
+import { events } from "@/db/schema/events";
+import { grades } from "@/db/schema/grades";
+import { homeworks } from "@/db/schema/homeworks";
+import { parentStudents } from "@/db/schema/parentStudents";
+import { students } from "@/db/schema/students";
+import { subjects } from "@/db/schema/subjects";
+import { teacherClasses } from "@/db/schema/teacherClasses";
+import { teachers } from "@/db/schema/teachers";
+import { users } from "@/db/schema/users";
+import { calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage } from "@/lib/average";
 import { count, desc, eq } from "drizzle-orm";
 import { Hono } from "hono";
 

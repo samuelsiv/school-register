@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { db } from "@/db/index.js";
-import { events } from "@/db/schema/events.js";
+import { db } from "@/db/index";
+import { events } from "@/db/schema/events";
 import { and, eq } from "drizzle-orm";
 
 export default async function () {

@@ -1,9 +1,9 @@
-import { db } from "@/db/index.js";
-import {classes} from "@/db/schema/classes.js";
-import { students } from "@/db/schema/students.js";
-import { teachers } from "@/db/schema/teachers.js";
-import { users } from "@/db/schema/users.js";
-import { authMiddleware } from "@/middleware/auth.js";
+import { db } from "@/db/index";
+import {classes} from "@/db/schema/classes";
+import { students } from "@/db/schema/students";
+import { teachers } from "@/db/schema/teachers";
+import { users } from "@/db/schema/users";
+import { authMiddleware } from "@/middleware/auth";
 import { zValidator } from "@hono/zod-validator";
 import { eq, or } from "drizzle-orm";
 import { Hono } from "hono";

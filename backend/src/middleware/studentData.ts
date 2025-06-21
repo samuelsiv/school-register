@@ -1,7 +1,7 @@
-import { db } from "@/db/index.js";
-import { classes } from "@/db/schema/classes.js";
-import { parentStudents } from "@/db/schema/parentStudents.js";
-import { students, type Student } from "@/db/schema/students.js";
+import { db } from "@/db/index";
+import { classes } from "@/db/schema/classes";
+import { parentStudents } from "@/db/schema/parentStudents";
+import { students, type Student } from "@/db/schema/students";
 import { and, eq } from "drizzle-orm";
 import { createMiddleware } from "hono/factory";
 

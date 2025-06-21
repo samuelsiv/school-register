@@ -8,9 +8,9 @@ import { pathToFileURL } from "url";
 import dotenv from "dotenv";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { authMiddleware } from "./middleware/auth.js";
-import { roleMiddleware } from "./middleware/role.js";
-import { studentDataMiddleware } from "./middleware/studentData.js";
+import { authMiddleware } from "./middleware/auth";
+import { roleMiddleware } from "./middleware/role";
+import { studentDataMiddleware } from "./middleware/studentData";
 dotenv.config();
 
 const app = new Hono();
@@ -35,7 +35,7 @@ async function loadRoutes(routesDir: string) {
     const filePath = path.join(routesDir, file.name);
     if (file.isDirectory()) {
       await loadRoutes(filePath);
-    } else if (file.name.endsWith(".js")) {
+    } else if (file.name.endsWith("")) {
       const fileURL = pathToFileURL(filePath).href;
       const routeModule = await import(fileURL);
       console.log(`Loading route: ${filePath}`);

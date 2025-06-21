@@ -1,11 +1,11 @@
-import { db } from "@/db/index.js";
-import {events} from "@/db/schema/events.js";
-import { grades } from "@/db/schema/grades.js";
-import { parentStudents } from "@/db/schema/parentStudents.js";
-import {subjects} from "@/db/schema/subjects.js";
-import {users} from "@/db/schema/users.js";
-import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average.js";
-import { studentDataMiddleware } from "@/middleware/studentData.js";
+import { db } from "@/db/index";
+import {events} from "@/db/schema/events";
+import { grades } from "@/db/schema/grades";
+import { parentStudents } from "@/db/schema/parentStudents";
+import {subjects} from "@/db/schema/subjects";
+import {users} from "@/db/schema/users";
+import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average";
+import { studentDataMiddleware } from "@/middleware/studentData";
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 

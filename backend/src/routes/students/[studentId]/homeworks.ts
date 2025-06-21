@@ -1,9 +1,9 @@
-import { db } from "@/db/index.js";
-import { homeworks } from "@/db/schema/homeworks.js";
-import {subjects} from "@/db/schema/subjects.js";
-import { teachers } from "@/db/schema/teachers.js";
-import { users } from "@/db/schema/users.js";
-import { studentDataMiddleware } from "@/middleware/studentData.js";
+import { db } from "@/db/index";
+import { homeworks } from "@/db/schema/homeworks";
+import {subjects} from "@/db/schema/subjects";
+import { teachers } from "@/db/schema/teachers";
+import { users } from "@/db/schema/users";
+import { studentDataMiddleware } from "@/middleware/studentData";
 import { and, desc, eq } from "drizzle-orm";
 import { Hono } from "hono";
 
