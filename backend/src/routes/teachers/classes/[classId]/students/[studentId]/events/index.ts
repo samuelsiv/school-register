@@ -4,9 +4,9 @@ import { events } from "@/db/schema/events.js";
 import { and, eq } from "drizzle-orm";
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events");
+  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId");
 
-  router.get("", async (c) => {
+  router.get("/events", async (c) => {
     const classId = parseInt(c.req.param("classId"));
     const studentId = parseInt(c.req.param("studentId"));
 

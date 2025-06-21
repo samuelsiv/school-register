@@ -7,7 +7,7 @@ export default async function () {
   const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events/:eventId");
 
   // GET /api/v1/teachers/classes/:classId/:studentId/events/:eventId
-  router.get("", async (c) => {
+  router.get("/:eventId", async (c) => {
     const classId = parseInt(c.req.param("classId"));
     const studentId = parseInt(c.req.param("studentId"));
     const eventId = parseInt(c.req.param("eventId"));

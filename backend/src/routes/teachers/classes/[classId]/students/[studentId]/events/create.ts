@@ -15,9 +15,9 @@ const createEventSchema = z.object({
 });
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events");
+  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId");
 
-  router.post("", zValidator("json", createEventSchema), async (c) => {
+  router.post("/events", zValidator("json", createEventSchema), async (c) => {
     const { eventDate, eventHour, eventType, eventDescription } = c.req.valid("json");
     const classId = parseInt(c.req.param("classId"));
     const studentId = parseInt(c.req.param("studentId"));

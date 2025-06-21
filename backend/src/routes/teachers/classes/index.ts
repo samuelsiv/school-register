@@ -8,9 +8,9 @@ import { count, eq } from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
-  const router = new Hono().basePath("/api/v1/teachers/classes");
+  const router = new Hono().basePath("/api/v1/teachers");
 
-  router.get("", async (c) => {
+  router.get("/classes", async (c) => {
     const user = c.get("user");
         
     // Poi, verifica le associazioni teacherClasses
@@ -34,7 +34,7 @@ export default async function() {
       .innerJoin(teachers, eq(classes.coordinatorTeacherId, teachers.teacherId))
       .innerJoin(users, eq(teachers.userId, users.userId))
       .leftJoin(students, eq(students.classId, classes.classId))
-      .where(eq(teacherClasses.teacherId, teacherId)) // Usa teacherId invece di user.userId
+      .where(eq(teacherClasses.teacherId, user.userId))
       .groupBy(
         classes.classId,
         classes.className,
