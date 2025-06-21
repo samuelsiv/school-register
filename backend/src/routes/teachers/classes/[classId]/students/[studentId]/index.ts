@@ -14,8 +14,8 @@ import {count, desc, eq} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
-    const router = new Hono().basePath("/api/v1/teachers/classes/:classId/:studentId");
-    router.get("/overview", async (c) => {
+    const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId");
+    router.get("", async (c) => {
         const studentId = parseInt(c.req.param("studentId"));
         const teacher = c.get("user");
 

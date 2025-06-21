@@ -5,9 +5,9 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
-  const router = new Hono().basePath("/api/v1/teachers/classes/:classId");
+  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students");
 
-  router.get("/students", async (c) => {
+  router.get("", async (c) => {
     const classId = parseInt(c.req.param("classId"));
     if (isNaN(classId)) {
       return c.json({ error: "Invalid classId" }, 400);
