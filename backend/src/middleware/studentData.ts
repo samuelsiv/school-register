@@ -1,48 +1,58 @@
 import { db } from "@/db/index";
-import { classes } from "@/db/schema/classes";
+import { Class, classes } from "@/db/schema/classes";
 import { parentStudents } from "@/db/schema/parentStudents";
 import { students, type Student } from "@/db/schema/students";
+import { querySingleItem } from "@/db/utils";
 import { and, eq } from "drizzle-orm";
 import { createMiddleware } from "hono/factory";
 
 export const studentDataMiddleware = createMiddleware(async (c, next) => {
   const user = c.get("user");
-
-  let student: Student | null = null;
+  let idToQuery: number;
+  let queryField: "studentId" | "userId";
 
   if (user.role === "parent") {
     const studentId = parseInt(c.req.param("studentId") as string);
+    
+    if (isNaN(studentId)) {
+      return c.json({
+        error: "Invalid student ID",
+      }, 400);
+    }
 
-    const dbResult = await db
-      .select()
-      .from(parentStudents)
-      .where(and(
+    // Check if parent is authorized to view this student
+    const combination = await querySingleItem<{
+      parentId: number;
+      studentId: number;
+    } | null>(
+      parentStudents,
+      [and(
         eq(parentStudents.parentId, user.userId),
         eq(parentStudents.studentId, studentId),
-      ));
+      )]
+    );
 
-    if (dbResult.length === 0) {
+    if (!combination) {
       return c.json({
-        error: "You are not authorized to view this student's grades",
+        error: "You are not authorized to view this student",
       }, 403);
     }
 
-    const studentEntries = await db
-      .select()
-      .from(students)
-      .where(eq(students.studentId, studentId));
-
-    student = studentEntries[0];
+    idToQuery = studentId;
+    queryField = "studentId";
   } else if (user.role === "student") {
-    const dbResult = await db.select().from(students).where(eq(students.userId, user.userId));
-    if (dbResult.length === 0) {
-      return c.json({
-        error: "You are not authorized to view this student's grades",
-      }, 403);
-    }
-
-    student = dbResult[0];
+    idToQuery = user.userId;
+    queryField = "userId";
+  } else {
+    return c.json({
+      error: "Missing permission",
+    }, 403);
   }
+
+  const student = await querySingleItem<Student | null>(
+    students,
+    [eq(students[queryField], idToQuery)]
+  );
 
   if (!student) {
     return c.json({
@@ -50,15 +60,17 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
     }, 404);
   }
 
-  // Set the student in the context
   c.set("student", student);
 
-  const classEntries = await db
-    .select()
-    .from(classes)
-    .where(eq(classes.classId, student.classId!)); // Changed from studentId to classId
+  if (student.classId) {
+    const classEntry = await querySingleItem<Class | null>(
+      classes,
+      [eq(classes.classId, student.classId)]
+    );
+    c.set("class", classEntry);
+  } else {
+    c.set("class", null);
+  }
 
-  c.set("class", classEntries.length <= 0 ? null : classEntries[0]);
-
-  await next();
+  return await next();
 });

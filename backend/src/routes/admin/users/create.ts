@@ -1,7 +1,8 @@
 import { db } from "@/db/index";
 import { students } from "@/db/schema/students";
 import { teachers } from "@/db/schema/teachers";
-import { users } from "@/db/schema/users";
+import { User, users } from "@/db/schema/users";
+import { insertSingleItem, querySingleItem } from "@/db/utils";
 import { checkTurnstileToken } from "@/lib/turnstile";
 import { authMiddleware } from "@/middleware/auth";
 import { zValidator } from "@hono/zod-validator";
@@ -26,39 +27,40 @@ export default async function() {
 	router.post("/create", zValidator("json", createAccountSchema), async (c) => {
 		const { email, password, username, name, surname, role } = c.req.valid("json");
 
-		const existingUser = await db
-			.select()
-			.from(users)
-			.where(
-				or(
-					eq(users.username, username),
-					eq(users.email, email),
-				),
-			)
-			.limit(1)
-			.execute();
+		const existingUser = await querySingleItem<User>(
+			users,
+			[or(
+				eq(users.username, username),
+				eq(users.email, email),
+			)]
+		);
 
-		if (existingUser.length == 1) { return c.json({ error: "User already exists" }, 400); }
-		const userData = {
-			username,
-			email,
-			password: await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS.toString() || "10")),
-			name,
-			surname,
-			role,
-		};
+		if (existingUser) return c.json({ error: "User already exists" }, 400);
 
-		const newUser = await db.insert(users).values(userData).returning().execute();
+		const newUser = await insertSingleItem<User>(
+			users,
+			{
+				username,
+				email,
+				password: await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS.toString() || "10")),
+				name,
+				surname,
+				role,
+			}
+		);
 
-		if (role === "student") {
-			await db.insert(students).values({
-				userId: newUser[0].userId,
+		const roleInserts = {
+			student: () => db.insert(students).values({
+				userId: newUser.userId,
 				classId: null,
-			}).execute();
-		} else if (role === "teacher") {
-			await db.insert(teachers).values({
-				userId: newUser[0].userId,
-			}).execute();
+			}),
+			teacher: () => db.insert(teachers).values({
+				userId: newUser.userId,
+			}),
+		} as const;
+
+		if (role in roleInserts) {
+			await roleInserts[role as keyof typeof roleInserts]().execute();
 		}
 
 		return c.json({ message: "Account created successfully" }, 201);

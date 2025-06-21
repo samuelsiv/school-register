@@ -10,7 +10,7 @@ export const authMiddleware = createMiddleware(async (c, next) => {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET) as IJwtData;
 		if (!decoded) { return c.json({ error: "Unauthorized" }, 401); }
 		c.set("user", decoded);
-		await next();
+		return await next();
 	} catch (err) {
 		return c.json({ error: "Invalid token" }, 401);
 	}
