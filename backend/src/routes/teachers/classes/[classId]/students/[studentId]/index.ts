@@ -56,11 +56,8 @@ export default async function() {
 
         const student = studentResult[0];
 
-        if (!student) {
-            console.log("Student is falsy:", student);
-            return c.json({error: "Student not found " + studentId}, 404);
-        }
-
+        if (!student) return c.json({error: "Student not found " + studentId}, 404);
+        
         const parentsList = await db
             .select({
                 parentId: parentStudents.parentId,
