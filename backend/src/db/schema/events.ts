@@ -3,6 +3,7 @@ import { date, integer, pgTable, serial, smallint, text, varchar } from "drizzle
 import {classes} from "./classes";
 import { students } from "./students";
 import { teachers } from "./teachers";
+import {z} from "zod";
 
 export const events = pgTable("events", {
   eventId: serial("event_id").primaryKey(),
@@ -10,7 +11,7 @@ export const events = pgTable("events", {
   teacherId: integer("teacher_id").references(() => teachers.teacherId, { onDelete: "cascade" }), // created by
   eventDate: date("event_date").notNull(),
   eventHour: smallint("event_hour").notNull(),
-  eventType: varchar("event_type", { length: 50 }).notNull(), // e.g. "absence", "delay", "leave", "present", "homework", "other", "note"
+  eventType: varchar("event_type", { length: 50 }).notNull(), // e.g. ["present", "absence", "delay", "leave"]
   eventDescription: text("event_description"), // e.g. "other"
   classId: integer("class_id").notNull().references(() => classes.classId, { onDelete: "cascade" }),
 });

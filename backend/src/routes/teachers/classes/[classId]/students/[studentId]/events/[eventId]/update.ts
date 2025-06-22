@@ -8,7 +8,7 @@ import { z } from "zod";
 const updateEventSchema = z.object({
   eventDate: z.string().optional(),
   eventHour: z.number().min(0).max(23).optional(),
-  eventType: z.string().optional(),
+  eventType: z.enum(["present", "absence", "delay", "leave"]).optional(),
   eventDescription: z.string().optional(),
 });
 

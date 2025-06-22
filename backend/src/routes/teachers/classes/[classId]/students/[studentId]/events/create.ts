@@ -11,7 +11,7 @@ import { querySingleItem } from "@/db/utils";
 const createEventSchema = z.object({
   eventDate: z.string().refine((date) => !isNaN(Date.parse(date)), { message: "Invalid date format" }),
   eventHour: z.number().min(0).max(23),
-  eventType: z.string(),
+  eventType: z.enum(["present", "absence", "delay", "leave"]),
   eventDescription: z.string().optional(),
 });
 

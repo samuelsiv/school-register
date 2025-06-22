@@ -10,6 +10,7 @@ import {SchoolEvent} from "@/types/event";
 
 export default function TeacherTodayPage() {
     const teacherStore = TeacherStore.useContainer();
+    console.log(teacherStore.todayEvents);
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <TeacherSidebar/>

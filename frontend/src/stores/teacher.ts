@@ -1,6 +1,6 @@
 "use client";
 
-import { fetcher } from "@/lib/request";
+import {fetcher, request} from "@/lib/request";
 import { Student } from "@/types/student";
 import { redirect, useParams } from "next/navigation";
 import {useEffect, useMemo, useState} from "react";
@@ -68,7 +68,7 @@ const useSchoolTeachers = () => {
 };
 
 const useStudentsEvents = (classId: string | null) => {
-  const { data, error } = useSWR<{ eventsByStudent: Record<number, SchoolEvent[]> }>(
+  const { data, error, mutate } = useSWR<{ eventsByStudent: Record<number, SchoolEvent[]> }>(
     classId ? API_ENDPOINTS.eventsStudents(classId) : null,
     fetcher, {
     keepPreviousData: true
@@ -76,6 +76,7 @@ const useStudentsEvents = (classId: string | null) => {
 
   return {
     events: data?.eventsByStudent ?? [],
+    mutate,
     isLoading: !data && !error,
     error
   };
@@ -112,7 +113,7 @@ const useSelectedStudent = (classId: string | null, studentId: number | null) =>
 };
 
 const TeacherStore = createContainer(() => {
-  const { classId } = useParams();
+  let { classId } = useParams();
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   
   const { userId, name, teacherId } = useUserAuth();
@@ -120,7 +121,7 @@ const TeacherStore = createContainer(() => {
   const { teachers: schoolTeachers } = useSchoolTeachers();
   const { students: classStudents } = useClassStudents(classId as string);
 
-  const { events: studentsEvents } = useStudentsEvents(classId as string);
+  let { events: studentsEvents, mutate: mutateEvents } = useStudentsEvents(classId as string);
   const todayEvents = useMemo(() => {
     return Object.entries(studentsEvents).map(([studentId, events]) => {
       return {
@@ -141,8 +142,8 @@ const TeacherStore = createContainer(() => {
   }, [todayEvents])
 
   const copyEvents = (hour: number) => {
-    let events: SchoolEvent[]
-    if (hour === 1 || noEventsHours.includes(hour-1)) events = classStudents.map(student => ({
+    let toInsertEvents: SchoolEvent[]
+    if (hour === 1 || noEventsHours.includes(hour-1)) toInsertEvents = classStudents.map(student => ({
       eventDate: new Date().toISOString().split('T')[0],
       eventHour: 1,
       studentId: student.studentId,
@@ -152,7 +153,7 @@ const TeacherStore = createContainer(() => {
       eventDescription: getDescription(EventType.PRESENT),
       classId: parseInt(classId as string, 10)
     }))
-    else events = todayEvents
+    else toInsertEvents = todayEvents
         .map(e => e.events)
         .flat()
         .filter(e => e.eventHour === hour-1)
@@ -166,7 +167,9 @@ const TeacherStore = createContainer(() => {
           }
         })
 
-    console.log(events)
+    request("POST", `/api/v1/teachers/classes/${classId}/students/events/createMany`, {
+      data: toInsertEvents
+    }).then(res => mutateEvents())
   }
 
   const { overview: selectedStudentInfo } = useSelectedStudent(
