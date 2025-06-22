@@ -12,9 +12,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
     "removeComments": true,
     "baseUrl": ".",
     "paths": {
@@ -23,9 +23,9 @@
     "types": ["node"],
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
   },
   "include": [
     "src/**/*.ts"

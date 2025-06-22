@@ -1,10 +1,9 @@
-import { db } from "@/db/index";
+import { db } from "@/db";
 import { classes } from "@/db/schema/classes";
 import {students} from "@/db/schema/students";
-import { teacherClasses } from "@/db/schema/teacherClasses";
 import { teachers } from "@/db/schema/teachers";
 import { users } from "@/db/schema/users";
-import {count, eq, isNotNull, ne} from "drizzle-orm";
+import {eq, isNotNull} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
@@ -18,8 +17,8 @@ export default async function() {
             .select({
                 classId: classes.classId,
                 className: classes.className,
-                schoolYear: classes.schoolYear,
                 coordinator: users.name,
+                schoolYear: classes.schoolYear,
             })
             .from(classes)
             .innerJoin(teachers, eq(classes.coordinatorTeacherId, teachers.teacherId))
@@ -29,10 +28,10 @@ export default async function() {
         const allStudents = await db
             .select({
                 classId: students.classId,
-                studentId: students.studentId,
-                userId: students.userId,
                 name: users.name,
+                studentId: students.studentId,
                 surname: users.surname,
+                userId: students.userId,
                 username: users.username,
             })
             .from(students)
@@ -46,10 +45,10 @@ export default async function() {
                 acc[classId] = [];
             }
             acc[classId].push({
-                studentId: student.studentId,
-                userId: student.userId,
                 name: student.name,
+                studentId: student.studentId,
                 surname: student.surname,
+                userId: student.userId,
                 username: student.username || "",
             });
             return acc;

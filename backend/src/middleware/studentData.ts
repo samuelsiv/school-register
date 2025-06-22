@@ -1,4 +1,3 @@
-import { db } from "@/db/index";
 import { Class, classes } from "@/db/schema/classes";
 import { parentStudents } from "@/db/schema/parentStudents";
 import { students, type Student } from "@/db/schema/students";
@@ -12,8 +11,7 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
   let queryField: "studentId" | "userId";
 
   if (user.role === "parent") {
-    const studentId = parseInt(c.req.param("studentId") as string);
-    
+    const studentId = parseInt(c.req.param("studentId") as string, 10);
     if (isNaN(studentId)) {
       return c.json({
         error: "Invalid student ID",
@@ -29,7 +27,7 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
       [and(
         eq(parentStudents.parentId, user.userId),
         eq(parentStudents.studentId, studentId),
-      )]
+      )],
     );
 
     if (!combination) {
@@ -51,7 +49,7 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
 
   const student = await querySingleItem<Student | null>(
     students,
-    [eq(students[queryField], idToQuery)]
+    [eq(students[queryField], idToQuery)],
   );
 
   if (!student) {
@@ -65,7 +63,7 @@ export const studentDataMiddleware = createMiddleware(async (c, next) => {
   if (student.classId) {
     const classEntry = await querySingleItem<Class | null>(
       classes,
-      [eq(classes.classId, student.classId)]
+      [eq(classes.classId, student.classId)],
     );
     c.set("class", classEntry);
   } else {

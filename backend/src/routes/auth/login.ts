@@ -1,19 +1,18 @@
-import { db } from "@/db/index";
-import { users } from "@/db/schema/users";
-import { checkTurnstileToken } from "@/lib/turnstile";
-import { zValidator } from "@hono/zod-validator";
+import {db} from "@/db";
+import {users} from "@/db/schema/users";
+import {checkTurnstileToken} from "@/lib/turnstile";
+import {zValidator} from "@hono/zod-validator";
 import bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
-import { Hono } from "hono";
-import {
-  setCookie,
-} from "hono/cookie";
+import {eq} from "drizzle-orm";
+import {Hono} from "hono";
+import {setCookie} from "hono/cookie";
 import jwt from "jsonwebtoken";
-import { z } from "zod";
+import {z} from "zod";
+
 const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password is required" }),
-  captcha: z.string().min(6, { message: "Captcha is required" }),
+  captcha: z.string().min(6, {message: "Captcha is required"}),
+  email: z.string().email({message: "Invalid email address"}),
+  password: z.string().min(6, {message: "Password is required"}),
 });
 
 export default async function() {
@@ -43,10 +42,10 @@ export default async function() {
       .where(eq(users.userId, userFound.userId));
 
     const token = jwt.sign(
-      {
-        userId: userFound.userId,
-        role: userFound.role,
-      },
+        {
+          role: userFound.role,
+          userId: userFound.userId,
+        },
       process.env.JWT_SECRET,
       { expiresIn: 3600 },
     );
@@ -56,8 +55,8 @@ export default async function() {
       expires: new Date(Date.now() + 3600 * 1000),
     });
     return c.json({
-      token,
       success: true,
+      token,
       user: userInfo,
     });
   });

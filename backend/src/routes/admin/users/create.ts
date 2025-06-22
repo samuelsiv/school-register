@@ -1,24 +1,21 @@
-import { db } from "@/db/index";
+import { db } from "@/db";
 import { students } from "@/db/schema/students";
 import { teachers } from "@/db/schema/teachers";
 import { User, users } from "@/db/schema/users";
 import { insertSingleItem, querySingleItem } from "@/db/utils";
-import { checkTurnstileToken } from "@/lib/turnstile";
-import { authMiddleware } from "@/middleware/auth";
 import { zValidator } from "@hono/zod-validator";
 import bcrypt from "bcrypt";
 import { eq, or } from "drizzle-orm";
 import { Hono } from "hono";
-import jwt from "jsonwebtoken";
 import { z } from "zod";
 
 const createAccountSchema = z.object({
 	email: z.string().email(),
-	password: z.string().min(8),
-	username: z.string().min(1),
 	name: z.string().min(1),
-	surname: z.string().min(1),
+	password: z.string().min(8),
 	role: z.enum(["student", "teacher"]),
+	surname: z.string().min(1),
+	username: z.string().min(1),
 });
 
 export default async function() {
@@ -32,27 +29,27 @@ export default async function() {
 			[or(
 				eq(users.username, username),
 				eq(users.email, email),
-			)]
+			)],
 		);
 
-		if (existingUser) return c.json({ error: "User already exists" }, 400);
+		if (existingUser) { return c.json({ error: "User already exists" }, 400); }
 
 		const newUser = await insertSingleItem<User>(
 			users,
 			{
-				username,
 				email,
-				password: await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS.toString() || "10")),
 				name,
-				surname,
+				password: await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUNDS.toString() || "10", 10)),
 				role,
-			}
+				surname,
+				username,
+			},
 		);
 
 		const roleInserts = {
 			student: () => db.insert(students).values({
-				userId: newUser.userId,
 				classId: null,
+				userId: newUser.userId,
 			}),
 			teacher: () => db.insert(teachers).values({
 				userId: newUser.userId,

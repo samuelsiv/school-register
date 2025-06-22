@@ -4,11 +4,12 @@ import {SidebarTrigger} from "@/components/ui/sidebar";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
 import TeacherStore from "@/stores/teacher";
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {ChevronLeftCircleIcon, ChevronLeftIcon, ChevronRightCircleIcon, CopyIcon} from "lucide-react";
+import {ChevronLeftCircleIcon, ChevronRightCircleIcon, CopyIcon} from "lucide-react";
+import {getAbbreviation, getColor} from "@/types/eventType";
+import {SchoolEvent} from "@/types/event";
 
 export default function TeacherTodayPage() {
     const teacherStore = TeacherStore.useContainer();
-
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <TeacherSidebar/>
@@ -37,23 +38,36 @@ export default function TeacherTodayPage() {
                     <TableHeader>
                         <TableRow className="">
                             <TableHead className={"text-center border-b-3"}>Student</TableHead>
-                            <TableHead className={"text-center border-b-3"}>1^ hour</TableHead>
-                            <TableHead className={"text-center border-b-3"}><div className={"flex-row flex justify-center"}>2^ hour<CopyIcon /></div></TableHead>
-                            <TableHead className={"text-center border-b-3"}>3^ hour</TableHead>
-                            <TableHead className={"text-center border-b-3"}>4^ hour</TableHead>
-                            <TableHead className={"text-center border-b-3"}>5^ hour</TableHead>
+                            {teacherStore.dayHours.map(hour => <TableHead className={"text-center border-b-3"} key={"hourint-" + hour}>
+                                <div className={"flex-row flex justify-between"}>
+                                    <br/>
+                                    <p>{hour}^ hour</p>
+                                    {teacherStore.noEventsHours.indexOf(hour) !== -1 &&
+                                        <CopyIcon onClick={() => teacherStore.copyEvents(hour)}/>
+                                    }
+                                </div>
+                            </TableHead>)}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {teacherStore.classStudents.map(student =>
-                            <TableRow key={`studRow-${student.studentId}`}>
-                                <TableCell className="font-medium border-e-1">{student.name} {student.surname}</TableCell>
-                                <TableCell className="font-medium border-e-1 bg-green-600">P</TableCell>
-                                <TableCell className="font-medium border-e-1 bg-red-600">A</TableCell>
-                                <TableCell className="font-medium border-e-1 bg-orange-600">R</TableCell>
-                                <TableCell className="font-medium border-e-1 bg-yellow-600">U</TableCell>
-                                <TableCell className="font-medium border-e-1 bg-green-600">P</TableCell>
+                        {[
+                            ...teacherStore.todayEvents,
+                            ...teacherStore.classStudents.filter(
+                                stud => teacherStore.todayEvents
+                                    .map(e => e.id)
+                                    .indexOf(stud.studentId.toString()) === -1
+                            ).map(st => {return {id: st.studentId.toString(), events: Array<SchoolEvent>()}})
+                        ].map(({id, events}) =>
+                            <TableRow key={`studRow-${id}`}>
+                                <TableCell className="font-medium border-e-1">
+                                    {[teacherStore.classStudents.find(stud => stud.studentId.toString() == id)]
+                                        .map(stud => `${stud?.name} ${stud?.surname}`)[0]
+                                    }
+                                </TableCell>
 
+                                {events.map(event =>
+                                    <TableCell className={`font-medium border-e-1 ${getColor(event.eventType)}`}>{getAbbreviation(event.eventType)}</TableCell>
+                                )}
                             </TableRow>
                         )}
                     </TableBody>

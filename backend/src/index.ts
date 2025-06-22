@@ -16,11 +16,11 @@ dotenv.config();
 const app = new Hono();
 app.use(logger());
 app.use("*", cors({
-  origin: "*", // this is for development only, change it to your domain in production
-  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowHeaders: ["Authorization", "Content-Type"],
+  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   exposeHeaders: ["Authorization"],
   maxAge: 600,
+  origin: "*", // only development, change it to your domain in production
 }));
 
 app.use("/api/v1/admin/*", authMiddleware, roleMiddleware(["admin"]));
@@ -52,11 +52,11 @@ async function loadRoutes(routesDir: string) {
   }
 }
 
-await loadRoutes(path.resolve("./dist/src/routes"));
+await loadRoutes(path.resolve("./dist/routes"));
 
 serve({
   fetch: app.fetch,
-  port: parseInt(process.env.PORT || "3000"),
+  port: parseInt(process.env.PORT || "3000", 10),
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`);
 });

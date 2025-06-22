@@ -1,8 +1,8 @@
-import { db } from "@/db/index";
+import { db } from "@/db";
 import { parentStudents } from "@/db/schema/parentStudents";
 import { students } from "@/db/schema/students";
+import {teachers} from "@/db/schema/teachers";
 import { users } from "@/db/schema/users";
-import { authMiddleware } from "@/middleware/auth";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 
@@ -20,7 +20,7 @@ export default async function() {
 			studentId: number;
 			classId: number | null;
 		}> = [];
-
+		let teacherId: number | undefined = undefined;
 		if (userFound.role === "parent") {
 			assignedStudents = (await db
 				.select({
@@ -54,6 +54,10 @@ export default async function() {
 				.map((entry) => entry);
 
 			assignedStudents = studentEntry.map((entry) => entry);
+		} else if (userFound.role === "teacher") {
+			teacherId = (await db.select({teacherId: teachers.teacherId})
+					.from(teachers).where(eq(teachers.userId, userId)).limit(1)
+			)[0]?.teacherId;
 		}
 
 		const { password: _, ...userInfo } = userFound;
@@ -61,6 +65,7 @@ export default async function() {
 			success: true,
 			user: userInfo,
 			assignedStudents,
+			teacherId,
 		});
 	});
 
