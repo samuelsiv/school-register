@@ -11,7 +11,7 @@ const ignoredPaths = [
     "/login",
 ]
 
-export const request = async (method: "POST" | "GET", path: string, options?: {
+export const request = async (method: "POST" | "GET" | "PATCH", path: string, options?: {
     auth?: string | null
     data?: object | undefined | null
 } | null) => {

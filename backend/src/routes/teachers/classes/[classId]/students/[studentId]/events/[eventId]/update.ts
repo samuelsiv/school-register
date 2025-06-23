@@ -13,7 +13,7 @@ const updateEventSchema = z.object({
 });
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events/:eventId");
+  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events");
 
   // PATCH /api/v1/teachers/classes/:classId/:studentId/events/:eventId
   router.patch("/:eventId", zValidator("json", updateEventSchema), async (c) => {

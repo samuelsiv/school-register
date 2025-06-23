@@ -4,7 +4,7 @@ import { events } from "@/db/schema/events";
 import { and, eq } from "drizzle-orm";
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events/:eventId");
+  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events");
 
   // GET /api/v1/teachers/classes/:classId/:studentId/events/:eventId
   router.get("/:eventId", async (c) => {

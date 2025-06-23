@@ -17,7 +17,7 @@ const app = new Hono();
 app.use(logger());
 app.use("*", cors({
   allowHeaders: ["Authorization", "Content-Type"],
-  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   exposeHeaders: ["Authorization"],
   maxAge: 600,
   origin: "*", // only development, change it to your domain in production

@@ -1,8 +1,8 @@
 export enum EventType {
+    PRESENT = "present",
     ABSENCE = "absence",
     DELAY = "delay",
     LEAVE = "leave",
-    PRESENT = "present"
 }
 
 export const getAbbreviation = (eventType: EventType) => {

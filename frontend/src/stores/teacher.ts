@@ -141,7 +141,7 @@ const TeacherStore = createContainer(() => {
         )
   }, [todayEvents])
 
-  const copyEvents = (hour: number) => {
+  const copyEvents = (hour: number, desc: string) => {
     let toInsertEvents: SchoolEvent[]
     if (hour === 1 || noEventsHours.includes(hour-1)) toInsertEvents = classStudents.map(student => ({
       eventDate: new Date().toISOString().split('T')[0],
@@ -150,7 +150,7 @@ const TeacherStore = createContainer(() => {
       eventId: null,
       eventType: EventType.PRESENT,
       teacherId: teacherId as number,
-      eventDescription: getDescription(EventType.PRESENT),
+      eventDescription: desc,
       classId: parseInt(classId as string, 10)
     }))
     else toInsertEvents = todayEvents
@@ -163,12 +163,21 @@ const TeacherStore = createContainer(() => {
           else if (newType == EventType.LEAVE) newType = EventType.ABSENCE
           return {
             ...e, eventHour: hour,
-            eventId: null, eventType: newType, eventDescription: getDescription(newType)
+            eventId: null, eventType: newType, eventDescription: desc
           }
         })
 
     request("POST", `/api/v1/teachers/classes/${classId}/students/events/createMany`, {
       data: toInsertEvents
+    }).then(res => mutateEvents())
+  }
+
+  const editEvent = (event: SchoolEvent, type: EventType, description: string) => {
+    request("PATCH", `/api/v1/teachers/classes/${classId}/students/${event.studentId}/events/${event.eventId}`, {
+      data: {
+        eventType: type,
+        eventDescription: description
+      }
     }).then(res => mutateEvents())
   }
 
@@ -193,7 +202,7 @@ const TeacherStore = createContainer(() => {
     selectedStudent,
     setSelectedStudent,
     selectedStudentInfo,
-    
+    editEvent,
     schoolTeachers,
   };
 });
