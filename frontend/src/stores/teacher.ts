@@ -122,13 +122,14 @@ const TeacherStore = createContainer(() => {
   const { students: classStudents } = useClassStudents(classId as string);
 
   let { events: studentsEvents, mutate: mutateEvents } = useStudentsEvents(classId as string);
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const todayEvents = useMemo(() => {
     return Object.entries(studentsEvents).map(([studentId, events]) => {
       return {
-        id: studentId, events: events.filter(event => event.eventDate === new Date().toISOString().split('T')[0])
+        id: studentId, events: events.filter(event => event.eventDate === selectedDate).sort(ev => ev.eventHour)
       }
     });
-  }, [studentsEvents])
+  }, [studentsEvents, selectedDate])
 
   const dayHours = [1, 2, 3, 4, 5]
   const noEventsHours = useMemo(() => {
@@ -180,6 +181,15 @@ const TeacherStore = createContainer(() => {
       }
     }).then(res => mutateEvents())
   }
+  const editHourEvent = (eventHour: number, description: string) => {
+    request("PATCH", `/api/v1/teachers/classes/${classId}/students/events`, {
+      data: {
+        eventDate: selectedDate,
+        eventHour,
+        eventDescription: description
+      }
+    }).then(res => mutateEvents())
+  }
 
   const { overview: selectedStudentInfo } = useSelectedStudent(
     classId as string, 
@@ -193,7 +203,7 @@ const TeacherStore = createContainer(() => {
     classId,
     teacherClasses,
     classStudents,
-
+    selectedDate,
     studentsEvents,
     todayEvents,
     dayHours,
@@ -203,6 +213,7 @@ const TeacherStore = createContainer(() => {
     setSelectedStudent,
     selectedStudentInfo,
     editEvent,
+    editHourEvent,
     schoolTeachers,
   };
 });

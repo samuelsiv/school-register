@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { events } from "@/db/schema/events";
-import { eq } from "drizzle-orm";
+import {asc, eq} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
@@ -17,7 +17,8 @@ export default async function() {
         const eventList = await db
             .select()
             .from(events)
-            .where(eq(events.classId, classId));
+            .where(eq(events.classId, classId))
+            .orderBy(asc(events.eventHour));
 
         // Group events by studentId
         const groupedByStudent = eventList.reduce((acc, event) => {

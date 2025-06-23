@@ -4,17 +4,19 @@ import {SidebarTrigger} from "@/components/ui/sidebar";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
 import TeacherStore from "@/stores/teacher";
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {ChevronLeftCircleIcon, ChevronRightCircleIcon, CopyIcon} from "lucide-react";
+import {ChevronLeftCircleIcon, ChevronRightCircleIcon, CopyIcon, EditIcon} from "lucide-react";
 import {getAbbreviation, getColor} from "@/types/eventType";
 import {SchoolEvent} from "@/types/event";
 import {useState} from "react";
 import {ModifyEventDialog} from "@/components/dialog/ModifyEventDialog";
 import {CopyEventsDialog} from "@/components/dialog/CopyEventsDialog";
+import {EditHoursEventsDialog} from "@/components/dialog/EditHourEventsDialog";
 
 export default function TeacherTodayPage() {
     const teacherStore = TeacherStore.useContainer();
     const [selectedEvent, setSelectedEvent] = useState<SchoolEvent | null>(null);
     const [copyHour, setCopyHour] = useState<number | null>(null);
+    const [editHour, setEditHour] = useState<number | null>(null);
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <TeacherSidebar/>
@@ -49,6 +51,9 @@ export default function TeacherTodayPage() {
                                     <p>{hour}^ hour</p>
                                     {teacherStore.noEventsHours.indexOf(hour) !== -1 &&
                                         <CopyIcon onClick={() => setCopyHour(hour)}/>
+                                    }
+                                    {teacherStore.noEventsHours.indexOf(hour) === -1 &&
+                                        <EditIcon onClick={() => setEditHour(hour)}/>
                                     }
                                 </div>
                             </TableHead>)}
@@ -87,6 +92,9 @@ export default function TeacherTodayPage() {
                 }
                 { copyHour != null &&
                     <CopyEventsDialog onDimiss={() => setCopyHour(null)} onSave={desc => teacherStore.copyEvents(copyHour, desc)} />
+                }
+                { editHour != null &&
+                    <EditHoursEventsDialog onDimiss={() => setEditHour(null)} onSave={desc => teacherStore.editHourEvent(editHour, desc)} />
                 }
             </div>
         </main>
