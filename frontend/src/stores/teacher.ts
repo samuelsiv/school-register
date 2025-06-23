@@ -126,7 +126,7 @@ const TeacherStore = createContainer(() => {
   const todayEvents = useMemo(() => {
     return Object.entries(studentsEvents).map(([studentId, events]) => {
       return {
-        id: studentId, events: events.filter(event => event.eventDate === selectedDate).sort(ev => ev.eventHour)
+        id: studentId, events: events.filter(event => event.eventDate === selectedDate)
       }
     });
   }, [studentsEvents, selectedDate])
@@ -215,6 +215,7 @@ const TeacherStore = createContainer(() => {
     editEvent,
     editHourEvent,
     schoolTeachers,
+    setSelectedDate,
   };
 });
 

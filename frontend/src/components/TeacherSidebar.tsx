@@ -25,14 +25,14 @@ const items = [
         icon: LayoutDashboardIcon
     },
     {
-        title: "Students",
-        url: "/teachers/[id]/students",
-        icon: ChartAreaIcon
-    },
-    {
         title: "Today",
         url: "/teachers/[id]/today",
         icon: ClockIcon
+    },
+    {
+        title: "Students",
+        url: "/teachers/[id]/students",
+        icon: ChartAreaIcon
     }
 ]
 

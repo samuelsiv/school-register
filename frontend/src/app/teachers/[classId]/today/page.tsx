@@ -36,9 +36,17 @@ export default function TeacherTodayPage() {
                 <Table className="font-medium border-1">
                     <TableCaption>
                         <div className={"w-full flex-row flex justify-between"}>
-                            <ChevronLeftCircleIcon />
-                            21/06/2025
-                            <ChevronRightCircleIcon />
+                            <ChevronLeftCircleIcon onClick={() => {
+                                let currDate = new Date(teacherStore.selectedDate)
+                                currDate.setDate(currDate.getDate() - 1)
+                                teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
+                            }}/>
+                            {teacherStore.selectedDate.split("-").reverse().join("/")}
+                            <ChevronRightCircleIcon onClick={() => {
+                                let currDate = new Date(teacherStore.selectedDate)
+                                currDate.setDate(currDate.getDate() + 1)
+                                teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
+                            }}/>
                         </div>
 
                     </TableCaption>
