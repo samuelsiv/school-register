@@ -1,6 +1,6 @@
 export type Teacher = {
     creationDate: string,
-        email: string,
+    email: string,
     lastLoginDate: string,
     name: string,
     role: string,

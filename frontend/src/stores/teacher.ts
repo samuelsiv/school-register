@@ -12,6 +12,7 @@ import { Overview } from "@/types/overview";
 import { Teacher } from "@/types/teacher";
 import {SchoolEvent} from "@/types/event";
 import {EventType, getDescription} from "@/types/eventType";
+import {Subject} from "@/types/subject";
 
 const API_ENDPOINTS = {
   user: "/api/v1/user",
@@ -26,7 +27,8 @@ const useUserAuth = () => {
   const { data: userData } = useSWR<{
     success: boolean;
     user: UserInfo;
-    teacherId: number
+    teacherId: number,
+    assignedSubjects: Subject[]
   }>(API_ENDPOINTS.user, fetcher, { keepPreviousData: true });
 
   useEffect(() => {
@@ -39,6 +41,7 @@ const useUserAuth = () => {
     userId: userData?.user.userId ?? null,
     teacherId: userData?.teacherId ?? null,
     name: userData?.user.name ?? null,
+    assignedSubjects: userData?.assignedSubjects,
     isLoading: !userData
   };
 };
@@ -116,7 +119,7 @@ const TeacherStore = createContainer(() => {
   let { classId } = useParams();
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   
-  const { userId, name, teacherId } = useUserAuth();
+  const { userId, name, teacherId, assignedSubjects } = useUserAuth();
   const { classes: teacherClasses } = useTeacherClasses();
   const { teachers: schoolTeachers } = useSchoolTeachers();
   const { students: classStudents } = useClassStudents(classId as string);

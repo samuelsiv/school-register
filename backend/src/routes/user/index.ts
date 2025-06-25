@@ -5,6 +5,8 @@ import {teachers} from "@/db/schema/teachers";
 import { users } from "@/db/schema/users";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
+import {subjects} from "@/db/schema/subjects";
+import {teachersSubjects} from "@/db/schema/teacherSubjects";
 
 export default async function() {
 	const router = new Hono().basePath("/api/v1");
@@ -19,6 +21,11 @@ export default async function() {
 		let assignedStudents: Array<{
 			studentId: number;
 			classId: number | null;
+		}> = [];
+		let assignedSubjects: Array<{
+			subjectId: number,
+			subjectName: string,
+			description: string,
 		}> = [];
 		let teacherId: number | undefined = undefined;
 		if (userFound.role === "parent") {
@@ -58,6 +65,15 @@ export default async function() {
 			teacherId = (await db.select({teacherId: teachers.teacherId})
 					.from(teachers).where(eq(teachers.userId, userId)).limit(1)
 			)[0]?.teacherId;
+			assignedSubjects = (await db.select({
+				subjectId: teachersSubjects.subjectId,
+				subjectName: subjects.subjectName,
+				description: subjects.description,
+			}).from(subjects).innerJoin(teachersSubjects, eq(teachersSubjects.teacherId, teacherId))).map(s => ({
+				subjectId: s.subjectId,
+				subjectName: s.subjectName,
+				description: s.description || "",
+			}));
 		}
 
 		const { password: _, ...userInfo } = userFound;
@@ -65,6 +81,7 @@ export default async function() {
 			success: true,
 			user: userInfo,
 			assignedStudents,
+			assignedSubjects,
 			teacherId,
 		});
 	});
