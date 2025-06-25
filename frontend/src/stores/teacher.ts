@@ -145,7 +145,7 @@ const TeacherStore = createContainer(() => {
   const copyEvents = (hour: number, desc: string) => {
     let toInsertEvents: SchoolEvent[]
     if (hour === 1 || noEventsHours.includes(hour-1)) toInsertEvents = classStudents.map(student => ({
-      eventDate: new Date().toISOString().split('T')[0],
+      eventDate: selectedDate,
       eventHour: 1,
       studentId: student.studentId,
       eventId: null,
