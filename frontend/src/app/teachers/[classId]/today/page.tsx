@@ -11,6 +11,7 @@ import {useState} from "react";
 import {ModifyEventDialog} from "@/components/dialog/ModifyEventDialog";
 import {CopyEventsDialog} from "@/components/dialog/CopyEventsDialog";
 import {EditHoursEventsDialog} from "@/components/dialog/EditHourEventsDialog";
+import {AddHomeworkDialog} from "@/components/dialog/AddHomeworkDialog";
 
 export default function TeacherTodayPage() {
     const teacherStore = TeacherStore.useContainer();
@@ -104,6 +105,16 @@ export default function TeacherTodayPage() {
                 { editHour != null &&
                     <EditHoursEventsDialog onDimiss={() => setEditHour(null)} onSave={desc => teacherStore.editHourEvent(editHour, desc)} />
                 }
+                <div className="flex flex-row justify-between gap-6 w-full">
+                    <div />
+                    <h2 className="scroll-m-20 text-2xl mt-6 align-center tracking-tight">Homeworks</h2>
+                    <AddHomeworkDialog
+                        teacherId={teacherStore.teacherId || 0}
+                        classId={parseInt(teacherStore.classId!.toString(), 10) || 0}
+                        subjects={teacherStore.assignedSubjects || []}
+                        onCreate={() => {}}
+                    />
+                </div>
             </div>
         </main>
     </div>

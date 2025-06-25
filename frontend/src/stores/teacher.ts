@@ -202,7 +202,8 @@ const TeacherStore = createContainer(() => {
   return {
     userId,
     name,
-    
+    teacherId,
+    assignedSubjects,
     classId,
     teacherClasses,
     classStudents,
