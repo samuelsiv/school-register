@@ -1,4 +1,4 @@
-name: "School Register DEMO"
+name: "schoolregdemo"
 
 services:
   api:
@@ -47,12 +47,6 @@ services:
       JWT_SECRET: DO_NOT_USE_DEV_IN_PROD_UNSAFE_JWT_KEY
     depends_on:
       - api
-    develop:
-      watch:
-        - action: sync
-          path: ./app/frontend
-          target: ./frontend
-
     networks:
       - traefik
 
@@ -71,8 +65,6 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
-    ports:
-      - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - cache:/data
@@ -87,7 +79,7 @@ services:
       - "--providers.docker=true"
       - "--api.dashboard=true"
     ports:
-      - "3000:3000"
+      - "33444:3000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
