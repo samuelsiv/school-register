@@ -69,7 +69,7 @@ export default async function() {
 				subjectId: teachersSubjects.subjectId,
 				subjectName: subjects.subjectName,
 				description: subjects.description,
-			}).from(subjects).innerJoin(teachersSubjects, eq(teachersSubjects.teacherId, teacherId))).map(s => ({
+			}).from(subjects).innerJoin(teachersSubjects, eq(teachersSubjects.teacherId, teacherId!))).map(s => ({
 				subjectId: s.subjectId,
 				subjectName: s.subjectName,
 				description: s.description || "",
