@@ -116,7 +116,7 @@ const useSelectedStudent = (classId: string | null, studentId: number | null) =>
 };
 
 const TeacherStore = createContainer(() => {
-  let { classId } = useParams();
+  const { classId } = useParams();
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   
   const { userId, name, teacherId, assignedSubjects } = useUserAuth();
@@ -124,7 +124,7 @@ const TeacherStore = createContainer(() => {
   const { teachers: schoolTeachers } = useSchoolTeachers();
   const { students: classStudents } = useClassStudents(classId as string);
 
-  let { events: studentsEvents, mutate: mutateEvents } = useStudentsEvents(classId as string);
+  const { events: studentsEvents, mutate: mutateEvents } = useStudentsEvents(classId as string);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const todayEvents = useMemo(() => {
     return Object.entries(studentsEvents).map(([studentId, events]) => {
@@ -191,7 +191,7 @@ const TeacherStore = createContainer(() => {
         eventHour,
         eventDescription: description
       }
-    }).then(res => mutateEvents())
+    }).then(_ => mutateEvents())
   }
 
   const { overview: selectedStudentInfo } = useSelectedStudent(

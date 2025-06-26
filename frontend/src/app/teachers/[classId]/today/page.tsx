@@ -38,13 +38,13 @@ export default function TeacherTodayPage() {
                     <TableCaption>
                         <div className={"w-full flex-row flex justify-between"}>
                             <ChevronLeftCircleIcon onClick={() => {
-                                let currDate = new Date(teacherStore.selectedDate)
+                                const currDate = new Date(teacherStore.selectedDate)
                                 currDate.setDate(currDate.getDate() - 1)
                                 teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
                             }}/>
                             {teacherStore.selectedDate.split("-").reverse().join("/")}
                             <ChevronRightCircleIcon onClick={() => {
-                                let currDate = new Date(teacherStore.selectedDate)
+                                const currDate = new Date(teacherStore.selectedDate)
                                 currDate.setDate(currDate.getDate() + 1)
                                 teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
                             }}/>
