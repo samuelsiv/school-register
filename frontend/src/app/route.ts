@@ -6,10 +6,11 @@ import {getAuthInfo} from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   const authInfo = await getAuthInfo(request);
+  console.log(authInfo)
   if (!authInfo || !authInfo.authenticated) {
     return new Response('', {
       status: 307,
-      headers: {'Set-Cookie': `auth_token=`, "Location": "/"},
+      headers: {'Set-Cookie': `auth_token=`, "Location": "/login"},
     });
   }
   if (authInfo.role == "student" || authInfo.role == "parent") {
