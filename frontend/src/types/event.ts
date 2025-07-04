@@ -6,6 +6,7 @@ export type SchoolEvent = {
   eventType: EventType,
   studentId: number,
   teacherId: number,
+  teacherName: string,
   eventDescription: string,
   eventHour: number,
   classId: number

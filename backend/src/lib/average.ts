@@ -29,9 +29,8 @@ export const calculateAveragesByDay = (grades: Array<{
         .filter((g) => Date.parse(g.insertedAt!) <= date)
         .map((g) => g.value * (g.weight / 100));
 
-      return {date, average: average(beforeGrades)};
-    })
-    .map((a) => ({...average, average: Math.round(a.average * 100) / 100}));
+      return {date, average: Math.round(average(beforeGrades) * 100) / 100};
+    });
 
 export const calculateAveragesBySubject = (grades: Array<{
   gradeId: number, subjectName: string
@@ -48,9 +47,9 @@ export const calculateAveragesBySubject = (grades: Array<{
         .filter((g) => g.subjectId === grade.subjectId);
 
       return {
-        average: average(
+        average: Math.round(average(
           subjectGrades.map((g) => g.value * (g.weight / 100)),
-        ),
+        ) * 100) / 100,
         grades: subjectGrades,
         subject: grade.subjectName,
         subjectId: grade.subjectId,
@@ -58,4 +57,3 @@ export const calculateAveragesBySubject = (grades: Array<{
         teacherId: grade.teacherId,
       };
     })
-    .map((a) => ({...a, average: Math.round(a.average * 100) / 100}));

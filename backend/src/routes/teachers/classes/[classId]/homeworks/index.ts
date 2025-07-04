@@ -26,9 +26,7 @@ export default async function () {
         subjectId: homeworks.subjectId,
         subjectName: subjects.subjectName,
         teacherId: homeworks.teacherId,
-        teacherName: sql<string>`${users.surname}
-        || ' ' ||
-        ${users.name}`.as("teacherName"),
+        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
         title: homeworks.title,
       })
       .from(homeworks)

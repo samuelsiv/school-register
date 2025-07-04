@@ -22,7 +22,7 @@ const API_ENDPOINTS = {
   classStudents: (classId: string) => `/api/v1/teachers/classes/${classId}/students`,
   classHomeworks: (classId: string) => `/api/v1/teachers/classes/${classId}/homeworks`,
   eventsStudents: (classId: string) => `/api/v1/teachers/classes/${classId}/students/events`,
-  studentOverview: (classId: string, studentId: number) => `/api/v1/teachers/classes/${classId}/${studentId}/overview`
+  studentOverview: (classId: string, studentId: number) => `/api/v1/teachers/classes/${classId}/students/${studentId}`
 } as const;
 
 const useUserAuth = () => {
@@ -158,7 +158,7 @@ const TeacherStore = createContainer(() => {
   }, [studentsEvents, selectedDate, classStudents])
 
   const todayHomeworks = useMemo(() => {
-    return studentsHomeworks.filter(h => h.createdAt === selectedDate)
+    return studentsHomeworks.filter(h => h.createdAt === selectedDate || h.dueDate === selectedDate)
   }, [studentsHomeworks, selectedDate])
 
   const dayHours = [1, 2, 3, 4, 5]
@@ -197,7 +197,8 @@ const TeacherStore = createContainer(() => {
       eventType: EventType.PRESENT,
       teacherId: teacherId as number,
       eventDescription: desc,
-      classId: parseInt(classId as string, 10)
+      classId: parseInt(classId as string, 10),
+      teacherName: "",
     }))
     else toInsertEvents = todayEvents
       .map(e => e.events)

@@ -11,7 +11,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
-import {BabyIcon, BookOpenCheckIcon, ChartAreaIcon, LayoutDashboardIcon, LogOutIcon} from "lucide-react";
+import {BabyIcon, BookOpenCheckIcon, ChartAreaIcon, ClockIcon, LayoutDashboardIcon, LogOutIcon} from "lucide-react";
 import Link from "next/link";
 import {Student} from "@/types/student";
 import UserStore from "@/stores/user";
@@ -22,6 +22,11 @@ const items = [
     title: "Dashboard",
     url: "/student",
     icon: LayoutDashboardIcon
+  },
+  {
+    title: "Today",
+    url: "/student/today",
+    icon: ClockIcon
   },
   {
     title: "Grades",

@@ -16,9 +16,7 @@ export default async function() {
         eventDescription: events.eventDescription, eventHour: events.eventHour,
         eventId: events.eventId, eventType: events.eventType,
         studentId: events.studentId, teacherId: events.teacherId,
-        teacherName: sql<string>`${users.surname}
-        || ' ' ||
-        ${users.name}`.as("teacherName"),
+        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
       })
       .from(events)
       .where(eq(events.studentId, student.studentId))

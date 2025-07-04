@@ -77,9 +77,8 @@ export default async function() {
         comment: grades.comment, gradeId: grades.gradeId,
         insertedAt: grades.insertedAt, studentId: grades.studentId,
         subjectId: grades.subjectId, subjectName: subjects.subjectName,
-        teacherId: grades.teacherId, teacherName: sql<string>`${users.surname}
-          || ' ' ||
-          ${users.name}`.as("teacherName"),
+        teacherId: grades.teacherId,
+        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
         value: grades.value, weight: grades.weight,
       })
       .from(grades)

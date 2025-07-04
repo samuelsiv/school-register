@@ -16,11 +16,10 @@ export default function TeacherStudentsPage() {
       <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
         <SidebarTrigger/>
         <div>
-          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-            Welcome, <span className="text-primary">{teacherStore.name || ""}!</span>
+          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight text-primary">
+            Students
           </h1>
-          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your students&#39; school
-            progress and attendance</h2>
+          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check out the class's student's list</h2>
         </div>
         <br/>
       </div>
@@ -35,7 +34,7 @@ export default function TeacherStudentsPage() {
               className={"flex flex-row items-center gap-4 px-2 py-2 w-full justify-start ring-sidebar-ring" + ((teacherStore.selectedStudent?.studentId == student.studentId) ? " ring-1" : "")}
               onClick={() => teacherStore.setSelectedStudent(student)}
               key={student.studentId}>
-              <div className="flex flex-row items-center gap-4  px-2 py-2 w-full justify-start">
+              <div className="flex flex-row items-center gap-4 px-2 py-2 w-full justify-start">
                 <UserIcon/>
                 <span className="text-lg font-semibold">{student.name} {student.surname}</span>
               </div>
@@ -70,11 +69,11 @@ export default function TeacherStudentsPage() {
                       <h1 className="text-2xl font-semibold">Parents: </h1>
                       <div className="ms-12">
                         {teacherStore.selectedStudentInfo?.parents.map(parent =>
-                          <li className="text-xl font-light"
+                          <li className="text-xl font-light text-start"
                               key={"parent" + parent.parentId}>{parent.name} {parent.surname} ({parent.email})</li>
                         )}
                         {teacherStore.selectedStudentInfo?.parents?.length == 0 &&
-                            <h1 className="text-xl font-light">None :/</h1>}
+                            <h1 className="text-xl font-light text-start">None :/</h1>}
                       </div>
                       <h1 className="text-2xl font-semibold">Average: {teacherStore.selectedStudentInfo?.average ? teacherStore.selectedStudentInfo?.average : "no grades"}</h1>
                   </div>

@@ -3,17 +3,19 @@
 import {fetcher} from "@/lib/request";
 import {getJsonStore, setJsonStore} from "@/lib/storage";
 import {Student} from "@/types/student";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import useSWR from "swr";
 import {createContainer} from "unstated-next";
 import {UserInfo} from "@/types/userInfo";
 import {GradeResponse} from "@/types/grade";
 import {Homework} from '@/types/homework';
 import {redirect} from "next/navigation";
+import {SchoolEvent} from "@/types/event";
 
 const API_ENDPOINTS = {
   user: "/api/v1/user",
   studentGrades: (studentId: number) => `/api/v1/students/${studentId}/grades`,
+  studentEvents: (studentId: number) => `/api/v1/students/${studentId}/events`,
   studentHomeworks: (studentId: number) => `/api/v1/students/${studentId}/homeworks`
 } as const;
 
@@ -54,6 +56,22 @@ const useStudentGrades = (studentId: number | null) => {
   };
 };
 
+const useStudentEvents = (studentId: number | null) => {
+  const {data, error} = useSWR<{
+    allEvents: SchoolEvent[],
+  }>(
+    studentId ? API_ENDPOINTS.studentEvents(studentId) : null,
+    fetcher,
+    {keepPreviousData: true}
+  );
+
+  return {
+    events: data?.allEvents?.reverse() ?? [],
+    isLoading: studentId && !data && !error,
+    error
+  };
+};
+
 const useStudentHomeworks = (studentId: number | null) => {
   const {data, error} = useSWR<Homework[]>(
     studentId ? API_ENDPOINTS.studentHomeworks(studentId) : null,
@@ -72,6 +90,7 @@ const UserStore = createContainer(() => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   const {user, assignedStudents, isLoading: userLoading} = useUserAuth();
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
   const isParent = user?.role === "parent";
   const isStudent = user?.role === "student";
@@ -82,8 +101,18 @@ const UserStore = createContainer(() => {
   const {grades, average, averageByDay, averageBySubject} = useStudentGrades(
     activeStudent?.studentId ?? null
   );
+
   const {homeworks} = useStudentHomeworks(activeStudent?.studentId ?? null);
 
+  const {events} = useStudentEvents(activeStudent?.studentId ?? null);
+
+  const todayEvents = useMemo(() => {
+    return events.filter(event => event.eventDate === selectedDate).sort((e) => -e.eventHour);
+  }, [events, selectedDate])
+
+  const todayHomeworks = useMemo(() => {
+    return homeworks.filter(h => h.createdAt === selectedDate || h.dueDate === selectedDate)
+  }, [homeworks, selectedDate])
   // Initialize selected student
   useEffect(() => {
     if (!user || userLoading) return;
@@ -133,17 +162,18 @@ const UserStore = createContainer(() => {
 
     isParent,
     isStudent,
-
+    todayEvents,
     managedStudents,
     selectedStudent: activeStudent,
     selectStudent,
-
+    todayHomeworks,
     grades,
     average,
     averageByDay,
     averageBySubject,
     homeworks,
-
+    selectedDate,
+    setSelectedDate,
     isLoading: userLoading
   };
 });

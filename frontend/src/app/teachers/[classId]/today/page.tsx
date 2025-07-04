@@ -3,8 +3,8 @@
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {TeacherSidebar} from "@/components/TeacherSidebar";
 import TeacherStore from "@/stores/teacher";
-import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {ChevronLeftCircleIcon, ChevronRightCircleIcon, CopyIcon, EditIcon} from "lucide-react";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {CheckCircle, ChevronLeftCircleIcon, ChevronRightCircleIcon, CopyIcon, EditIcon} from "lucide-react";
 import {getAbbreviation, getColor} from "@/types/eventType";
 import {SchoolEvent} from "@/types/event";
 import {useState} from "react";
@@ -15,6 +15,7 @@ import {AddHomeworkDialog} from "@/components/dialog/AddHomeworkDialog";
 import {Homework} from "@/types/homework";
 import HomeworkCard from "@/components/cards/homeworks/HomeworkCard";
 import HomeworkExpandedCard from "@/components/cards/homeworks/HomeworkExpandedCard";
+import {Card} from "@/components/ui/card";
 
 export default function TeacherTodayPage() {
   const teacherStore = TeacherStore.useContainer();
@@ -30,34 +31,32 @@ export default function TeacherTodayPage() {
       <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
         <SidebarTrigger/>
         <div>
-          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-            Welcome, <span className="text-primary">{teacherStore.name || ""}!</span>
-          </h1>
-          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your students&#39; school
-            progress and attendance</h2>
+          <div>
+            <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight text-primary">
+              Today
+            </h1>
+            <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check what has been done today in this class, and log other events!</h2>
+          </div>
         </div>
         <br/>
       </div>
+      <div className={"w-full flex-row flex justify-between"}>
+        <ChevronLeftCircleIcon onClick={() => {
+          const currDate = new Date(teacherStore.selectedDate)
+          currDate.setDate(currDate.getDate() - 1)
+          teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
+          setSelectedHomework(null)
+        }}/>
+        {teacherStore.selectedDate.split("-").reverse().join("/")}
+        <ChevronRightCircleIcon onClick={() => {
+          const currDate = new Date(teacherStore.selectedDate)
+          currDate.setDate(currDate.getDate() + 1)
+          teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
+          setSelectedHomework(null)
+        }}/>
+      </div>
       <div className="w-full h-full gap-12">
         <Table className="font-medium border-1">
-          <TableCaption>
-            <div className={"w-full flex-row flex justify-between"}>
-              <ChevronLeftCircleIcon onClick={() => {
-                const currDate = new Date(teacherStore.selectedDate)
-                currDate.setDate(currDate.getDate() - 1)
-                teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
-                setSelectedHomework(null)
-              }}/>
-              {teacherStore.selectedDate.split("-").reverse().join("/")}
-              <ChevronRightCircleIcon onClick={() => {
-                const currDate = new Date(teacherStore.selectedDate)
-                currDate.setDate(currDate.getDate() + 1)
-                teacherStore.setSelectedDate(currDate.toISOString().split("T")[0])
-                setSelectedHomework(null)
-              }}/>
-            </div>
-
-          </TableCaption>
           <TableHeader>
             <TableRow className="">
               <TableHead className={"text-center border-b-3"}>Student</TableHead>
@@ -120,13 +119,17 @@ export default function TeacherTodayPage() {
             }}
           />
         </div>
-        <div className="grid grid-rows-2 grid-cols-3 gap-12 w-full">
+        <div className="grid grid-rows-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 w-full">
           {selectedHomework == null && teacherStore.todayHomeworks.map((homework: Homework) => <HomeworkCard
             homework={homework} key={"hw-" + homework.homeworkId} onArrowClick={() => {
             setSelectedHomework(homework)
           }}/>)}
           {(selectedHomework != null) &&
               <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)}/>}
+          {teacherStore.todayHomeworks.length === 0 && <Card className="w-full mt-4 col-span-3 h-full flex align-center items-center justify-center flex-col gap-4">
+              <CheckCircle size="36"/>
+              <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No homeworks for today</h2>
+          </Card>}
         </div>
       </div>
     </main>

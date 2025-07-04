@@ -22,9 +22,7 @@ export default async function () {
         dueDate: homeworks.dueDate,
         homeworkId: homeworks.homeworkId,
         subjectName: subjects.subjectName,
-        teacherName: sql<string>`${users.surname}
-        || ' ' ||
-        ${users.name}`.as("teacherName"),
+        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
         title: homeworks.title,
       })
       .from(homeworks)

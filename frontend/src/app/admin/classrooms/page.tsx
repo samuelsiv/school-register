@@ -19,11 +19,10 @@ export default function AdminClassroomsPage() {
       <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
         <SidebarTrigger/>
         <div>
-          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-            Welcome, <span className="text-primary">{adminStore.name || ""}!</span>
+          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight text-primary">
+            Classrooms
           </h1>
-          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your school&#39;s
-            progress and attendance</h2>
+          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check out the school's classrooms's list</h2>
         </div>
         <br/>
       </div>

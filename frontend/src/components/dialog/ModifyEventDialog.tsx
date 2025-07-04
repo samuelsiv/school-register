@@ -12,6 +12,7 @@ import {EventType, getAbbreviation, getColor} from "@/types/eventType";
 import {TextIcon} from "lucide-react";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
+import EventTypeIndicator from "@/components/misc/EventTypeIndicator";
 
 export function ModifyEventDialog({event, onDimiss, onSave}: {
   event: SchoolEvent,
@@ -34,14 +35,13 @@ export function ModifyEventDialog({event, onDimiss, onSave}: {
         <DialogDescription className="mb-2">Event type</DialogDescription>
         <div className={"flex flex-row gap-4 w-full justify-center items-center"}>
           {Object.keys(EventType).map(type =>
-            <div
-              className={`flex font-bold border-e-1 w-1/5 text-4xl rounded-2xl select-none
-                             align-center items-center justify-center aspect-square ${selectedType == EventType[type as keyof typeof EventType] ? getColor(EventType[type as keyof typeof EventType]) : "bg-gray-600"}`}
-              key={`event-${event.eventId}-type-${type}`}
-              onClick={() => setEventType(EventType[type as keyof typeof EventType])}
-            >
-              {getAbbreviation(EventType[type as keyof typeof EventType])}
-            </div>
+            <EventTypeIndicator
+              id={event.eventId?.toString() || ""}
+              type={selectedType}
+              setType={setEventType}
+              isGray={selectedType == EventType[type as keyof typeof EventType]}
+              className={"w-1/5"}
+            />
           )}
         </div>
         <DialogDescription className="mb-2">Event description</DialogDescription>

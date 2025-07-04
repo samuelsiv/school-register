@@ -35,7 +35,7 @@ export default function Homeworks() {
       <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
         <SidebarTrigger/>
         <div>
-          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">Homeworks</h1>
+          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight text-primary">Homeworks</h1>
           <h2 className="scroll-m-20 text-xl align-center tracking-tight">These are your homeworks, make sure
             to do them all!</h2>
         </div>
@@ -44,7 +44,7 @@ export default function Homeworks() {
       {userStore.isParent && userStore.selectedStudent != null &&
           <KidInfoAlert name={userStore.selectedStudent.name}/>
       }
-      <Card className="border-t border-t-[2px]">
+      <Card className="border-t-[2px]">
         <Calendar
           mode="single"
           selected={undefined}
@@ -57,11 +57,13 @@ export default function Homeworks() {
       </Card>
 
       <div className="grid grid-rows-2 grid-cols-3 gap-12 w-full">
-        {selectedHomework == null && monthHomeworks.map((homework: Homework) => <HomeworkCard homework={homework}
-                                                                                              key={"hw-" + homework.homeworkId}
-                                                                                              onArrowClick={() => {
-                                                                                                setSelectedHomework(homework)
-                                                                                              }}/>)}
+        {selectedHomework == null && monthHomeworks.map((homework: Homework) =>
+          <HomeworkCard homework={homework}
+                        key={"hw-" + homework.homeworkId}
+                        onArrowClick={() => {
+                            setSelectedHomework(homework)
+                        }}/>)
+        }
         {(selectedHomework != null) &&
             <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)}/>}
       </div>

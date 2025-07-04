@@ -22,11 +22,10 @@ export default function AdminStudentsPage() {
       <div id="title" className="flex flex-row gap-12 w-full justify-between items-center">
         <SidebarTrigger/>
         <div>
-          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight">
-            Welcome, <span className="text-primary">{adminStore.name || ""}!</span>
+          <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight text-primary">
+            Students
           </h1>
-          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Monitor your school&#39;s
-            progress and attendance</h2>
+          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check out the school's student's list</h2>
         </div>
         <br/>
       </div>
@@ -92,11 +91,11 @@ export default function AdminStudentsPage() {
                   <h1 className="text-2xl font-semibold">Parents: </h1>
                   <div className="ms-12">
                     {adminStore.selectedUserInfo?.parents.map(parent =>
-                      <li className="text-xl font-light"
+                      <li className="text-xl font-light text-start"
                           key={"parent" + parent.parentId}>{parent.name} {parent.surname} ({parent.email})</li>
                     )}
                     {adminStore.selectedUserInfo?.parents?.length == 0 &&
-                        <h1 className="text-xl font-light">None :/</h1>}
+                        <h1 className="text-xl font-light text-start">None :/</h1>}
 
                   </div>
                   <h1 className="text-2xl font-semibold">Average: {adminStore.selectedUserInfo?.average ? adminStore.selectedUserInfo?.average : "no grades"}</h1>
