@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import {subjects} from "@/db/schema/subjects";
 import {teachersSubjects} from "@/db/schema/teacherSubjects";
+import * as console from "node:console";
 
 export default async function() {
 	const router = new Hono().basePath("/api/v1");
@@ -66,14 +67,17 @@ export default async function() {
 					.from(teachers).where(eq(teachers.userId, userId)).limit(1)
 			)[0]?.teacherId;
 			assignedSubjects = (await db.select({
-				subjectId: teachersSubjects.subjectId,
-				subjectName: subjects.subjectName,
-				description: subjects.description,
-			}).from(subjects).innerJoin(teachersSubjects, eq(teachersSubjects.teacherId, teacherId!))).map(s => ({
-				subjectId: s.subjectId,
-				subjectName: s.subjectName,
-				description: s.description || "",
-			}));
+    		description: subjects.description,
+    		subjectId: subjects.subjectId,
+    		subjectName: subjects.subjectName,
+			}).from(teachersSubjects)
+				.innerJoin(subjects, eq(teachersSubjects.subjectId, subjects.subjectId))
+  			.where(eq(teachersSubjects.teacherId, teacherId!)))
+  			.map((s) => ({
+    			description: s.description || "",
+    			subjectId: s.subjectId,
+    			subjectName: s.subjectName,
+				}));
 		}
 
 		const { password: _, ...userInfo } = userFound;
