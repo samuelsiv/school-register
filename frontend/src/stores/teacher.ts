@@ -161,7 +161,7 @@ const TeacherStore = createContainer(() => {
     return studentsHomeworks.filter(h => h.createdAt === selectedDate || h.dueDate === selectedDate)
   }, [studentsHomeworks, selectedDate])
 
-  const dayHours = [1, 2, 3, 4, 5]
+  const dayHours = useMemo(() => [1, 2, 3, 4, 5], [])
   const noEventsHours = useMemo(() => {
     return dayHours
       .filter(hour =>
@@ -170,7 +170,7 @@ const TeacherStore = createContainer(() => {
           .flat()
           .every(event => event.eventHour !== hour)
       )
-  }, [todayEvents])
+  }, [todayEvents, dayHours])
 
   const tableStudents = useMemo(() => [
     ...todayEvents,
@@ -185,7 +185,7 @@ const TeacherStore = createContainer(() => {
       .map(st => {
         return {id: st.studentId.toString(), events: Array<SchoolEvent>()}
       })
-  ], [todayEvents, classStudents, selectedDate])
+  ], [todayEvents, classStudents])
 
   const copyEvents = (hour: number, desc: string) => {
     let toInsertEvents: SchoolEvent[]

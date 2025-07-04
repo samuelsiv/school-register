@@ -22,7 +22,7 @@ export default function AdminClassroomsPage() {
           <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight text-primary">
             Classrooms
           </h1>
-          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check out the school's classrooms's list</h2>
+          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check out the school&apos;s classrooms&apos;s list</h2>
         </div>
         <br/>
       </div>

@@ -49,7 +49,7 @@ export default function StudentTodayPage() {
           {userStore.todayEvents.map(event => <Card className="border-1 mb-4" key={"event-" + event.eventId}>
             <div className="flex flex-row justify-between px-4 py-2">
               <div className="flex flex-row gap-4 w-full text-start">
-                <EventTypeIndicator type={event.eventType} id={event.eventId?.toString() || ""} setType={() => {}} isGray={false}/>
+                <EventTypeIndicator type={event.eventType} setType={() => {}} isGray={false}/>
                 <div className="flex flex-col gap-2">
                   <p className="text-md md:text-lg font-bold w-full">{event.teacherName}</p>
                   <p className={`text-sm font-light w-full ${event.eventDescription == "" ? "italic" : ""}`}>{event.eventDescription || "Nessuna descrizione"}</p>

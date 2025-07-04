@@ -19,7 +19,7 @@ export default function TeacherStudentsPage() {
           <h1 className="scroll-m-20 text-3xl font-extrabold align-center tracking-tight text-primary">
             Students
           </h1>
-          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check out the class's student's list</h2>
+          <h2 className="scroll-m-20 text-xl align-center tracking-tight">Check out the class&apos;s student&apos;s list</h2>
         </div>
         <br/>
       </div>

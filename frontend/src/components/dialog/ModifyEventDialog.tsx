@@ -36,7 +36,7 @@ export function ModifyEventDialog({event, onDimiss, onSave}: {
         <div className={"flex flex-row gap-4 w-full justify-center items-center"}>
           {Object.keys(EventType).map(type =>
             <EventTypeIndicator
-              id={event.eventId?.toString() || ""}
+              key={`event-${event.eventId}-type-${type}`}
               type={selectedType}
               setType={setEventType}
               isGray={selectedType == EventType[type as keyof typeof EventType]}
