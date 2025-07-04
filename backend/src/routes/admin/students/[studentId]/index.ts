@@ -6,31 +6,29 @@ import { homeworks } from "@/db/schema/homeworks";
 import { parentStudents } from "@/db/schema/parentStudents";
 import { students } from "@/db/schema/students";
 import { subjects } from "@/db/schema/subjects";
-import { teacherClasses } from "@/db/schema/teacherClasses";
-import { teachers } from "@/db/schema/teachers";
 import { users } from "@/db/schema/users";
 import { calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage } from "@/lib/average";
-import { count, desc, eq } from "drizzle-orm";
+import {desc, eq, sql} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
 	const router = new Hono().basePath("/api/v1/admin/students/:studentId");
 	router.get("/overview", async (c) => {
-		const studentId = parseInt(c.req.param("studentId"));
+		const studentId = parseInt(c.req.param("studentId"), 10);
 		if (isNaN(studentId)) {
 			return c.json({ error: "Invalid studentId " }, 400);
 		}
 
 		const studentResult = await db
 			.select({
-				studentId: students.studentId,
-				userId: students.userId,
 				classId: students.classId,
 				coordinatorId: classes.coordinatorTeacherId,
-				name: users.name,
-				surname: users.surname,
-				username: users.username,
 				email: users.email,
+				name: users.name,
+				studentId: students.studentId,
+				surname: users.surname,
+				userId: students.userId,
+				username: users.username,
 			})
 			.from(students)
 			.where(eq(students.studentId, studentId))
@@ -39,17 +37,12 @@ export default async function() {
 
 		const student = studentResult[0];
 
-		if (!student) {
-			console.log("Student is falsy:", student);
-			return c.json({ error: "Student not found " + studentId }, 404);
-		}
-
 		const parentsList = await db
 			.select({
-				parentId: parentStudents.parentId,
-				name: users.name,
-				surname: users.surname,
 				email: users.email,
+				name: users.name,
+				parentId: parentStudents.parentId,
+				surname: users.surname,
 			})
 			.from(parentStudents)
 			.innerJoin(users, eq(parentStudents.parentId, users.userId))
@@ -58,20 +51,20 @@ export default async function() {
 
 		const allGrades = (await db
 			.select({
-				gradeId: grades.gradeId, subjectName: subjects.subjectName,
-				studentId: grades.studentId, teacherId: grades.teacherId,
-				subjectId: grades.subjectId, value: grades.value,
-				weight: grades.weight, insertedAt: grades.insertedAt,
-				comment: grades.comment, teacherName: users.name,
+				comment: grades.comment, gradeId: grades.gradeId,
+				insertedAt: grades.insertedAt, studentId: grades.studentId,
+				subjectId: grades.subjectId, subjectName: subjects.subjectName,
+				teacherId: grades.teacherId, teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
+				value: grades.value, weight: grades.weight,
 			})
 			.from(grades)
-			.where(eq(grades.studentId, student.studentId))
+			.where(eq(grades.studentId, student!.studentId))
 			.innerJoin(subjects, eq(subjects.subjectId, grades.subjectId))
 			.innerJoin(users, eq(users.userId, grades.teacherId))).map((grade) => {
 				return {
 					...grade,
 					value: parseFloat(grade.value),
-					weight: parseInt(grade.weight),
+					weight: parseInt(grade.weight, 10),
 				};
 			});
 
@@ -80,7 +73,7 @@ export default async function() {
 			.from(events)
 			.where(eq(events.studentId, studentId));
 
-		const studentHomeworks = student.classId == null ? [] :
+		const studentHomeworks = student?.classId == null ? [] :
 			await db
 				.select()
 				.from(homeworks)
@@ -88,14 +81,14 @@ export default async function() {
 				.orderBy(desc(homeworks.createdAt));
 
 		return c.json({
-			student,
-			parents: parentsList,
 			allGrades,
 			average: calculateGeneralAverage(allGrades),
 			averagesByDay: calculateAveragesByDay(allGrades),
 			averagesBySubject: calculateAveragesBySubject(allGrades),
 			events: studentEvents,
 			homeworks: studentHomeworks,
+			parents: parentsList,
+			student,
 		});
 	});
 

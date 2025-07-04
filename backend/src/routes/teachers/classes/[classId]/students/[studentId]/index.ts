@@ -10,13 +10,13 @@ import { teacherClasses } from "@/db/schema/teacherClasses";
 import { teachers } from "@/db/schema/teachers";
 import { users } from "@/db/schema/users";
 import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average";
-import {count, desc, eq} from "drizzle-orm";
+import {desc, eq, sql} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
     const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students");
     router.get("/:studentId", async (c) => {
-        const studentId = parseInt(c.req.param("studentId"));
+        const studentId = parseInt(c.req.param("studentId"), 10);
         const teacher = c.get("user");
 
         if (isNaN(studentId)) {
@@ -24,30 +24,30 @@ export default async function() {
         }
 
         const teacherQuery = (await db.select({
-            userId: teachers.userId,
-            teacherId: teachers.teacherId,
-            name: users.name,
-            surname: users.surname,
-            username: users.username,
-            email: users.email,
+          email: users.email,
+          name: users.name,
+          surname: users.surname,
+          teacherId: teachers.teacherId,
+          userId: teachers.userId,
+          username: users.username,
         }).from(teachers)
             .where(eq(teachers.userId, teacher.userId))
             .innerJoin(users, eq(teachers.userId, users.userId))
             .execute());
 
         const teacherData = teacherQuery.at(0);
-        if (!teacherData) return c.json({ error: "Teacher not found" }, 404);
+        if (!teacherData) { return c.json({ error: "Teacher not found" }, 404); }
 
         const studentResult = await db
             .select({
-                studentId: students.studentId,
-                userId: students.userId,
-                classId: students.classId,
-                coordinatorId: classes.coordinatorTeacherId,
-                name: users.name,
-                surname: users.surname,
-                username: users.username,
-                email: users.email,
+              classId: students.classId,
+              coordinatorId: classes.coordinatorTeacherId,
+              email: users.email,
+              name: users.name,
+              studentId: students.studentId,
+              surname: users.surname,
+              userId: students.userId,
+              username: users.username,
             })
             .from(students)
             .where(eq(students.studentId, studentId))
@@ -56,14 +56,13 @@ export default async function() {
 
         const student = studentResult[0];
 
-        if (!student) return c.json({error: "Student not found " + studentId}, 404);
-        
+        if (!student) { return c.json({error: "Student not found " + studentId}, 404); }
         const parentsList = await db
             .select({
-                parentId: parentStudents.parentId,
-                name: users.name,
-                surname: users.surname,
-                email: users.email,
+              email: users.email,
+              name: users.name,
+              parentId: parentStudents.parentId,
+              surname: users.surname,
             })
             .from(parentStudents)
             .innerJoin(users, eq(parentStudents.parentId, users.userId))
@@ -72,11 +71,11 @@ export default async function() {
 
         const allGrades = (await db
             .select({
-                gradeId: grades.gradeId, subjectName: subjects.subjectName,
-                studentId: grades.studentId, teacherId: grades.teacherId,
-                subjectId: grades.subjectId, value: grades.value,
-                weight: grades.weight, insertedAt: grades.insertedAt,
-                comment: grades.comment, teacherName: users.name,
+              comment: grades.comment, gradeId: grades.gradeId,
+              insertedAt: grades.insertedAt, studentId: grades.studentId,
+              subjectId: grades.subjectId, subjectName: subjects.subjectName,
+              teacherId: grades.teacherId, teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
+              value: grades.value, weight: grades.weight,
             })
             .from(grades)
             .where(eq(grades.studentId, student.studentId))
@@ -85,7 +84,7 @@ export default async function() {
             return {
                 ...grade,
                 value: parseFloat(grade.value),
-                weight: parseInt(grade.weight),
+                weight: parseInt(grade.weight, 10),
             };
         });
 
@@ -102,19 +101,21 @@ export default async function() {
                 .orderBy(desc(homeworks.createdAt));
 
         const isCoordinator = teacherData.teacherId === student.coordinatorId;
-        console.log(isCoordinator, teacher.userId, student.coordinatorId, allGrades)
 
-        const filteredGrades = isCoordinator ? allGrades : allGrades.filter((grade) => grade.teacherId === teacherData.teacherId);
+        const filteredGrades =
+          isCoordinator
+            ? allGrades
+            : allGrades.filter((grade) => grade.teacherId === teacherData.teacherId);
 
         return c.json({
-            student,
-            parents: parentsList,
-            allGrades: filteredGrades,
-            average: filteredGrades.length == 0 ? null : calculateGeneralAverage(filteredGrades),
-            averagesByDay: filteredGrades.length == 0 ? null : calculateAveragesByDay(filteredGrades),
-            averagesBySubject: filteredGrades.length == 0 ? null : calculateAveragesBySubject(filteredGrades),
-            events: studentEvents,
-            homeworks: studentHomeworks,
+          allGrades: filteredGrades,
+          average: filteredGrades.length === 0 ? null : calculateGeneralAverage(filteredGrades),
+          averagesByDay: filteredGrades.length === 0 ? null : calculateAveragesByDay(filteredGrades),
+          averagesBySubject: filteredGrades.length == 0 ? null : calculateAveragesBySubject(filteredGrades),
+          events: studentEvents,
+          homeworks: studentHomeworks,
+          parents: parentsList,
+          student,
         });
     });
 

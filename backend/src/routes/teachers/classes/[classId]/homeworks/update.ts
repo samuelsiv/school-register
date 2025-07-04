@@ -15,7 +15,7 @@ const updateHomeworkSchema = z.object({
 });
 
 export default async function () {
-  const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students");
+  const router = new Hono().basePath("/api/v1/teachers/classes/:classId");
 
   // PATCH /api/v1/teachers/classes/:classId/students/homeworks
   router.patch("/homeworks", zValidator("json", updateHomeworkSchema), async (c) => {

@@ -12,12 +12,17 @@ import {ModifyEventDialog} from "@/components/dialog/ModifyEventDialog";
 import {CopyEventsDialog} from "@/components/dialog/CopyEventsDialog";
 import {EditHoursEventsDialog} from "@/components/dialog/EditHourEventsDialog";
 import {AddHomeworkDialog} from "@/components/dialog/AddHomeworkDialog";
+import {Homework} from "@/types/homework";
+import HomeworkCard from "@/components/cards/homeworks/HomeworkCard";
+import HomeworkExpandedCard from "@/components/cards/homeworks/HomeworkExpandedCard";
 
 export default function TeacherTodayPage() {
     const teacherStore = TeacherStore.useContainer();
     const [selectedEvent, setSelectedEvent] = useState<SchoolEvent | null>(null);
     const [copyHour, setCopyHour] = useState<number | null>(null);
     const [editHour, setEditHour] = useState<number | null>(null);
+    const [selectedHomework, setSelectedHomework] = useState<Homework | null>(null)
+
     return <div
         className="text-foreground flex items-center p-3 gap-6 text-center w-full h-full">
         <TeacherSidebar/>
@@ -107,6 +112,12 @@ export default function TeacherTodayPage() {
                         subjects={teacherStore.assignedSubjects || []}
                         onCreate={() => {}}
                     />
+                </div>
+                <div className="grid grid-rows-2 grid-cols-3 gap-12 w-full">
+                    { selectedHomework == null && teacherStore.todayHomeworks.map((homework: Homework) => <HomeworkCard homework={homework} key={"hw-" + homework.homeworkId} onArrowClick={() => {
+                        setSelectedHomework(homework)
+                    }}/>)}
+                    {(selectedHomework != null) && <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)} /> }
                 </div>
             </div>
         </main>

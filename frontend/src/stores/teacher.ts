@@ -13,12 +13,14 @@ import { Teacher } from "@/types/teacher";
 import {SchoolEvent} from "@/types/event";
 import {EventType, getDescription} from "@/types/eventType";
 import {Subject} from "@/types/subject";
+import {Homework} from "@/types/homework";
 
 const API_ENDPOINTS = {
   user: "/api/v1/user",
   teacherClasses: "/api/v1/teachers/classes",
   schoolTeachers: "/api/v1/teachers",
   classStudents: (classId: string) => `/api/v1/teachers/classes/${classId}/students`,
+  classHomeworks: (classId: string) => `/api/v1/teachers/classes/${classId}/homeworks`,
   eventsStudents: (classId: string) => `/api/v1/teachers/classes/${classId}/students/events`,
   studentOverview: (classId: string, studentId: number) => `/api/v1/teachers/classes/${classId}/${studentId}/overview`
 } as const;
@@ -74,11 +76,26 @@ const useStudentsEvents = (classId: string | null) => {
   const { data, error, mutate } = useSWR<{ eventsByStudent: Record<number, SchoolEvent[]> }>(
     classId ? API_ENDPOINTS.eventsStudents(classId) : null,
     fetcher, {
-    keepPreviousData: true
-  });
+      keepPreviousData: true
+    });
 
   return {
     events: data?.eventsByStudent ?? [],
+    mutate,
+    isLoading: !data && !error,
+    error
+  };
+};
+
+const useStudentsHomeworks = (classId: string | null) => {
+  const { data, error, mutate } = useSWR<{ homeworksList: Homework[] }>(
+    classId ? API_ENDPOINTS.classHomeworks(classId) : null,
+    fetcher, {
+      keepPreviousData: true
+    });
+
+  return {
+    homeworks: data?.homeworksList ?? [],
     mutate,
     isLoading: !data && !error,
     error
@@ -125,10 +142,12 @@ const TeacherStore = createContainer(() => {
   const { students: classStudents } = useClassStudents(classId as string);
 
   const { events: studentsEvents, mutate: mutateEvents } = useStudentsEvents(classId as string);
+  const { homeworks: studentsHomeworks, mutate: mutateHomeworks } = useStudentsHomeworks(classId as string);
+
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const todayEvents = useMemo(() => {
     return Object.entries(studentsEvents).map(([studentId, events]) => ({
-        id: studentId, events: events.filter(event => event.eventDate === selectedDate)
+      id: studentId, events: events.filter(event => event.eventDate === selectedDate)
     })).sort((a, b) => {
       const aStud = classStudents.find(st => st.studentId === parseInt(a.id))
       const bStud = classStudents.find(st => st.studentId === parseInt(b.id))
@@ -137,6 +156,10 @@ const TeacherStore = createContainer(() => {
       )
     });
   }, [studentsEvents, selectedDate, classStudents])
+
+  const todayHomeworks = useMemo(() => {
+    return studentsHomeworks.filter(h => h.createdAt === selectedDate)
+  }, [studentsHomeworks, selectedDate])
 
   const dayHours = [1, 2, 3, 4, 5]
   const noEventsHours = useMemo(() => {
@@ -237,7 +260,8 @@ const TeacherStore = createContainer(() => {
     editHourEvent,
     schoolTeachers,
     setSelectedDate,
-    tableStudents
+    tableStudents,
+    todayHomeworks
   };
 });
 

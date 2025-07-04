@@ -3,8 +3,7 @@ import { homeworks } from "@/db/schema/homeworks";
 import {subjects} from "@/db/schema/subjects";
 import { teachers } from "@/db/schema/teachers";
 import { users } from "@/db/schema/users";
-import { studentDataMiddleware } from "@/middleware/studentData";
-import { and, desc, eq } from "drizzle-orm";
+import {eq, sql} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
@@ -16,13 +15,13 @@ export default async function() {
 
     const entries = await db
       .select({
-        title: homeworks.title,
-        description: homeworks.description,
         createdAt: homeworks.createdAt,
+        description: homeworks.description,
         dueDate: homeworks.dueDate,
+        homeworkId: homeworks.homeworkId,
         subjectName: subjects.subjectName,
-          teacherName: users.name,
-          homeworkId: homeworks.homeworkId,
+        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
+        title: homeworks.title,
       })
       .from(homeworks)
       .where(eq(homeworks.classId, studentClass.classId))

@@ -27,7 +27,6 @@ export default function Homeworks() {
 
     const [selectedHomework, setSelectedHomework] = useState<Homework | null>(null)
 
-
     return <div
         className="w-full  text-foreground flex items-center p-3 gap-6 text-center h-full">
         <AppSidebar/>

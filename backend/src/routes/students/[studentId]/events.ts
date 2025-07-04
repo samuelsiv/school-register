@@ -1,12 +1,7 @@
 import { db } from "@/db/index";
 import {events} from "@/db/schema/events";
-import { grades } from "@/db/schema/grades";
-import { parentStudents } from "@/db/schema/parentStudents";
-import {subjects} from "@/db/schema/subjects";
 import {users} from "@/db/schema/users";
-import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average";
-import { studentDataMiddleware } from "@/middleware/studentData";
-import { and, eq } from "drizzle-orm";
+import {eq, sql} from "drizzle-orm";
 import { Hono } from "hono";
 
 export default async function() {
@@ -17,11 +12,11 @@ export default async function() {
 
     const allEvents = await db
       .select({
-        eventId: events.eventId, eventDate: events.eventDate,
+        classId: events.classId, eventDate: events.eventDate,
+        eventDescription: events.eventDescription, eventHour: events.eventHour,
+        eventId: events.eventId, eventType: events.eventType,
         studentId: events.studentId, teacherId: events.teacherId,
-        eventHour: events.eventHour, eventDescription: events.eventDescription,
-        eventType: events.eventType, classId: events.classId,
-        teacherName: users.name,
+        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
       })
       .from(events)
       .where(eq(events.studentId, student.studentId))
