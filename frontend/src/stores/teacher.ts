@@ -1,17 +1,17 @@
 "use client";
 
 import {fetcher, request} from "@/lib/request";
-import { Student } from "@/types/student";
-import { redirect, useParams } from "next/navigation";
+import {Student} from "@/types/student";
+import {redirect, useParams} from "next/navigation";
 import {useEffect, useMemo, useState} from "react";
 import useSWR from "swr";
-import { createContainer } from "unstated-next";
-import { UserInfo } from "@/types/userInfo";
-import { ClassRes } from "@/types/class";
-import { Overview } from "@/types/overview";
-import { Teacher } from "@/types/teacher";
+import {createContainer} from "unstated-next";
+import {UserInfo} from "@/types/userInfo";
+import {ClassRes} from "@/types/class";
+import {Overview} from "@/types/overview";
+import {Teacher} from "@/types/teacher";
 import {SchoolEvent} from "@/types/event";
-import {EventType, getDescription} from "@/types/eventType";
+import {EventType} from "@/types/eventType";
 import {Subject} from "@/types/subject";
 import {Homework} from "@/types/homework";
 
@@ -26,12 +26,12 @@ const API_ENDPOINTS = {
 } as const;
 
 const useUserAuth = () => {
-  const { data: userData } = useSWR<{
+  const {data: userData} = useSWR<{
     success: boolean;
     user: UserInfo;
     teacherId: number,
     assignedSubjects: Subject[]
-  }>(API_ENDPOINTS.user, fetcher, { keepPreviousData: true });
+  }>(API_ENDPOINTS.user, fetcher, {keepPreviousData: true});
 
   useEffect(() => {
     if (userData?.user.role !== "teacher") {
@@ -49,10 +49,10 @@ const useUserAuth = () => {
 };
 
 const useTeacherClasses = () => {
-  const { data, error } = useSWR<ClassRes>(API_ENDPOINTS.teacherClasses, fetcher, {
+  const {data, error} = useSWR<ClassRes>(API_ENDPOINTS.teacherClasses, fetcher, {
     keepPreviousData: true
   });
-  
+
   return {
     classes: data?.allClasses ?? [],
     isLoading: !data && !error,
@@ -61,7 +61,7 @@ const useTeacherClasses = () => {
 };
 
 const useSchoolTeachers = () => {
-  const { data, error } = useSWR<{ teachers: Teacher[] }>(API_ENDPOINTS.schoolTeachers, fetcher, {
+  const {data, error} = useSWR<{ teachers: Teacher[] }>(API_ENDPOINTS.schoolTeachers, fetcher, {
     keepPreviousData: true
   });
 
@@ -73,7 +73,7 @@ const useSchoolTeachers = () => {
 };
 
 const useStudentsEvents = (classId: string | null) => {
-  const { data, error, mutate } = useSWR<{ eventsByStudent: Record<number, SchoolEvent[]> }>(
+  const {data, error, mutate} = useSWR<{ eventsByStudent: Record<number, SchoolEvent[]> }>(
     classId ? API_ENDPOINTS.eventsStudents(classId) : null,
     fetcher, {
       keepPreviousData: true
@@ -88,7 +88,7 @@ const useStudentsEvents = (classId: string | null) => {
 };
 
 const useStudentsHomeworks = (classId: string | null) => {
-  const { data, error, mutate } = useSWR<{ homeworksList: Homework[] }>(
+  const {data, error, mutate} = useSWR<{ homeworksList: Homework[] }>(
     classId ? API_ENDPOINTS.classHomeworks(classId) : null,
     fetcher, {
       keepPreviousData: true
@@ -103,12 +103,12 @@ const useStudentsHomeworks = (classId: string | null) => {
 };
 
 const useClassStudents = (classId: string | null) => {
-  const { data, error } = useSWR<{ students: Student[] }>(
+  const {data, error} = useSWR<{ students: Student[] }>(
     classId ? API_ENDPOINTS.classStudents(classId) : null,
     fetcher,
-    { keepPreviousData: true }
+    {keepPreviousData: true}
   );
-  
+
   return {
     students: data?.students ?? [],
     isLoading: classId && !data && !error,
@@ -117,14 +117,14 @@ const useClassStudents = (classId: string | null) => {
 };
 
 const useSelectedStudent = (classId: string | null, studentId: number | null) => {
-  const { data, error } = useSWR<Overview>(
-    classId && studentId 
+  const {data, error} = useSWR<Overview>(
+    classId && studentId
       ? API_ENDPOINTS.studentOverview(classId, studentId)
       : null,
     fetcher,
-    { keepPreviousData: true }
+    {keepPreviousData: true}
   );
-  
+
   return {
     overview: data ?? null,
     isLoading: classId && studentId && !data && !error,
@@ -133,16 +133,16 @@ const useSelectedStudent = (classId: string | null, studentId: number | null) =>
 };
 
 const TeacherStore = createContainer(() => {
-  const { classId } = useParams();
+  const {classId} = useParams();
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  
-  const { userId, name, teacherId, assignedSubjects } = useUserAuth();
-  const { classes: teacherClasses } = useTeacherClasses();
-  const { teachers: schoolTeachers } = useSchoolTeachers();
-  const { students: classStudents } = useClassStudents(classId as string);
 
-  const { events: studentsEvents, mutate: mutateEvents } = useStudentsEvents(classId as string);
-  const { homeworks: studentsHomeworks, mutate: mutateHomeworks } = useStudentsHomeworks(classId as string);
+  const {userId, name, teacherId, assignedSubjects} = useUserAuth();
+  const {classes: teacherClasses} = useTeacherClasses();
+  const {teachers: schoolTeachers} = useSchoolTeachers();
+  const {students: classStudents} = useClassStudents(classId as string);
+
+  const {events: studentsEvents, mutate: mutateEvents} = useStudentsEvents(classId as string);
+  const {homeworks: studentsHomeworks, mutate: mutateHomeworks} = useStudentsHomeworks(classId as string);
 
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const todayEvents = useMemo(() => {
@@ -152,7 +152,7 @@ const TeacherStore = createContainer(() => {
       const aStud = classStudents.find(st => st.studentId === parseInt(a.id))
       const bStud = classStudents.find(st => st.studentId === parseInt(b.id))
       return (
-        aStud?.surname || "" < (bStud?.surname || "")  ? -1 : (aStud?.surname || "" > (bStud?.surname || "") ? 1 : 0)
+        aStud?.surname || "" < (bStud?.surname || "") ? -1 : (aStud?.surname || "" > (bStud?.surname || "") ? 1 : 0)
       )
     });
   }, [studentsEvents, selectedDate, classStudents])
@@ -164,12 +164,12 @@ const TeacherStore = createContainer(() => {
   const dayHours = [1, 2, 3, 4, 5]
   const noEventsHours = useMemo(() => {
     return dayHours
-        .filter(hour =>
-            todayEvents
-                .map(({id: _, events: e}) => e)
-                .flat()
-                .every(event => event.eventHour !== hour)
-        )
+      .filter(hour =>
+        todayEvents
+          .map(({id: _, events: e}) => e)
+          .flat()
+          .every(event => event.eventHour !== hour)
+      )
   }, [todayEvents])
 
   const tableStudents = useMemo(() => [
@@ -182,12 +182,14 @@ const TeacherStore = createContainer(() => {
       .sort(
         (a, b) => a.surname < b.surname ? -1 : (a.surname > b.surname ? 1 : 0)
       )
-      .map(st => {return {id: st.studentId.toString(), events: Array<SchoolEvent>()}})
+      .map(st => {
+        return {id: st.studentId.toString(), events: Array<SchoolEvent>()}
+      })
   ], [todayEvents, classStudents, selectedDate])
 
   const copyEvents = (hour: number, desc: string) => {
     let toInsertEvents: SchoolEvent[]
-    if (hour === 1 || noEventsHours.includes(hour-1)) toInsertEvents = classStudents.map(student => ({
+    if (hour === 1 || noEventsHours.includes(hour - 1)) toInsertEvents = classStudents.map(student => ({
       eventDate: selectedDate,
       eventHour: 1,
       studentId: student.studentId,
@@ -198,18 +200,18 @@ const TeacherStore = createContainer(() => {
       classId: parseInt(classId as string, 10)
     }))
     else toInsertEvents = todayEvents
-        .map(e => e.events)
-        .flat()
-        .filter(e => e.eventHour === hour-1)
-        .map(e => {
-          let newType = e.eventType
-          if (newType == EventType.DELAY) newType = EventType.PRESENT
-          else if (newType == EventType.LEAVE) newType = EventType.ABSENCE
-          return {
-            ...e, eventHour: hour,
-            eventId: null, eventType: newType, eventDescription: desc
-          }
-        })
+      .map(e => e.events)
+      .flat()
+      .filter(e => e.eventHour === hour - 1)
+      .map(e => {
+        let newType = e.eventType
+        if (newType == EventType.DELAY) newType = EventType.PRESENT
+        else if (newType == EventType.LEAVE) newType = EventType.ABSENCE
+        return {
+          ...e, eventHour: hour,
+          eventId: null, eventType: newType, eventDescription: desc
+        }
+      })
 
     request("POST", `/api/v1/teachers/classes/${classId}/students/events/createMany`, {
       data: toInsertEvents
@@ -234,8 +236,8 @@ const TeacherStore = createContainer(() => {
     }).then(_ => mutateEvents())
   }
 
-  const { overview: selectedStudentInfo } = useSelectedStudent(
-    classId as string, 
+  const {overview: selectedStudentInfo} = useSelectedStudent(
+    classId as string,
     selectedStudent?.studentId ?? null
   );
 

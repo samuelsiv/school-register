@@ -15,42 +15,42 @@ const loginSchema = z.object({
   password: z.string().min(6, {message: "Password is required"}),
 });
 
-export default async function() {
+export default async function () {
   const router = new Hono().basePath("/api/v1/auth");
 
   router.post("/login", zValidator("json", loginSchema), async (c) => {
-    const { email, password, captcha } = c.req.valid("json");
+    const {email, password, captcha} = c.req.valid("json");
 
     const captchaValid = await checkTurnstileToken(captcha);
     if (!captchaValid) {
-      return c.json({ error: "Invalid captcha" }, 400);
+      return c.json({error: "Invalid captcha"}, 400);
     }
 
     const [userFound] = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (!userFound) {
-      return c.json({ error: "Invalid email or password" }, 401);
+      return c.json({error: "Invalid email or password"}, 401);
     }
 
     const passwordMatch = await bcrypt.compare(password, userFound.password);
     if (!passwordMatch) {
-      return c.json({ error: "Invalid email or password" }, 401);
+      return c.json({error: "Invalid email or password"}, 401);
     }
 
     await db
       .update(users)
-      .set({ lastLoginDate: new Date() })
+      .set({lastLoginDate: new Date()})
       .where(eq(users.userId, userFound.userId));
 
     const token = jwt.sign(
-        {
-          role: userFound.role,
-          userId: userFound.userId,
-        },
+      {
+        role: userFound.role,
+        userId: userFound.userId,
+      },
       process.env.JWT_SECRET,
-      { expiresIn: 3600 },
+      {expiresIn: 3600},
     );
 
-    const { password: _, ...userInfo } = userFound;
+    const {password: _, ...userInfo} = userFound;
     setCookie(c, "auth_token", token, {
       expires: new Date(Date.now() + 3600 * 1000),
     });

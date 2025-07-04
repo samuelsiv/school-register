@@ -1,26 +1,23 @@
-import { db } from "@/db/index";
-import { classes } from "@/db/schema/classes";
+import {db} from "@/db";
+import {classes} from "@/db/schema/classes";
 import {students} from "@/db/schema/students";
-import { teacherClasses } from "@/db/schema/teacherClasses";
-import { teachers } from "@/db/schema/teachers";
-import { users } from "@/db/schema/users";
-import { count, eq } from "drizzle-orm";
-import { Hono } from "hono";
+import {teacherClasses} from "@/db/schema/teacherClasses";
+import {teachers} from "@/db/schema/teachers";
+import {users} from "@/db/schema/users";
+import {count, eq} from "drizzle-orm";
+import {Hono} from "hono";
 
 export default async function() {
   const router = new Hono().basePath("/api/v1/teachers");
 
   router.get("/classes", async (c) => {
     const user = c.get("user");
-        
+
     // Poi, verifica le associazioni teacherClasses
     const teacherClassAssociations = await db
       .select()
       .from(teacherClasses)
       .where(eq(teacherClasses.teacherId, user.userId));
-    
-    console.log("Teacher class associations:", teacherClassAssociations);
-
     const allClasses = await db
       .select({
         classId: classes.classId,
@@ -42,7 +39,7 @@ export default async function() {
         users.name,
       );
 
-    return c.json({ allClasses });
+    return c.json({allClasses});
   });
 
   return router;

@@ -6,28 +6,31 @@ import {useState} from "react";
 import {CheckCircle} from "lucide-react";
 
 export function HomeworksCard({homeworks}: { homeworks: Homework[] }) {
-    const [selectedHomework, setSelectedHomework] = useState<Homework | null>(null)
+  const [selectedHomework, setSelectedHomework] = useState<Homework | null>(null)
 
-    return (
-        <Card className="border-t-[2px]">
-            <CardHeader>
-                <CardTitle className="text-2xl">Homeworks</CardTitle>
-                <CardDescription>
-                    Next homeworks to do
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                {homeworks.length == 0 && <div className="w-full h-full flex align-center items-center justify-center flex-col gap-4">
-                    <CheckCircle size="36" />
-                    <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No homeworks to do!</h2>
-                </div>
-                }
+  return (
+    <Card className="border-t-[2px]">
+      <CardHeader>
+        <CardTitle className="text-2xl">Homeworks</CardTitle>
+        <CardDescription>
+          Next homeworks to do
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {homeworks.length == 0 &&
+            <div className="w-full h-full flex align-center items-center justify-center flex-col gap-4">
+                <CheckCircle size="36"/>
+                <h2 className="scroll-m-20 text-2xl tracking-tight font-bold">No homeworks to do!</h2>
+            </div>
+        }
 
-                { selectedHomework == null && homeworks.map((homework: Homework) => <HomeworkCard key={"hw-" + homework.homeworkId} homework={homework} onArrowClick={() => {
-                    setSelectedHomework(homework)
-                }}/>)}
-                {(selectedHomework != null) && <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)} /> }
-            </CardContent>
-        </Card>
-    )
+        {selectedHomework == null && homeworks.map((homework: Homework) => <HomeworkCard
+          key={"hw-" + homework.homeworkId} homework={homework} onArrowClick={() => {
+          setSelectedHomework(homework)
+        }}/>)}
+        {(selectedHomework != null) &&
+            <HomeworkExpandedCard homework={selectedHomework} goBack={() => setSelectedHomework(null)}/>}
+      </CardContent>
+    </Card>
+  )
 }

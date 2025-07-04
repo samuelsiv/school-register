@@ -1,9 +1,9 @@
-import { Class, classes } from "@/db/schema/classes";
-import { parentStudents } from "@/db/schema/parentStudents";
-import { students, type Student } from "@/db/schema/students";
-import { querySingleItem } from "@/db/utils";
-import { and, eq } from "drizzle-orm";
-import { createMiddleware } from "hono/factory";
+import {Class, classes} from "@/db/schema/classes";
+import {parentStudents} from "@/db/schema/parentStudents";
+import {students, type Student} from "@/db/schema/students";
+import {querySingleItem} from "@/db/utils";
+import {and, eq} from "drizzle-orm";
+import {createMiddleware} from "hono/factory";
 
 export const studentDataMiddleware = createMiddleware(async (c, next) => {
   const user = c.get("user");

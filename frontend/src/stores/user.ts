@@ -1,15 +1,15 @@
 "use client";
 
-import { fetcher } from "@/lib/request";
-import { getJsonStore, setJsonStore } from "@/lib/storage";
-import { Student } from "@/types/student";
-import { useEffect, useState } from "react";
+import {fetcher} from "@/lib/request";
+import {getJsonStore, setJsonStore} from "@/lib/storage";
+import {Student} from "@/types/student";
+import {useEffect, useState} from "react";
 import useSWR from "swr";
-import { createContainer } from "unstated-next";
-import { UserInfo } from "@/types/userInfo";
-import { GradeResponse } from "@/types/grade";
-import { Homework } from '@/types/homework';
-import { redirect } from "next/navigation";
+import {createContainer} from "unstated-next";
+import {UserInfo} from "@/types/userInfo";
+import {GradeResponse} from "@/types/grade";
+import {Homework} from '@/types/homework';
+import {redirect} from "next/navigation";
 
 const API_ENDPOINTS = {
   user: "/api/v1/user",
@@ -18,11 +18,11 @@ const API_ENDPOINTS = {
 } as const;
 
 const useUserAuth = () => {
-  const { data: userData } = useSWR<{
+  const {data: userData} = useSWR<{
     success: boolean;
     user: UserInfo;
     assignedStudents: Student[];
-  }>(API_ENDPOINTS.user, fetcher, { keepPreviousData: true });
+  }>(API_ENDPOINTS.user, fetcher, {keepPreviousData: true});
 
   useEffect(() => {
     if (userData && !["parent", "student"].includes(userData.user.role)) {
@@ -38,10 +38,10 @@ const useUserAuth = () => {
 };
 
 const useStudentGrades = (studentId: number | null) => {
-  const { data, error } = useSWR<GradeResponse>(
+  const {data, error} = useSWR<GradeResponse>(
     studentId ? API_ENDPOINTS.studentGrades(studentId) : null,
     fetcher,
-    { keepPreviousData: true }
+    {keepPreviousData: true}
   );
 
   return {
@@ -55,10 +55,10 @@ const useStudentGrades = (studentId: number | null) => {
 };
 
 const useStudentHomeworks = (studentId: number | null) => {
-  const { data, error } = useSWR<Homework[]>(
+  const {data, error} = useSWR<Homework[]>(
     studentId ? API_ENDPOINTS.studentHomeworks(studentId) : null,
     fetcher,
-    { keepPreviousData: true }
+    {keepPreviousData: true}
   );
 
   return {
@@ -70,19 +70,19 @@ const useStudentHomeworks = (studentId: number | null) => {
 
 const UserStore = createContainer(() => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  
-  const { user, assignedStudents, isLoading: userLoading } = useUserAuth();
-  
+
+  const {user, assignedStudents, isLoading: userLoading} = useUserAuth();
+
   const isParent = user?.role === "parent";
   const isStudent = user?.role === "student";
   const managedStudents = isParent ? assignedStudents : [];
-  
+
   const activeStudent = isParent ? selectedStudent : assignedStudents[0] || null;
-  
-  const { grades, average, averageByDay, averageBySubject } = useStudentGrades(
+
+  const {grades, average, averageByDay, averageBySubject} = useStudentGrades(
     activeStudent?.studentId ?? null
   );
-  const { homeworks } = useStudentHomeworks(activeStudent?.studentId ?? null);
+  const {homeworks} = useStudentHomeworks(activeStudent?.studentId ?? null);
 
   // Initialize selected student
   useEffect(() => {
@@ -90,11 +90,11 @@ const UserStore = createContainer(() => {
 
     if (isParent) {
       const storedStudent = getJsonStore<Student | null>("selected_student");
-      const validStoredStudent = storedStudent && 
-        assignedStudents.some(s => s.studentId === storedStudent.studentId) 
-          ? storedStudent 
-          : null;
-      
+      const validStoredStudent = storedStudent &&
+      assignedStudents.some(s => s.studentId === storedStudent.studentId)
+        ? storedStudent
+        : null;
+
       setSelectedStudent(validStoredStudent || assignedStudents[0] || null);
     } else if (isStudent) {
       setSelectedStudent(assignedStudents[0] || null);
@@ -106,7 +106,7 @@ const UserStore = createContainer(() => {
       console.warn("Only parents can select different students");
       return;
     }
-    
+
     setSelectedStudent(student);
     setJsonStore<Student>("selected_student", student);
   };
@@ -130,20 +130,20 @@ const UserStore = createContainer(() => {
     name: user?.name ?? null,
     getName,
     getDisplayName,
-    
+
     isParent,
     isStudent,
-    
+
     managedStudents,
     selectedStudent: activeStudent,
     selectStudent,
-    
+
     grades,
     average,
     averageByDay,
     averageBySubject,
     homeworks,
-    
+
     isLoading: userLoading
   };
 });

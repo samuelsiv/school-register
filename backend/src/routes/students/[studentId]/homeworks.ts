@@ -1,17 +1,19 @@
-import { db } from "@/db/index";
-import { homeworks } from "@/db/schema/homeworks";
+import {db} from "@/db";
+import {homeworks} from "@/db/schema/homeworks";
 import {subjects} from "@/db/schema/subjects";
-import { teachers } from "@/db/schema/teachers";
-import { users } from "@/db/schema/users";
+import {teachers} from "@/db/schema/teachers";
+import {users} from "@/db/schema/users";
 import {eq, sql} from "drizzle-orm";
-import { Hono } from "hono";
+import {Hono} from "hono";
 
-export default async function() {
+export default async function () {
   const router = new Hono().basePath("/api/v1/students/:studentId");
 
   router.get("/homeworks", async (c) => {
     const studentClass = c.get("class");
-    if (!studentClass) { return c.json({ error: "You are not assigned to any class." }); }
+    if (!studentClass) {
+      return c.json({error: "You are not assigned to any class."});
+    }
 
     const entries = await db
       .select({
@@ -20,7 +22,9 @@ export default async function() {
         dueDate: homeworks.dueDate,
         homeworkId: homeworks.homeworkId,
         subjectName: subjects.subjectName,
-        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
+        teacherName: sql<string>`${users.surname}
+        || ' ' ||
+        ${users.name}`.as("teacherName"),
         title: homeworks.title,
       })
       .from(homeworks)

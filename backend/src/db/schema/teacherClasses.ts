@@ -1,23 +1,23 @@
-import { relations } from "drizzle-orm";
-import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import { classes } from "./classes";
-import { teachers } from "./teachers";
+import {relations} from "drizzle-orm";
+import {integer, pgTable, primaryKey} from "drizzle-orm/pg-core";
+import {classes} from "./classes";
+import {teachers} from "./teachers";
 
 export const teacherClasses = pgTable("teachers_classes", {
-  teacherId: integer("teacher_id").notNull().references(() => teachers.teacherId, { onDelete: "cascade" }),
-  classId: integer("class_id").notNull().references(() => classes.classId, { onDelete: "cascade" }),
+  classId: integer("class_id").notNull().references(() => classes.classId, {onDelete: "cascade"}),
+  teacherId: integer("teacher_id").notNull().references(() => teachers.teacherId, {onDelete: "cascade"}),
 }, (table) => [
-  primaryKey({ columns: [table.teacherId, table.classId] }),
+  primaryKey({columns: [table.teacherId, table.classId]}),
 ]);
 
-export const teacherClassesRelations = relations(teacherClasses, ({ one }) => ({
-  teacher: one(teachers, {
-    fields: [teacherClasses.teacherId],
-    references: [teachers.teacherId],
-  }),
+export const teacherClassesRelations = relations(teacherClasses, ({one}) => ({
   class: one(classes, {
     fields: [teacherClasses.classId],
     references: [classes.classId],
+  }),
+  teacher: one(teachers, {
+    fields: [teacherClasses.teacherId],
+    references: [teachers.teacherId],
   }),
 }));
 

@@ -1,9 +1,9 @@
-import { Hono } from "hono";
-import { db } from "@/db/index";
-import { events } from "@/db/schema/events";
-import { and, eq } from "drizzle-orm";
-import { zValidator } from "@hono/zod-validator";
-import { z } from "zod";
+import {db} from "@/db";
+import {events} from "@/db/schema/events";
+import {zValidator} from "@hono/zod-validator";
+import {and, eq} from "drizzle-orm";
+import {Hono} from "hono";
+import {z} from "zod";
 
 const updateEventSchema = z.object({
   eventDate: z.string(),
@@ -11,16 +11,16 @@ const updateEventSchema = z.object({
   eventDescription: z.string(),
 });
 
-export default async function () {
+export default async function() {
   const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students");
 
   // PATCH /api/v1/teachers/classes/:classId/students/events
   router.patch("/events", zValidator("json", updateEventSchema), async (c) => {
     const classId = parseInt(c.req.param("classId"), 10);
-    const { eventDescription, eventHour, eventDate } = c.req.valid("json");
+    const {eventDescription, eventHour, eventDate} = c.req.valid("json");
 
     if (isNaN(classId)) {
-      return c.json({ error: "Invalid classId" }, 400);
+      return c.json({error: "Invalid classId"}, 400);
     }
 
     // Update the event by eventId, classId, and studentId
@@ -33,7 +33,7 @@ export default async function () {
       return c.json({ error: "Event not found" }, 404);
     }*/
 
-    return c.json({ message: "Events updated successfully", ...result });
+    return c.json({message: "Events updated successfully", ...result});
   });
 
   return router;

@@ -1,9 +1,9 @@
-import { Hono } from "hono";
-import { db } from "@/db/index";
-import { events } from "@/db/schema/events";
-import { and, eq } from "drizzle-orm";
+import {db} from "@/db";
+import {events} from "@/db/schema/events";
+import {and, eq} from "drizzle-orm";
+import {Hono} from "hono";
 
-export default async function () {
+export default async function() {
   const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students/:studentId/events");
 
   // GET /api/v1/teachers/classes/:classId/:studentId/events/:eventId
@@ -13,7 +13,7 @@ export default async function () {
     const eventId = parseInt(c.req.param("eventId"));
 
     if (isNaN(classId) || isNaN(studentId) || isNaN(eventId)) {
-      return c.json({ error: "Invalid classId, studentId, or eventId" }, 400);
+      return c.json({error: "Invalid classId, studentId, or eventId"}, 400);
     }
 
     // Fetch the event by eventId, classId, and studentId
@@ -24,10 +24,10 @@ export default async function () {
       .limit(1);
 
     if (event.length === 0) {
-      return c.json({ error: "Event not found" }, 404);
+      return c.json({error: "Event not found"}, 404);
     }
 
-    return c.json({ event: event[0] });
+    return c.json({event: event[0]});
   });
 
   return router;

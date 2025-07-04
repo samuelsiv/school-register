@@ -1,6 +1,6 @@
-import { db } from "@/db/index.js";
-import { and, eq } from "drizzle-orm";
-import { SelectedFields } from "drizzle-orm/pg-core";
+import {db} from "@/db/index.js";
+import {and} from "drizzle-orm";
+import {SelectedFields} from "drizzle-orm/pg-core";
 
 /**
  * Queries a single item from the database based on the provided table and conditions.
@@ -9,8 +9,8 @@ import { SelectedFields } from "drizzle-orm/pg-core";
  * @returns The single item if found, or null if not found.
  */
 export async function querySingleItem<T>(
-  table: any, 
-  conditions: Array<any>, 
+  table: any,
+  conditions: Array<any>,
   select?: SelectedFields
 ): Promise<T | null> {
   const result = await (select ? db.select(select) : db.select())

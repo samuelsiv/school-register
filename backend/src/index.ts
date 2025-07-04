@@ -1,16 +1,17 @@
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
+import {serve} from "@hono/node-server";
+import {Hono} from "hono";
 
-import { readdir } from "fs/promises";
+import {readdir} from "fs/promises";
 import path from "path";
-import { pathToFileURL } from "url";
+import {pathToFileURL} from "url";
 
 import dotenv from "dotenv";
-import { cors } from "hono/cors";
-import { logger } from "hono/logger";
-import { authMiddleware } from "./middleware/auth";
-import { roleMiddleware } from "./middleware/role";
-import { studentDataMiddleware } from "./middleware/studentData";
+import {cors} from "hono/cors";
+import {logger} from "hono/logger";
+import {authMiddleware} from "./middleware/auth";
+import {roleMiddleware} from "./middleware/role";
+import {studentDataMiddleware} from "./middleware/studentData";
+
 dotenv.config();
 
 const app = new Hono();
@@ -31,7 +32,7 @@ app.use("/api/v1/parents/*", authMiddleware, roleMiddleware(["parent"]));
 app.use("/api/v1/user/*", authMiddleware, roleMiddleware(["*"]));
 
 async function loadRoutes(routesDir: string) {
-  const routeFiles = await readdir(routesDir, { withFileTypes: true });
+  const routeFiles = await readdir(routesDir, {withFileTypes: true});
   for (const file of routeFiles) {
     const filePath = path.join(routesDir, file.name);
     if (file.isDirectory()) {

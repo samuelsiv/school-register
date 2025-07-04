@@ -1,10 +1,10 @@
-import { db } from "@/db/index";
-import { grades } from "@/db/schema/grades";
+import {db} from "@/db";
+import {grades} from "@/db/schema/grades";
 import {subjects} from "@/db/schema/subjects";
 import {users} from "@/db/schema/users";
 import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average";
 import {eq, sql} from "drizzle-orm";
-import { Hono } from "hono";
+import {Hono} from "hono";
 
 export default async function() {
   const router = new Hono().basePath("/api/v1/students/:studentId");
@@ -18,18 +18,20 @@ export default async function() {
         insertedAt: grades.insertedAt, studentId: grades.studentId,
         subjectId: grades.subjectId, subjectName: subjects.subjectName,
         teacherId: grades.teacherId,
-        teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
+        teacherName: sql<string>`${users.surname}
+        || ' ' ||
+        ${users.name}`.as("teacherName"),
         value: grades.value, weight: grades.weight,
       })
       .from(grades)
       .where(eq(grades.studentId, student.studentId))
       .innerJoin(subjects, eq(subjects.subjectId, grades.subjectId))
       .innerJoin(users, eq(users.userId, grades.teacherId))).map((grade) => {
-        return {
-          ...grade,
-          value: parseFloat(grade.value),
-          weight: parseInt(grade.weight, 10),
-        };
+      return {
+        ...grade,
+        value: parseFloat(grade.value),
+        weight: parseInt(grade.weight, 10),
+      };
     });
 
     return c.json({

@@ -1,96 +1,98 @@
-import { db } from "@/db/index";
-import { classes } from "@/db/schema/classes";
-import { events } from "@/db/schema/events";
-import { grades } from "@/db/schema/grades";
-import { homeworks } from "@/db/schema/homeworks";
-import { parentStudents } from "@/db/schema/parentStudents";
-import { students } from "@/db/schema/students";
-import { subjects } from "@/db/schema/subjects";
-import { users } from "@/db/schema/users";
-import { calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage } from "@/lib/average";
+import {db} from "@/db";
+import {classes} from "@/db/schema/classes";
+import {events} from "@/db/schema/events";
+import {grades} from "@/db/schema/grades";
+import {homeworks} from "@/db/schema/homeworks";
+import {parentStudents} from "@/db/schema/parentStudents";
+import {students} from "@/db/schema/students";
+import {subjects} from "@/db/schema/subjects";
+import {users} from "@/db/schema/users";
+import {calculateAveragesByDay, calculateAveragesBySubject, calculateGeneralAverage} from "@/lib/average";
 import {desc, eq, sql} from "drizzle-orm";
-import { Hono } from "hono";
+import {Hono} from "hono";
 
 export default async function() {
-	const router = new Hono().basePath("/api/v1/admin/students/:studentId");
-	router.get("/overview", async (c) => {
-		const studentId = parseInt(c.req.param("studentId"), 10);
-		if (isNaN(studentId)) {
-			return c.json({ error: "Invalid studentId " }, 400);
-		}
+  const router = new Hono().basePath("/api/v1/admin/students/:studentId");
+  router.get("/overview", async (c) => {
+    const studentId = parseInt(c.req.param("studentId"), 10);
+    if (isNaN(studentId)) {
+      return c.json({error: "Invalid studentId "}, 400);
+    }
 
-		const studentResult = await db
-			.select({
-				classId: students.classId,
-				coordinatorId: classes.coordinatorTeacherId,
-				email: users.email,
-				name: users.name,
-				studentId: students.studentId,
-				surname: users.surname,
-				userId: students.userId,
-				username: users.username,
-			})
-			.from(students)
-			.where(eq(students.studentId, studentId))
-			.innerJoin(users, eq(students.userId, users.userId))
-			.leftJoin(classes, eq(students.classId, classes.classId));
+    const studentResult = await db
+      .select({
+        classId: students.classId,
+        coordinatorId: classes.coordinatorTeacherId,
+        email: users.email,
+        name: users.name,
+        studentId: students.studentId,
+        surname: users.surname,
+        userId: students.userId,
+        username: users.username,
+      })
+      .from(students)
+      .where(eq(students.studentId, studentId))
+      .innerJoin(users, eq(students.userId, users.userId))
+      .leftJoin(classes, eq(students.classId, classes.classId));
 
-		const student = studentResult[0];
+    const student = studentResult[0];
 
-		const parentsList = await db
-			.select({
-				email: users.email,
-				name: users.name,
-				parentId: parentStudents.parentId,
-				surname: users.surname,
-			})
-			.from(parentStudents)
-			.innerJoin(users, eq(parentStudents.parentId, users.userId))
-			.where(eq(parentStudents.studentId, studentId))
-			.execute();
+    const parentsList = await db
+      .select({
+        email: users.email,
+        name: users.name,
+        parentId: parentStudents.parentId,
+        surname: users.surname,
+      })
+      .from(parentStudents)
+      .innerJoin(users, eq(parentStudents.parentId, users.userId))
+      .where(eq(parentStudents.studentId, studentId))
+      .execute();
 
-		const allGrades = (await db
-			.select({
-				comment: grades.comment, gradeId: grades.gradeId,
-				insertedAt: grades.insertedAt, studentId: grades.studentId,
-				subjectId: grades.subjectId, subjectName: subjects.subjectName,
-				teacherId: grades.teacherId, teacherName: sql<string>`${users.surname} || ' ' || ${users.name}`.as("teacherName"),
-				value: grades.value, weight: grades.weight,
-			})
-			.from(grades)
-			.where(eq(grades.studentId, student!.studentId))
-			.innerJoin(subjects, eq(subjects.subjectId, grades.subjectId))
-			.innerJoin(users, eq(users.userId, grades.teacherId))).map((grade) => {
-				return {
-					...grade,
-					value: parseFloat(grade.value),
-					weight: parseInt(grade.weight, 10),
-				};
-			});
+    const allGrades = (await db
+      .select({
+        comment: grades.comment, gradeId: grades.gradeId,
+        insertedAt: grades.insertedAt, studentId: grades.studentId,
+        subjectId: grades.subjectId, subjectName: subjects.subjectName,
+        teacherId: grades.teacherId, teacherName: sql<string>`${users.surname}
+          || ' ' ||
+          ${users.name}`.as("teacherName"),
+        value: grades.value, weight: grades.weight,
+      })
+      .from(grades)
+      .where(eq(grades.studentId, student!.studentId))
+      .innerJoin(subjects, eq(subjects.subjectId, grades.subjectId))
+      .innerJoin(users, eq(users.userId, grades.teacherId))).map((grade) => {
+      return {
+        ...grade,
+        value: parseFloat(grade.value),
+        weight: parseInt(grade.weight, 10),
+      };
+    });
 
-		const studentEvents = await db
-			.select()
-			.from(events)
-			.where(eq(events.studentId, studentId));
+    const studentEvents = await db
+      .select()
+      .from(events)
+      .where(eq(events.studentId, studentId));
 
-		const studentHomeworks = student?.classId == null ? [] :
-			await db
-				.select()
-				.from(homeworks)
-				.where(eq(homeworks.classId, student.classId))
-				.orderBy(desc(homeworks.createdAt));
+    const studentHomeworks = student?.classId == null ? [] :
+      await db
+        .select()
+        .from(homeworks)
+        .where(eq(homeworks.classId, student.classId))
+        .orderBy(desc(homeworks.createdAt));
 
-		return c.json({
-			allGrades,
-			average: calculateGeneralAverage(allGrades),
-			averagesByDay: calculateAveragesByDay(allGrades),
-			averagesBySubject: calculateAveragesBySubject(allGrades),
-			events: studentEvents,
-			homeworks: studentHomeworks,
-			parents: parentsList,
-			student,
-		});
-	});
+    return c.json({
+      allGrades,
+      average: calculateGeneralAverage(allGrades),
+      averagesByDay: calculateAveragesByDay(allGrades),
+      averagesBySubject: calculateAveragesBySubject(allGrades),
+      events: studentEvents,
+      homeworks: studentHomeworks,
+      parents: parentsList,
+      student,
+    });
+  });
 
-	return router;
+  return router;
 }

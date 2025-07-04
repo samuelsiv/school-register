@@ -1,8 +1,9 @@
-import type { Class } from "./db/schema/classes";
-import type { Student } from "./db/schema/students";
+import type {Class} from "./db/schema/classes";
+import type {Student} from "./db/schema/students";
 
 declare global {
   namespace NodeJS {
+    // tslint:disable-next-line:interface-name
     interface ProcessEnv {
       DATABASE_URL: string;
       REDIS_URL: string;
@@ -24,6 +25,7 @@ export interface IJwtData {
 }
 
 declare module "hono" {
+  // tslint:disable-next-line:interface-name
   interface ContextVariableMap {
     user: IJwtData;
     student: Student;
