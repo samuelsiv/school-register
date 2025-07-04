@@ -1,13 +1,12 @@
 import { db } from "@/db";
 import {homeworks} from "@/db/schema/homeworks";
-import {subjects, subjectsRelations} from "@/db/schema/subjects";
+import {Teacher, teachers} from "@/db/schema/teachers";
+import {teachersSubjects} from "@/db/schema/teacherSubjects";
+import {querySingleItem} from "@/db/utils";
 import {zValidator} from "@hono/zod-validator";
 import {and, eq, sql} from "drizzle-orm";
 import { Hono } from "hono";
 import {z} from "zod";
-import {querySingleItem} from "@/db/utils";
-import {Teacher, teachers} from "@/db/schema/teachers";
-import {teachersSubjects} from "@/db/schema/teacherSubjects";
 
 const createHomeworkSchema = z.object({
     description: z.string(),
@@ -18,7 +17,7 @@ const createHomeworkSchema = z.object({
 });
 
 export default async function() {
-    const router = new Hono().basePath("/api/v1/teachers/classes/:classId/students");
+    const router = new Hono().basePath("/api/v1/teachers/classes/:classId");
 
     router.put("/homeworks", zValidator("json", createHomeworkSchema), async (c) => {
         const {dueDate, description, title, teacherId, subjectId} = c.req.valid("json");
@@ -52,8 +51,6 @@ export default async function() {
             .returning()
             .onConflictDoNothing()
             .execute();
-
-
         return c.json({ newHomework });
     });
 

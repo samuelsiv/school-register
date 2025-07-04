@@ -46,6 +46,8 @@ services:
     image: postgres:13
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "24432:5432"
     environment:
       POSTGRES_USER: sr
       POSTGRES_PASSWORD: sr

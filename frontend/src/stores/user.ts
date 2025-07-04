@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { createContainer } from "unstated-next";
 import { UserInfo } from "@/types/userInfo";
-import { Grade, GradeResponse } from "@/types/grade";
+import { GradeResponse } from "@/types/grade";
 import { Homework } from '@/types/homework';
 import { redirect } from "next/navigation";
 

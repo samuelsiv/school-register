@@ -24,7 +24,8 @@ app.use("*", cors({
 }));
 
 app.use("/api/v1/admin/*", authMiddleware, roleMiddleware(["admin"]));
-app.use("/api/v1/students/*", authMiddleware, roleMiddleware(["student", "parent"]), studentDataMiddleware);
+app.use("/api/v1/students/*", authMiddleware, roleMiddleware(["student", "parent"]));
+app.use("/api/v1/students/:studentId/*", studentDataMiddleware);
 app.use("/api/v1/teachers/*", authMiddleware, roleMiddleware(["teacher"]));
 app.use("/api/v1/parents/*", authMiddleware, roleMiddleware(["parent"]));
 app.use("/api/v1/user/*", authMiddleware, roleMiddleware(["*"]));
