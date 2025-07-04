@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     if (!authInfo || !authInfo.authenticated) {
         return new Response('', {
             status: 307,
-            headers: {'Set-Cookie': `auth_token=`, "Location": "/login"},
+            headers: {'Set-Cookie': `auth_token=`, "Location": "/"},
         });
     }
     if (authInfo.role == "student" || authInfo.role == "parent") {

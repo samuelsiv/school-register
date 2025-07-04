@@ -81,7 +81,7 @@ export function AppSidebar() {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenuButton asChild onClick={() => {
-                    document.cookie = "auth_token=; Max-Age=1";
+                    document.cookie = "auth_token=; Max-Age=1; Path=/";
                     redirect("/login");
                 }}>
                     <div>

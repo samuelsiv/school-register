@@ -62,7 +62,7 @@ function LoginForm() {
                     return;
                 }
 
-                document.cookie = "auth_token=" + data.token + "; Max-Age=3600";
+                document.cookie = "auth_token=" + data.token + "; Max-Age=3600; Path=/";
                 preload("/api/v1/user", fetcher)
                     .then((data: {
                         success: boolean,

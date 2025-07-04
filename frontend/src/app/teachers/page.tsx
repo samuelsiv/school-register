@@ -32,7 +32,7 @@ export default function HomePage() {
                 </Card></Link>)}
             </div>
             <Button asChild onClick={() => {
-                document.cookie = "auth_token=; Max-Age=1";
+                document.cookie = "auth_token=; Max-Age=1; Path=/";
                 redirect("/login");
             }} className="mt-4">
                 <div className="w-[40%]">
