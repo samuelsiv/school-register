@@ -32,7 +32,7 @@ export function AddHomeworkDialog({subjects, teacherId, classId, onCreate}: {sub
         dueDate: new Date().toISOString().split("T")[0],
         title: "",
         teacherId: teacherId,
-        subjectId: subjects[0].subjectId!,
+        subjectId: subjects.length != 0 ? subjects[0].subjectId : 0,
     }
     const form = useForm({
         resolver: zodResolver(createHomeworkSchema),
@@ -66,6 +66,7 @@ export function AddHomeworkDialog({subjects, teacherId, classId, onCreate}: {sub
                 setIsLoading(false);
             });
     }
+    console.log(subjects);
     return <Dialog open={isOpen} onOpenChange={newOpen => setIsOpen(newOpen)}>
         <DialogTrigger className="p-2 bg-card border rounded-xl" ><PlusIcon /></DialogTrigger>
         <DialogContent>
@@ -91,9 +92,6 @@ export function AddHomeworkDialog({subjects, teacherId, classId, onCreate}: {sub
                                     <FormControl>
                                         <div
                                             className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:border-input">
-                                            {/*<span className="px-3 text-muted-foreground">
-												<MailIcon size={18}/>
-											</span>*/}
                                             <Input
                                                 className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 mb-2"
                                                 placeholder={"Study for tomorrow's history test"}
@@ -114,9 +112,6 @@ export function AddHomeworkDialog({subjects, teacherId, classId, onCreate}: {sub
                                     <FormControl>
                                         <div
                                             className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:border-input">
-                                            {/*<span className="px-3 text-muted-foreground">
-												<MailIcon size={18}/>
-											</span>*/}
                                             <Input
                                                 className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 mb-2"
                                                 placeholder={"blah blah blah"}

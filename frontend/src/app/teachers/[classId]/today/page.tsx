@@ -69,18 +69,11 @@ export default function TeacherTodayPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {[
-                            ...teacherStore.todayEvents,
-                            ...teacherStore.classStudents.filter(
-                                stud => teacherStore.todayEvents
-                                    .map(e => e.id)
-                                    .indexOf(stud.studentId.toString()) === -1
-                            ).map(st => {return {id: st.studentId.toString(), events: Array<SchoolEvent>()}})
-                        ].map(({id, events}) =>
+                        {teacherStore.tableStudents.map(({id, events}) =>
                             <TableRow key={`studRow-${id}`}>
                                 <TableCell className="font-medium border-e-1">
                                     {[teacherStore.classStudents.find(stud => stud.studentId.toString() == id)]
-                                        .map(stud => `${stud?.name} ${stud?.surname}`)[0]
+                                        .map(stud => `${stud?.surname} ${stud?.name}`)[0]
                                     }
                                 </TableCell>
 
@@ -105,9 +98,9 @@ export default function TeacherTodayPage() {
                 { editHour != null &&
                     <EditHoursEventsDialog onDimiss={() => setEditHour(null)} onSave={desc => teacherStore.editHourEvent(editHour, desc)} />
                 }
-                <div className="flex flex-row justify-between gap-6 w-full">
+                <div className="flex flex-row justify-between gap-6 w-full mt-8">
                     <div />
-                    <h2 className="scroll-m-20 text-2xl mt-6 align-center tracking-tight">Homeworks</h2>
+                    <h2 className="scroll-m-20 text-2xl align-center tracking-tight">Homeworks</h2>
                     <AddHomeworkDialog
                         teacherId={teacherStore.teacherId || 0}
                         classId={parseInt(teacherStore.classId!.toString(), 10) || 0}

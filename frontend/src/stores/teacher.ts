@@ -127,12 +127,16 @@ const TeacherStore = createContainer(() => {
   const { events: studentsEvents, mutate: mutateEvents } = useStudentsEvents(classId as string);
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const todayEvents = useMemo(() => {
-    return Object.entries(studentsEvents).map(([studentId, events]) => {
-      return {
+    return Object.entries(studentsEvents).map(([studentId, events]) => ({
         id: studentId, events: events.filter(event => event.eventDate === selectedDate)
-      }
+    })).sort((a, b) => {
+      const aStud = classStudents.find(st => st.studentId === parseInt(a.id))
+      const bStud = classStudents.find(st => st.studentId === parseInt(b.id))
+      return (
+        aStud?.surname || "" < (bStud?.surname || "")  ? -1 : (aStud?.surname || "" > (bStud?.surname || "") ? 1 : 0)
+      )
     });
-  }, [studentsEvents, selectedDate])
+  }, [studentsEvents, selectedDate, classStudents])
 
   const dayHours = [1, 2, 3, 4, 5]
   const noEventsHours = useMemo(() => {
@@ -144,6 +148,19 @@ const TeacherStore = createContainer(() => {
                 .every(event => event.eventHour !== hour)
         )
   }, [todayEvents])
+
+  const tableStudents = useMemo(() => [
+    ...todayEvents,
+    ...classStudents.filter(
+      stud => todayEvents
+        .map(e => e.id)
+        .indexOf(stud.studentId.toString()) === -1
+    )
+      .sort(
+        (a, b) => a.surname < b.surname ? -1 : (a.surname > b.surname ? 1 : 0)
+      )
+      .map(st => {return {id: st.studentId.toString(), events: Array<SchoolEvent>()}})
+  ], [todayEvents, classStudents, selectedDate])
 
   const copyEvents = (hour: number, desc: string) => {
     let toInsertEvents: SchoolEvent[]
@@ -173,7 +190,7 @@ const TeacherStore = createContainer(() => {
 
     request("POST", `/api/v1/teachers/classes/${classId}/students/events/createMany`, {
       data: toInsertEvents
-    }).then(res => mutateEvents())
+    }).then(_ => mutateEvents())
   }
 
   const editEvent = (event: SchoolEvent, type: EventType, description: string) => {
@@ -182,7 +199,7 @@ const TeacherStore = createContainer(() => {
         eventType: type,
         eventDescription: description
       }
-    }).then(res => mutateEvents())
+    }).then(_ => mutateEvents())
   }
   const editHourEvent = (eventHour: number, description: string) => {
     request("PATCH", `/api/v1/teachers/classes/${classId}/students/events`, {
@@ -220,6 +237,7 @@ const TeacherStore = createContainer(() => {
     editHourEvent,
     schoolTeachers,
     setSelectedDate,
+    tableStudents
   };
 });
 
